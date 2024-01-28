@@ -42,7 +42,7 @@
         }
         function EditDistrict(thisId) {
 
-            let FinancialYr = $(thisId).parent().parent().children('.1').html();
+            let FinancialYr = $(thisId).closest('tr').find('.1').html();
             console.log(FinancialYr);
             $("#slctFinancialYearId").val(FinancialYr);
         }
