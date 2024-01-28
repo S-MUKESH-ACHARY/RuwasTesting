@@ -1,0 +1,185 @@
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Operation.master.cs" Inherits="Wfp.Operation" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+
+     <meta charset="utf-8">
+   
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+        name="viewport"/>
+    <title>Wfp</title>
+
+    <%--Bootstrap--%>
+    <link href="BootstrapUpdated/bootstrap.min.css" rel="stylesheet" />
+    <script src="BootstrapUpdated/bootstrap.min.js"></script>
+
+
+    <%--popper--%>
+    <script src="BootstrapUpdated/popper.min.js"></script>
+
+    <%--JQuery--%>
+    <script src="JQuery_Updated/JQuery.js"></script> 
+
+    <%--Font-Awesome updated 6.4.0--%>
+    <script src="https://kit.fontawesome.com/f2023d6bb3.js" crossorigin="anonymous"></script>
+
+ <style>
+        .ugandaLogoDiv{
+            border-radius:50%;
+            text-align:center;
+            display:relative;
+            background-color:white;
+            height:100px;
+            width:100px;
+        }
+        .ugandalogo{
+             padding-top:10px;
+        }
+        .icon-container {
+  display: inline-flex;
+  align-items: center; 
+  justify-content: center; 
+  width: 60px; 
+  height: 60px; 
+ background-color:white;
+  border-radius: 50%; 
+}
+
+.icon-container i {
+  font-size: 40px;
+  color: #33cee6; 
+}
+
+
+.sidenav {
+  height: 80vh;
+  width: 200px;
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+.sidenav a {
+  padding:5%;
+  text-decoration: none;
+  font-size: 17px;
+  color: #17a2b8;
+  display: block;
+}
+
+.sidenav a:hover {
+  color: black;
+}
+
+.main {
+  margin-left: 200px; /* Same as the width of the sidenav */
+  /*padding: 0px 10px;*/
+  overflow-y:auto;
+  max-height:80vh;
+ 
+}
+
+li:hover{
+    background-color:#33cee6
+}
+li:active{
+    background-color:#33cee6
+}
+
+
+
+
+        
+    </style>
+
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+
+        <nav class="navbar navbar-expand-lg mt-0 pt-0 pb-0" style="background-color:#33cee6;background-image:url(Photos/top.png)">
+          
+                <div class="container-fluid d-flex">
+                    <ul class="navbar-nav p-2 m-2" style="list-style:none">
+                        <li class="nav-item">
+                               <div class="ugandaLogoDiv">
+                                   <img src="Photos/hbg_img.png" alt="Logo" class="ugandalogo" height="75" width="75"/>
+                               </div>                         
+                        </li>  
+                         <li class="nav-item m-2 pt-2"> 
+                         
+                                <div class="h5 mb-0 pb-0" style="color:red">REPUBLIC OF UGANDA</div>
+                          <span class="h5">Minister Of Water And Environment</span>
+                        </li>
+                    </ul>
+                    <ul class="text-end me-4 pt-2" style="list-style:none">
+                        <li>
+                            <div class="icon-container">
+                                <i class="fa-solid fa-user" style="color:#33cee6;"></i>
+                            </div>
+                        </li>
+                    </ul>
+                   
+                </div>
+            </nav>
+
+        <div class="bg-secondary-subtle sidenav">
+               <ul class="navbar-nav">
+                   <li class="nav-item">
+                        <a href="#" class="nav-link"><i class="fa-solid fa-list"></i>&nbsp;&nbsp;Add Facility</a>
+                   </li>
+                    <li class="nav-item">
+                        <a href="#services" class="nav-link"><i class="fa-solid fa-house-flood-water"></i>&nbsp;&nbsp;Valley Tank</a>
+                   </li>
+                   <li>
+                       <a href="#" class="nav-link"><i class="fa-solid fa-arrow-up-from-ground-water"></i>&nbsp;&nbsp;Earth Dam</a>
+                   </li>
+                    <li class="nav-item">
+                      <a href="#contact" class="nav-link"><i class="fa-solid fa-fish-fins"></i>&nbsp;&nbsp;Fish Pond</a>
+                   </li>
+                    <li class="nav-item">
+                        <a href="#contact" class="nav-link"><i class="fa-solid fa-tree"></i>&nbsp;Irrigation Scheme</a>
+                   </li>
+                 <li class="nav-item">
+                        <a href="#contact" class="nav-link"><i class="fa-solid fa-industry"></i>&nbsp;&nbsp;Rural industry</a>
+                   </li>
+                    <li class="nav-item">
+                       <a href="#contact" class="nav-link"><i class="fa-solid fa-water"></i>&nbsp;Bulk Water</a>
+                   </li>
+                    <li class="nav-item">
+                         <a href="#contact" class="nav-link"><i class="fa-solid fa-bore-hole"></i>&nbsp;&nbsp;Borehole</a>
+                   </li>
+                    <li class="nav-item">
+                       <a href="#contact" class="nav-link"><i class="fa-solid fa-magnifying-glass-arrow-right"></i>&nbsp;&nbsp;Facility Search</a>
+                   </li>
+                    <li class="nav-item">
+                       <a href="#contact" class="nav-link"><i class="fa-solid fa-gear"></i>&nbsp;&nbsp;Operations</a>
+                   </li>
+               </ul>
+               
+             
+            
+            
+            
+           
+             
+            
+             
+             
+           </div>
+
+        <div class="main">
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+       
+    </form>
+</body>
+</html>

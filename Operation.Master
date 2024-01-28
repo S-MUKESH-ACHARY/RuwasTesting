@@ -1,0 +1,284 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Operation.master.cs" Inherits="RUWAS.Operation" %>
+<!DOCTYPE html>
+<html data-bs-theme="blue">
+<head runat="server">
+    <title></title>
+    <%--<script src="Bootstrap_5_3_V/bootstrap-select.min.js"></script>
+    <link href="Bootstrap_5_3_V/bootstrap-select.min.css" rel="stylesheet" />--%>
+    <%--Font-Awesome updated 6.4.0--%>
+    <script src="FontAwesome/Fontawesome.js"></script>
+    
+    <%-- Bootstrap css--%>
+    <link href="Bootstrap_5_3_V/bootstrap.min.css" rel="stylesheet" />
+    
+
+    <%--Bootstrap Js--%>
+    <%--<script src="Bootstrap_5_3_V/bootstrap.min.js"></script>--%>
+    <script src="Bootstrap_5_3_V/popper.min.js"></script>
+   
+    
+    <%--Jquery--%>
+    <script src="UpdatedJQuery/jQuery.min.js"></script>
+
+
+    <%--Data Table Js--%>
+    <script src="Datatable/datatables.min.js"></script>
+    
+
+    <%--Data Table css--%>
+    <link href="Datatable/datatables.min.css" rel="stylesheet"/>
+    <style>
+        /*.DE{
+         color:#336699;
+         font-weight:700;
+         cursor:pointer;
+       }*/
+        .DIsize {
+            font-size: 12px;
+        }
+
+        .BulletMark {
+            list-style-type: none;
+        }
+
+        .liHead {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .DE {
+            background-color: #0059b3;
+            font-size: 14px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .HLight:hover {
+            background-color: #0059b3;
+            color: white;
+            font-weight: 600;
+        }
+        /*div a{
+            color:gray;
+            text-decoration:none;
+        }*/
+        div a:hover {
+            color: #336699;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        label, th, td {
+            font-size: 14px;
+        }
+
+        .divUgandaLogo {
+            border-radius: 50%;
+            text-align: center;
+            background-color: white;
+            height: 80px;
+            width: 80px;
+        }
+
+        .ugandalogo {
+            padding-top: 10px;
+        }
+
+        .icon-container {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            background-color: white;
+            border-radius: 50%;
+            margin-block-start: 8px;
+        }
+
+            .icon-container i {
+                font-size: 20px;
+                color: #264d73;
+            }
+
+        /*footer {
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+        }*/
+
+        .dropdown-menu {
+            margin: 0 auto 50px;
+            box-shadow: 0 10px 10px #666;
+            /*box-shadow: 6px 6px 6px 1px rgba(0, 0, 0,0.4);*/
+        }
+
+        body {
+            background-color: #ecf1f4;
+            min-height: 100vh;
+        }
+        /*Loader*/
+  .loader-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.1); /* Adjust the alpha value for the desired level of transparency */
+      backdrop-filter: blur(1px); /* Adjust the blur amount as needed */
+      z-index: 2000; /* Set a high z-index value */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+
+  /* Loader Styles */
+  .loader {
+      border: 8px solid #f3f3f3; /* Light grey */
+      border-top: 8px solid #3498db; /* Blue */
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+      0% {
+          transform: rotate(0deg);
+      }
+
+      100% {
+          transform: rotate(360deg);
+      }
+  }
+    </style>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <%--Loader--%>
+ <div class="loader-container" style="display:none">
+    <!-- Loader -->
+    <div class="loader"></div>
+</div>
+    <form id="form1" runat="server">
+        <nav style="background-image: url(RUWASAssets/Header.svg); background-size: cover;" class="navbar navbar-expand-lg mt-0 pt-0 pb-0">
+            <div class="container-fluid">
+                <ul class="navbar-nav p-2 m-2" style="list-style: none;">
+                    <li class="nav-item">
+                        <div class="divUgandaLogo">
+                            <img src="RUWASAssets/hbg_img.png" alt="logo" class="ugandalogo" height="75" width="75" />
+                        </div>
+                    </li>
+                    <li class="nav-item m-2 pt-2">
+                        <div class="h5 mb-0 pb-0" style="color: red;">THE REPUBLIC OF UGANDA</div>
+                        <span class="h5">Ministry Of Water And Environment</span>
+                    </li>
+                </ul>
+                <div class="h3 mt-3 me-4" style="color: #264d73;">WEMIS</div>
+            </div>
+        </nav>
+        <nav class="navbar mt-0 pt-0 pb-0" style="background-color: #264d73;">
+            <div class="container-fluid">
+                <ul class="navbar-nav" style="list-style: none;">
+                    <li class="nav-item ms-4">
+                        <div class="mb-0 pb-0 h6 text-light">District Rural Water and Sanitation Database (RUWAS)</div>
+                    </li>
+                </ul>
+                <ul class="text-end" style="list-style: none;">
+                    <li>
+                        <div class="icon-container">
+                            <i class="fa-solid fa-user" style="cursor: pointer;"></i>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="d-flex justify-content-center">
+            <div class="p-2 row">
+                <%--<a class="p-2 h6" href="#1" onclick="home()">Home</a>--%>
+                <div class="dropdown-center col">
+                    <button type="button" style="font-weight: 600;" class="btn dropdown HLight" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">Home</button>
+                </div>
+                <%-- <a class="p-2 h6" href="DashBoard.aspx" onclick="dataentry()" id="dataEntryId">Data Entry</a>--%>
+                <div class="dropdown-center col">
+                    <button type="button" id="dataEntryId" style="font-weight: 600;" class="btn dropdown HLight" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" onclick="location.href='DashBoard.aspx'">Data&nbsp;Entry</button>
+                </div>
+                <%-- <a class="p-2 h6" href="#3" onclick="reports()">Reports</a>--%>
+                <div class="dropdown col">
+                    <button type="button" style="font-weight: 600;" class="btn dropdown-toggle HLight" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" id="reportsId">Reports</button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item DIsize" href="StandardReports.aspx">Standard Reports</a></li>
+                        <li><a class="dropdown-item DIsize" href="QuarterlyProgressDashboardDWSCG.aspx">Quarterly Progress Dashboard-DWSCG</a></li>
+                        <li><a class="dropdown-item DIsize" href="SanitationProgressDashboardDSHCG.aspx">Sanitation Progress Dashboard-DSHCG</a></li>
+                        <li><a class="dropdown-item DIsize" href="WorkPlanDashboardDWSCG.aspx">WorkPlan Dashboard -DWSCG</a></li>
+                        <li><a class="dropdown-item DIsize" href="SanitationDashboardDSHCG.aspx">Sanitation Dashboard -DSHCG</a></li>
+                        <li><a class="dropdown-item DIsize" href="ViewVariationDocuments.aspx">View Variation Documents</a></li>
+                        <li><a class="dropdown-item DIsize" href="DistrictSanitationAndHygieneGrant.aspx">District Sanitation And Hygiene Grant</a></li>
+                        <li><a class="dropdown-item DIsize" href="WorkPlanEscalationReportDWSCG.aspx">WorkPlan Escalation Report -DWSCG</a></li>
+                        <li><a class="dropdown-item DIsize" href="SanitationEscalationReportDSHCG.aspx">Sanitation Escalation Report -DSHCG</a></li>
+                        <li><a class="dropdown-item DIsize" href="DistrictPerformanceReportsDSHCG.aspx">District Performance Reports DSHCG</a></li>
+                        <li><a class="dropdown-item DIsize" href="DistrictPerformanceReportsDWSCG.aspx">District Performance Reports DWSCG</a></li>
+                    </ul>
+                </div>
+                <%--<a class="p-2 h6" href="#4" onclick="map()">Map</a>--%>
+                <div class="dropdown-center col">
+                    <button id="mapId" type="button" style="font-weight: 600;" class="btn dropdown HLight" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" onclick="location.href='Map.aspx'">Map</button>
+                </div>
+                <%--<a class="p-2 h6" href="#5" onclick="administration()">Administration</a>--%>
+                <div class="dropdown col">
+                    <button type="button" id="administrationId" style="font-weight: 600;" class="btn dropdown-toggle HLight" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">Administration</button>
+                    <div class="dropdown-menu">
+                        <div class="d-flex">
+                            <div class="col">
+                                <ul class="BulletMark">
+                                    <li><a class="dropdown-item liHead" href="#">Manage Setup</a></li>
+                                    <li><a class="dropdown-item DIsize" href="ModelActivity.aspx">Model Activities</a></li>
+                                    <li><a class="dropdown-item DIsize" href="Categories.aspx">Categories</a></li>
+                                    <li><a class="dropdown-item DIsize" href="BudgetType.aspx">Budget Type</a></li>
+                                    <li><a class="dropdown-item DIsize" href="Technology.aspx">Technology</a></li>
+                                    <li><a class="dropdown-item DIsize" href="SubTechnologies.aspx">Sub Technology</a></li>
+                                    <li><a class="dropdown-item DIsize" href="LC.aspx">LC</a></li>
+                                    <li><a class="dropdown-item DIsize" href="ViewParish.aspx">Parish</a></li>
+                                    <li><a class="dropdown-item DIsize" href="SubCounty.aspx">Sub-county</a></li>
+                                    <li><a class="dropdown-item DIsize" href="Districts.aspx">Districts</a></li>
+                                    <li><a class="dropdown-item DIsize" href="PopulationProjection.aspx">Population Projection</a></li>
+                                    <li><a class="dropdown-item DIsize" href="PlannedFundsPerDistricts.aspx">Planned Amount per District</a></li>
+                                </ul>
+                            </div>
+                            <div class="col">
+                                <ul class="BulletMark">
+                                    <li><a class="dropdown-item liHead" href="#">Manage Setup</a></li>
+                                    <li><a class="dropdown-item DIsize" href="FinancialYear.aspx">Financial Year</a></li>
+                                    <li><a class="dropdown-item DIsize" href="RWSRC.aspx">RWSRC</a></li>
+                                    <li><a class="dropdown-item DIsize" href="FundingSource.aspx">Funding Source</a></li>
+                                    <li><a class="dropdown-item DIsize" href="WorkPlanPeriod.aspx">Work Plan Period</a></li>
+                                    <li><a class="dropdown-item DIsize" href="ApproveDays.aspx">Approve Days</a></li>
+                                    <li><a class="dropdown-item DIsize" href="Validation.aspx">Validation</a></li>
+                                    <li><a class="dropdown-item DIsize" href="EventLog.aspx">Event Log</a></li>
+                                    <li><a class="dropdown-item DIsize" href="WorkplanAuditTrail.aspx">Work Plan Audit Trail</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+        <footer>
+            <div class="navbar" style="background-color: #264d73; position:sticky; bottom: 0;right:0; left: 0;">
+                <div class="container-fluid">
+                    <ul class="navbar-nav" style="list-style: none;">
+                        <li class="nav-item ms-4">
+                            <div class="mb-0 pb-0 h6 text-light">&copy;WEMIS</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </footer>
+    </form>
+</body>
+</html>

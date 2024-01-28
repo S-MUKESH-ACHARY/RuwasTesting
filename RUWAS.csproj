@@ -1,0 +1,2145 @@
+﻿<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D4AE37D7-24BD-4C8B-B6BF-2F1BE59BD8BC}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RUWAS</RootNamespace>
+    <AssemblyName>RUWAS</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.7.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.HashCode, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Bcl.HashCode.1.1.1\lib\net461\Microsoft.Bcl.HashCode.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.Logging.Abstractions.6.0.0\lib\net461\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Npgsql, Version=4.1.12.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <HintPath>packages\Npgsql.4.1.12\lib\net461\Npgsql.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Collections.Immutable, Version=7.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Collections.Immutable.7.0.0\lib\net462\System.Collections.Immutable.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Diagnostics.DiagnosticSource.6.0.0\lib\net461\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Encodings.Web, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Text.Encodings.Web.7.0.0\lib\net462\System.Text.Encodings.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Json, Version=7.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Text.Json.7.0.2\lib\net462\System.Text.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Channels, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Threading.Channels.7.0.0\lib\net462\System.Threading.Channels.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+      <HintPath>packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AnnualAttachments.aspx" />
+    <Content Include="AnnualWorkplanDWSCG.aspx" />
+    <Content Include="ApplyForVariations.aspx" />
+    <Content Include="ApproveDays.aspx" />
+    <Content Include="Bootstrap_5_3_V\bootstrap-select.min.css" />
+    <Content Include="Bootstrap_5_3_V\bootstrap-select.min.js" />
+    <Content Include="Bootstrap_5_3_V\bootstrap.min.css" />
+    <Content Include="Bootstrap_5_3_V\bootstrap.min.js" />
+    <Content Include="Bootstrap_5_3_V\popper.min.js" />
+    <Content Include="Bootstrap_5_3_V\popperjs.min.js" />
+    <Content Include="BudgetType.aspx" />
+    <Content Include="Categories.aspx" />
+    <Content Include="Contracts.aspx" />
+    <Content Include="DashBoard.aspx" />
+    <Content Include="DataTableSimple\dataTables.min.css" />
+    <Content Include="DataTableSimple\dataTables.min.js" />
+    <Content Include="Datatable\AutoFill-2.6.0\css\autoFill.bootstrap.css" />
+    <Content Include="Datatable\AutoFill-2.6.0\css\autoFill.bootstrap.min.css" />
+    <Content Include="Datatable\AutoFill-2.6.0\css\autoFill.bootstrap4.css" />
+    <Content Include="Datatable\AutoFill-2.6.0\css\autoFill.bootstrap4.min.css" />
+    <Content Include="Datatable\AutoFill-2.6.0\css\autoFill.bootstrap5.css" />
+    <Content Include="Datatable\AutoFill-2.6.0\css\autoFill.bootstrap5.min.css" />
+    <Content Include="Datatable\AutoFill-2.6.0\css\autoFill.bulma.css" />
+    <Content Include="Datatable\AutoFill-2.6.0\css\autoFill.bulma.min.css" />
+    <Content Include="Datatable\AutoFill-2.6.0\css\autoFill.dataTables.css" />
+    <Content Include="Datatable\AutoFill-2.6.0\css\autoFill.dataTables.min.css" />
+    <Content Include="Datatable\AutoFill-2.6.0\css\autoFill.foundation.css" />
+    <Content Include="Datatable\AutoFill-2.6.0\css\autoFill.foundation.min.css" />
+    <Content Include="Datatable\AutoFill-2.6.0\css\autoFill.jqueryui.css" />
+    <Content Include="Datatable\AutoFill-2.6.0\css\autoFill.jqueryui.min.css" />
+    <Content Include="Datatable\AutoFill-2.6.0\css\autoFill.semanticui.css" />
+    <Content Include="Datatable\AutoFill-2.6.0\css\autoFill.semanticui.min.css" />
+    <Content Include="Datatable\AutoFill-2.6.0\js\autoFill.bootstrap.js" />
+    <Content Include="Datatable\AutoFill-2.6.0\js\autoFill.bootstrap.min.js" />
+    <Content Include="Datatable\AutoFill-2.6.0\js\autoFill.bootstrap4.js" />
+    <Content Include="Datatable\AutoFill-2.6.0\js\autoFill.bootstrap4.min.js" />
+    <Content Include="Datatable\AutoFill-2.6.0\js\autoFill.bootstrap5.js" />
+    <Content Include="Datatable\AutoFill-2.6.0\js\autoFill.bootstrap5.min.js" />
+    <Content Include="Datatable\AutoFill-2.6.0\js\autoFill.bulma.js" />
+    <Content Include="Datatable\AutoFill-2.6.0\js\autoFill.bulma.min.js" />
+    <Content Include="Datatable\AutoFill-2.6.0\js\autoFill.dataTables.js" />
+    <Content Include="Datatable\AutoFill-2.6.0\js\autoFill.dataTables.min.js" />
+    <Content Include="Datatable\AutoFill-2.6.0\js\autoFill.foundation.js" />
+    <Content Include="Datatable\AutoFill-2.6.0\js\autoFill.foundation.min.js" />
+    <Content Include="Datatable\AutoFill-2.6.0\js\autoFill.jqueryui.js" />
+    <Content Include="Datatable\AutoFill-2.6.0\js\autoFill.jqueryui.min.js" />
+    <Content Include="Datatable\AutoFill-2.6.0\js\autoFill.semanticui.js" />
+    <Content Include="Datatable\AutoFill-2.6.0\js\autoFill.semanticui.min.js" />
+    <Content Include="Datatable\AutoFill-2.6.0\js\dataTables.autoFill.js" />
+    <Content Include="Datatable\AutoFill-2.6.0\js\dataTables.autoFill.min.js" />
+    <Content Include="Datatable\Bootstrap-5-5.3.0\css\bootstrap.css" />
+    <Content Include="Datatable\Bootstrap-5-5.3.0\css\bootstrap.min.css" />
+    <Content Include="Datatable\Bootstrap-5-5.3.0\js\bootstrap.bundle.js" />
+    <Content Include="Datatable\Bootstrap-5-5.3.0\js\bootstrap.bundle.min.js" />
+    <Content Include="Datatable\Buttons-2.4.1\css\buttons.bootstrap.css" />
+    <Content Include="Datatable\Buttons-2.4.1\css\buttons.bootstrap.min.css" />
+    <Content Include="Datatable\Buttons-2.4.1\css\buttons.bootstrap4.css" />
+    <Content Include="Datatable\Buttons-2.4.1\css\buttons.bootstrap4.min.css" />
+    <Content Include="Datatable\Buttons-2.4.1\css\buttons.bootstrap5.css" />
+    <Content Include="Datatable\Buttons-2.4.1\css\buttons.bootstrap5.min.css" />
+    <Content Include="Datatable\Buttons-2.4.1\css\buttons.bulma.css" />
+    <Content Include="Datatable\Buttons-2.4.1\css\buttons.bulma.min.css" />
+    <Content Include="Datatable\Buttons-2.4.1\css\buttons.dataTables.css" />
+    <Content Include="Datatable\Buttons-2.4.1\css\buttons.dataTables.min.css" />
+    <Content Include="Datatable\Buttons-2.4.1\css\buttons.foundation.css" />
+    <Content Include="Datatable\Buttons-2.4.1\css\buttons.foundation.min.css" />
+    <Content Include="Datatable\Buttons-2.4.1\css\buttons.jqueryui.css" />
+    <Content Include="Datatable\Buttons-2.4.1\css\buttons.jqueryui.min.css" />
+    <Content Include="Datatable\Buttons-2.4.1\css\buttons.semanticui.css" />
+    <Content Include="Datatable\Buttons-2.4.1\css\buttons.semanticui.min.css" />
+    <Content Include="Datatable\Buttons-2.4.1\js\buttons.bootstrap.js" />
+    <Content Include="Datatable\Buttons-2.4.1\js\buttons.bootstrap.min.js" />
+    <Content Include="Datatable\Buttons-2.4.1\js\buttons.bootstrap4.js" />
+    <Content Include="Datatable\Buttons-2.4.1\js\buttons.bootstrap4.min.js" />
+    <Content Include="Datatable\Buttons-2.4.1\js\buttons.bootstrap5.js" />
+    <Content Include="Datatable\Buttons-2.4.1\js\buttons.bootstrap5.min.js" />
+    <Content Include="Datatable\Buttons-2.4.1\js\buttons.bulma.js" />
+    <Content Include="Datatable\Buttons-2.4.1\js\buttons.bulma.min.js" />
+    <Content Include="Datatable\Buttons-2.4.1\js\buttons.colVis.js" />
+    <Content Include="Datatable\Buttons-2.4.1\js\buttons.colVis.min.js" />
+    <Content Include="Datatable\Buttons-2.4.1\js\buttons.dataTables.js" />
+    <Content Include="Datatable\Buttons-2.4.1\js\buttons.dataTables.min.js" />
+    <Content Include="Datatable\Buttons-2.4.1\js\buttons.foundation.js" />
+    <Content Include="Datatable\Buttons-2.4.1\js\buttons.foundation.min.js" />
+    <Content Include="Datatable\Buttons-2.4.1\js\buttons.html5.js" />
+    <Content Include="Datatable\Buttons-2.4.1\js\buttons.html5.min.js" />
+    <Content Include="Datatable\Buttons-2.4.1\js\buttons.jqueryui.js" />
+    <Content Include="Datatable\Buttons-2.4.1\js\buttons.jqueryui.min.js" />
+    <Content Include="Datatable\Buttons-2.4.1\js\buttons.print.js" />
+    <Content Include="Datatable\Buttons-2.4.1\js\buttons.print.min.js" />
+    <Content Include="Datatable\Buttons-2.4.1\js\buttons.semanticui.js" />
+    <Content Include="Datatable\Buttons-2.4.1\js\buttons.semanticui.min.js" />
+    <Content Include="Datatable\Buttons-2.4.1\js\dataTables.buttons.js" />
+    <Content Include="Datatable\Buttons-2.4.1\js\dataTables.buttons.min.js" />
+    <Content Include="Datatable\ColReorder-1.7.0\css\colReorder.bootstrap.css" />
+    <Content Include="Datatable\ColReorder-1.7.0\css\colReorder.bootstrap.min.css" />
+    <Content Include="Datatable\ColReorder-1.7.0\css\colReorder.bootstrap4.css" />
+    <Content Include="Datatable\ColReorder-1.7.0\css\colReorder.bootstrap4.min.css" />
+    <Content Include="Datatable\ColReorder-1.7.0\css\colReorder.bootstrap5.css" />
+    <Content Include="Datatable\ColReorder-1.7.0\css\colReorder.bootstrap5.min.css" />
+    <Content Include="Datatable\ColReorder-1.7.0\css\colReorder.bulma.css" />
+    <Content Include="Datatable\ColReorder-1.7.0\css\colReorder.bulma.min.css" />
+    <Content Include="Datatable\ColReorder-1.7.0\css\colReorder.dataTables.css" />
+    <Content Include="Datatable\ColReorder-1.7.0\css\colReorder.dataTables.min.css" />
+    <Content Include="Datatable\ColReorder-1.7.0\css\colReorder.foundation.css" />
+    <Content Include="Datatable\ColReorder-1.7.0\css\colReorder.foundation.min.css" />
+    <Content Include="Datatable\ColReorder-1.7.0\css\colReorder.jqueryui.css" />
+    <Content Include="Datatable\ColReorder-1.7.0\css\colReorder.jqueryui.min.css" />
+    <Content Include="Datatable\ColReorder-1.7.0\css\colReorder.semanticui.css" />
+    <Content Include="Datatable\ColReorder-1.7.0\css\colReorder.semanticui.min.css" />
+    <Content Include="Datatable\ColReorder-1.7.0\js\colReorder.bootstrap.js" />
+    <Content Include="Datatable\ColReorder-1.7.0\js\colReorder.bootstrap.min.js" />
+    <Content Include="Datatable\ColReorder-1.7.0\js\colReorder.bootstrap4.js" />
+    <Content Include="Datatable\ColReorder-1.7.0\js\colReorder.bootstrap4.min.js" />
+    <Content Include="Datatable\ColReorder-1.7.0\js\colReorder.bootstrap5.js" />
+    <Content Include="Datatable\ColReorder-1.7.0\js\colReorder.bootstrap5.min.js" />
+    <Content Include="Datatable\ColReorder-1.7.0\js\colReorder.bulma.js" />
+    <Content Include="Datatable\ColReorder-1.7.0\js\colReorder.bulma.min.js" />
+    <Content Include="Datatable\ColReorder-1.7.0\js\colReorder.dataTables.js" />
+    <Content Include="Datatable\ColReorder-1.7.0\js\colReorder.dataTables.min.js" />
+    <Content Include="Datatable\ColReorder-1.7.0\js\colReorder.foundation.js" />
+    <Content Include="Datatable\ColReorder-1.7.0\js\colReorder.foundation.min.js" />
+    <Content Include="Datatable\ColReorder-1.7.0\js\colReorder.jqueryui.js" />
+    <Content Include="Datatable\ColReorder-1.7.0\js\colReorder.jqueryui.min.js" />
+    <Content Include="Datatable\ColReorder-1.7.0\js\colReorder.semanticui.js" />
+    <Content Include="Datatable\ColReorder-1.7.0\js\colReorder.semanticui.min.js" />
+    <Content Include="Datatable\ColReorder-1.7.0\js\dataTables.colReorder.js" />
+    <Content Include="Datatable\ColReorder-1.7.0\js\dataTables.colReorder.min.js" />
+    <Content Include="Datatable\DataTables-1.13.6\css\dataTables.bootstrap.css" />
+    <Content Include="Datatable\DataTables-1.13.6\css\dataTables.bootstrap.min.css" />
+    <Content Include="Datatable\DataTables-1.13.6\css\dataTables.bootstrap4.css" />
+    <Content Include="Datatable\DataTables-1.13.6\css\dataTables.bootstrap4.min.css" />
+    <Content Include="Datatable\DataTables-1.13.6\css\dataTables.bootstrap5.css" />
+    <Content Include="Datatable\DataTables-1.13.6\css\dataTables.bootstrap5.min.css" />
+    <Content Include="Datatable\DataTables-1.13.6\css\dataTables.bulma.css" />
+    <Content Include="Datatable\DataTables-1.13.6\css\dataTables.bulma.min.css" />
+    <Content Include="Datatable\DataTables-1.13.6\css\dataTables.dataTables.css" />
+    <Content Include="Datatable\DataTables-1.13.6\css\dataTables.dataTables.min.css" />
+    <Content Include="Datatable\DataTables-1.13.6\css\dataTables.foundation.css" />
+    <Content Include="Datatable\DataTables-1.13.6\css\dataTables.foundation.min.css" />
+    <Content Include="Datatable\DataTables-1.13.6\css\dataTables.jqueryui.css" />
+    <Content Include="Datatable\DataTables-1.13.6\css\dataTables.jqueryui.min.css" />
+    <Content Include="Datatable\DataTables-1.13.6\css\dataTables.semanticui.css" />
+    <Content Include="Datatable\DataTables-1.13.6\css\dataTables.semanticui.min.css" />
+    <Content Include="Datatable\DataTables-1.13.6\css\jquery.dataTables.css" />
+    <Content Include="Datatable\DataTables-1.13.6\css\jquery.dataTables.min.css" />
+    <Content Include="Datatable\DataTables-1.13.6\images\sort_asc.png" />
+    <Content Include="Datatable\DataTables-1.13.6\images\sort_asc_disabled.png" />
+    <Content Include="Datatable\DataTables-1.13.6\images\sort_both.png" />
+    <Content Include="Datatable\DataTables-1.13.6\images\sort_desc.png" />
+    <Content Include="Datatable\DataTables-1.13.6\images\sort_desc_disabled.png" />
+    <Content Include="Datatable\DataTables-1.13.6\js\dataTables.bootstrap.js" />
+    <Content Include="Datatable\DataTables-1.13.6\js\dataTables.bootstrap.min.js" />
+    <Content Include="Datatable\DataTables-1.13.6\js\dataTables.bootstrap4.js" />
+    <Content Include="Datatable\DataTables-1.13.6\js\dataTables.bootstrap4.min.js" />
+    <Content Include="Datatable\DataTables-1.13.6\js\dataTables.bootstrap5.js" />
+    <Content Include="Datatable\DataTables-1.13.6\js\dataTables.bootstrap5.min.js" />
+    <Content Include="Datatable\DataTables-1.13.6\js\dataTables.bulma.js" />
+    <Content Include="Datatable\DataTables-1.13.6\js\dataTables.bulma.min.js" />
+    <Content Include="Datatable\DataTables-1.13.6\js\dataTables.dataTables.js" />
+    <Content Include="Datatable\DataTables-1.13.6\js\dataTables.dataTables.min.js" />
+    <Content Include="Datatable\DataTables-1.13.6\js\dataTables.foundation.js" />
+    <Content Include="Datatable\DataTables-1.13.6\js\dataTables.foundation.min.js" />
+    <Content Include="Datatable\DataTables-1.13.6\js\dataTables.jqueryui.js" />
+    <Content Include="Datatable\DataTables-1.13.6\js\dataTables.jqueryui.min.js" />
+    <Content Include="Datatable\DataTables-1.13.6\js\dataTables.semanticui.js" />
+    <Content Include="Datatable\DataTables-1.13.6\js\dataTables.semanticui.min.js" />
+    <Content Include="Datatable\DataTables-1.13.6\js\jquery.dataTables.js" />
+    <Content Include="Datatable\DataTables-1.13.6\js\jquery.dataTables.min.js" />
+    <Content Include="Datatable\datatables.css" />
+    <Content Include="Datatable\datatables.js" />
+    <Content Include="Datatable\datatables.min.css" />
+    <Content Include="Datatable\datatables.min.js" />
+    <Content Include="DistrictPerformanceReportsDSHCG.aspx" />
+    <Content Include="DistrictPerformanceReportsDWSCG.aspx" />
+    <Content Include="Districts.aspx" />
+    <Content Include="DistrictSanitationAndHygieneGrant.aspx" />
+    <Content Include="EventLog.aspx" />
+    <Content Include="FinancialYear.aspx" />
+    <Content Include="FontAwesome\Fontawesome.js" />
+    <Content Include="FundingSource.aspx" />
+    <Content Include="Global.asax" />
+    <Content Include="LC.aspx" />
+    <Content Include="Map.aspx" />
+    <Content Include="ModelActivity.aspx" />
+    <Content Include="NewAnnualAttachment.aspx" />
+    <Content Include="NewBudgetType.aspx" />
+    <Content Include="NewCategories.aspx" />
+    <Content Include="NewContract.aspx" />
+    <Content Include="NewDistricts.aspx" />
+    <Content Include="NewFinancialYear.aspx" />
+    <Content Include="NewFundingSource.aspx" />
+    <Content Include="NewLC.aspx" />
+    <Content Include="NewModelActivity.aspx" />
+    <Content Include="NewParish.aspx" />
+    <Content Include="NewPlannedFund.aspx" />
+    <Content Include="NewRWSRC.aspx" />
+    <Content Include="NewSubCounty.aspx" />
+    <Content Include="NewSubTechnology.aspx" />
+    <Content Include="NewTechnology.aspx" />
+    <Content Include="NewWorkPlanPeriod.aspx" />
+    <Content Include="ol-ext\dist\ol-ext.css" />
+    <Content Include="ol-ext\dist\ol-ext.js" />
+    <Content Include="ol-ext\dist\ol-ext.min.css" />
+    <Content Include="ol-ext\dist\ol-ext.min.js" />
+    <Content Include="PlannedFundsPerDistricts.aspx" />
+    <Content Include="PopulationProjection.aspx" />
+    <Content Include="Pratice.aspx" />
+    <Content Include="ProgressReportDSHCG.aspx" />
+    <Content Include="ProgressReportDWSCG.aspx" />
+    <Content Include="QuarterlyAttachments.aspx" />
+    <Content Include="NewQuaterlyAttachment.aspx" />
+    <Content Include="QuarterlyProgressDashboardDWSCG.aspx" />
+    <Content Include="RUWASAssets\10W.png" />
+    <Content Include="RUWASAssets\1W.png" />
+    <Content Include="RUWASAssets\2W.png" />
+    <Content Include="RUWASAssets\3W.png" />
+    <Content Include="RUWASAssets\4W.png" />
+    <Content Include="RUWASAssets\5W.png" />
+    <Content Include="RUWASAssets\6W.png" />
+    <Content Include="RUWASAssets\7W.png" />
+    <Content Include="RUWASAssets\8W.png" />
+    <Content Include="RUWASAssets\9W.png" />
+    <Content Include="RUWASAssets\annualAttachments.jpeg" />
+    <Content Include="RUWASAssets\annualWorkplan.png" />
+    <Content Include="RUWASAssets\applyForVariations.png" />
+    <Content Include="RUWASAssets\contracts.png" />
+    <Content Include="RUWASAssets\districtPerformanceDSHCG.jpg" />
+    <Content Include="RUWASAssets\districtPerformanceDWSCG.jpg" />
+    <Content Include="RUWASAssets\hbg_img.png" />
+    <Content Include="RUWASAssets\Header.svg" />
+    <Content Include="RUWASAssets\ProgressReportDSHCG.jpeg" />
+    <Content Include="RUWASAssets\ProgressReportDWSCG.png" />
+    <Content Include="RUWASAssets\quarterlyAttachments.jpeg" />
+    <Content Include="RUWASAssets\sanitationWorkPlan.png" />
+    <Content Include="RWSRC.aspx" />
+    <Content Include="SanitationAnnualWorkPlanDSHCG.aspx" />
+    <Content Include="SanitationDashboardDSHCG.aspx" />
+    <Content Include="SanitationEscalationReportDSHCG.aspx" />
+    <Content Include="SanitationProgressDashboardDSHCG.aspx" />
+    <Content Include="StandardReports.aspx" />
+    <Content Include="SubCounty.aspx" />
+    <Content Include="SubTechnologies.aspx" />
+    <Content Include="Technology.aspx" />
+    <Content Include="UpdatedJQuery\JQuery.js" />
+    <Content Include="UpdatedJQuery\jQuery.min.js" />
+    <Content Include="v6.15.1\apidoc\index.html" />
+    <Content Include="v6.15.1\apidoc\logo-70x70.png" />
+    <Content Include="v6.15.1\apidoc\module-ol_array.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_AssertionError-AssertionError.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_AssertionError.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_Collection-Collection.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_Collection.CollectionEvent.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_Collection.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_color.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_colorlike.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_control.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_control_Attribution-Attribution.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_control_Attribution.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_control_Control-Control.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_control_Control.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_control_FullScreen-FullScreen.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_control_FullScreen.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_control_MousePosition-MousePosition.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_control_MousePosition.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_control_OverviewMap-OverviewMap.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_control_OverviewMap.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_control_Rotate-Rotate.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_control_Rotate.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_control_ScaleLine-ScaleLine.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_control_ScaleLine.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_control_Zoom-Zoom.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_control_Zoom.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_control_ZoomSlider-ZoomSlider.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_control_ZoomSlider.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_control_ZoomToExtent-ZoomToExtent.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_control_ZoomToExtent.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_coordinate.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_DataTile-DataTile.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_DataTile.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_easing.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_events.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_events_condition.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_events_Event-BaseEvent.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_events_Event.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_events_Target-Target.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_events_Target.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_extent.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_Feature-Feature.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_Feature.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_featureloader.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_EsriJSON-EsriJSON.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_EsriJSON.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_Feature-FeatureFormat.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_Feature.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_Bbox-Bbox.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_Bbox.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_Contains-Contains.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_Contains.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_Disjoint-Disjoint.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_Disjoint.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_During-During.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_During.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_DWithin-DWithin.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_DWithin.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_EqualTo-EqualTo.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_EqualTo.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_GreaterThan-GreaterThan.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_GreaterThan.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_GreaterThanOrEqualTo-GreaterThanOrEqualTo.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_GreaterThanOrEqualTo.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_Intersects-Intersects.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_Intersects.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_IsBetween-IsBetween.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_IsBetween.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_IsLike-IsLike.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_IsLike.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_IsNull-IsNull.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_IsNull.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_LessThan-LessThan.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_LessThan.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_LessThanOrEqualTo-LessThanOrEqualTo.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_LessThanOrEqualTo.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_Not-Not.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_Not.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_NotEqualTo-NotEqualTo.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_NotEqualTo.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_Or-Or.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_Or.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_Within-Within.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_filter_Within.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_GeoJSON-GeoJSON.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_GeoJSON.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_GML-GML.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_GML.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_GML2-GML2.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_GML2.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_GML3-GML3.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_GML3.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_GML32-GML32.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_GML32.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_GMLBase-GMLBase.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_GMLBase.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_GPX-GPX.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_GPX.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_IGC-IGC.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_IGC.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_IIIFInfo-IIIFInfo.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_IIIFInfo.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_JSONFeature-JSONFeature.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_JSONFeature.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_KML-KML.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_KML.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_MVT-MVT.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_MVT.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_OSMXML-OSMXML.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_OSMXML.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_Polyline-Polyline.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_Polyline.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_TextFeature-TextFeature.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_TextFeature.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_TopoJSON-TopoJSON.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_TopoJSON.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_WFS-WFS.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_WFS.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_WKB-WKB.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_WKB.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_WKT-WKT.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_WKT.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_WMSCapabilities-WMSCapabilities.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_WMSCapabilities.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_WMSGetFeatureInfo-WMSGetFeatureInfo.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_WMSGetFeatureInfo.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_WMTSCapabilities-WMTSCapabilities.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_WMTSCapabilities.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_XML-XML.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_XML.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_XMLFeature-XMLFeature.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_format_XMLFeature.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_Geolocation-Geolocation.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_Geolocation.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_geom_Circle-Circle.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_geom_Circle.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_geom_Geometry-Geometry.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_geom_Geometry.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_geom_GeometryCollection-GeometryCollection.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_geom_GeometryCollection.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_geom_GeometryLayout.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_geom_LinearRing-LinearRing.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_geom_LinearRing.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_geom_LineString-LineString.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_geom_LineString.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_geom_MultiLineString-MultiLineString.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_geom_MultiLineString.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_geom_MultiPoint-MultiPoint.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_geom_MultiPoint.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_geom_MultiPolygon-MultiPolygon.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_geom_MultiPolygon.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_geom_Point-Point.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_geom_Point.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_geom_Polygon-Polygon.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_geom_Polygon.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_geom_SimpleGeometry-SimpleGeometry.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_geom_SimpleGeometry.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_has.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_Image-ImageWrapper.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_Image.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_ImageTile-ImageTile.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_ImageTile.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_DoubleClickZoom-DoubleClickZoom.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_DoubleClickZoom.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_DragAndDrop-DragAndDrop.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_DragAndDrop.DragAndDropEvent.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_DragAndDrop.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_DragBox-DragBox.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_DragBox.DragBoxEvent.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_DragBox.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_DragPan-DragPan.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_DragPan.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_DragRotate-DragRotate.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_DragRotate.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_DragRotateAndZoom-DragRotateAndZoom.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_DragRotateAndZoom.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_DragZoom-DragZoom.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_DragZoom.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_Draw-Draw.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_Draw.DrawEvent.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_Draw.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_Extent-Extent.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_Extent.ExtentEvent.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_Extent.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_Interaction-Interaction.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_Interaction.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_KeyboardPan-KeyboardPan.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_KeyboardPan.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_KeyboardZoom-KeyboardZoom.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_KeyboardZoom.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_Link-Link.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_Link.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_Modify-Modify.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_Modify.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_Modify.ModifyEvent.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_MouseWheelZoom-MouseWheelZoom.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_MouseWheelZoom.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_PinchRotate-PinchRotate.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_PinchRotate.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_PinchZoom-PinchZoom.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_PinchZoom.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_Pointer-PointerInteraction.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_Pointer.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_Select-Select.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_Select.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_Select.SelectEvent.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_Snap-Snap.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_Snap.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_Translate-Translate.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_Translate.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_interaction_Translate.TranslateEvent.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_Kinetic-Kinetic.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_Kinetic.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_layer_Base-BaseLayer.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_layer_Base.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_layer_BaseImage-BaseImageLayer.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_layer_BaseImage.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_layer_BaseTile-BaseTileLayer.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_layer_BaseTile.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_layer_BaseVector-BaseVectorLayer.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_layer_BaseVector.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_layer_Graticule-Graticule.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_layer_Graticule.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_layer_Group-LayerGroup.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_layer_Group.GroupEvent.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_layer_Group.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_layer_Heatmap-Heatmap.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_layer_Heatmap.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_layer_Image-ImageLayer.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_layer_Image.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_layer_Layer-Layer.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_layer_Layer.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_layer_MapboxVector-MapboxVectorLayer.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_layer_MapboxVector.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_layer_Tile-TileLayer.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_layer_Tile.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_layer_Vector-VectorLayer.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_layer_Vector.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_layer_VectorImage-VectorImageLayer.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_layer_VectorImage.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_layer_VectorTile-VectorTileLayer.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_layer_VectorTile.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_layer_VectorTileRenderType.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_layer_WebGLTile-WebGLTileLayer.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_layer_WebGLTile.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_loadingstrategy.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_Map-Map.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_Map.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_MapBrowserEvent-MapBrowserEvent.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_MapBrowserEvent.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_MapEvent-MapEvent.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_MapEvent.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_Object-BaseObject.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_Object.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_Object.ObjectEvent.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_Observable-Observable.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_Observable.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_Overlay-Overlay.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_Overlay.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_pixel.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_PluggableMap-PluggableMap.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_PluggableMap.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_proj.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_proj_proj4.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_proj_Projection-Projection.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_proj_Projection.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_proj_Units.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_render.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_renderer_canvas_ImageLayer-CanvasImageLayerRenderer.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_renderer_canvas_ImageLayer.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_renderer_canvas_TileLayer-CanvasTileLayerRenderer.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_renderer_canvas_TileLayer.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_renderer_canvas_VectorImageLayer-CanvasVectorImageLayerRenderer.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_renderer_canvas_VectorImageLayer.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_renderer_canvas_VectorLayer-CanvasVectorLayerRenderer.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_renderer_canvas_VectorLayer.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_renderer_canvas_VectorTileLayer-CanvasVectorTileLayerRenderer.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_renderer_canvas_VectorTileLayer.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_renderer_Composite-CompositeMapRenderer.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_renderer_Composite.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_renderer_webgl_PointsLayer-WebGLPointsLayerRenderer.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_renderer_webgl_PointsLayer.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_renderer_webgl_TileLayer-WebGLTileLayerRenderer.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_renderer_webgl_TileLayer.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_render_canvas.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_render_canvas_Immediate-CanvasImmediateRenderer.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_render_canvas_Immediate.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_render_Event-RenderEvent.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_render_Event.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_render_Feature-RenderFeature.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_render_Feature.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_render_VectorContext-VectorContext.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_render_VectorContext.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_size.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_BingMaps-BingMaps.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_BingMaps.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_CartoDB-CartoDB.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_CartoDB.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_Cluster-Cluster.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_Cluster.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_DataTile-DataTileSource.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_DataTile.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_GeoTIFF-GeoTIFFSource.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_GeoTIFF.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_IIIF-IIIF.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_IIIF.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_Image-ImageSource.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_Image.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_Image.ImageSourceEvent.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_ImageArcGISRest-ImageArcGISRest.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_ImageArcGISRest.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_ImageCanvas-ImageCanvasSource.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_ImageCanvas.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_ImageMapGuide-ImageMapGuide.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_ImageMapGuide.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_ImageStatic-Static.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_ImageStatic.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_ImageWMS-ImageWMS.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_ImageWMS.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_OSM-OSM.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_OSM.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_Raster-RasterSource.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_Raster.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_Raster.RasterSourceEvent.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_Source-Source.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_Source.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_Stamen-Stamen.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_Stamen.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_Tile-TileSource.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_Tile.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_Tile.TileSourceEvent.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_TileArcGISRest-TileArcGISRest.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_TileArcGISRest.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_TileDebug-TileDebug.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_TileDebug.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_TileImage-TileImage.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_TileImage.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_TileJSON-TileJSON.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_TileJSON.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_TileWMS-TileWMS.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_TileWMS.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_UrlTile-UrlTile.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_UrlTile.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_UTFGrid-UTFGrid.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_UTFGrid.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_Vector-VectorSource.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_Vector.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_Vector.VectorSourceEvent.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_VectorTile-VectorTile.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_VectorTile.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_wms.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_WMTS-WMTS.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_WMTS.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_XYZ-XYZ.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_XYZ.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_Zoomify-Zoomify.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_source_Zoomify.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_sphere.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_structs_LRUCache-LRUCache.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_structs_LRUCache.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_style_Circle-CircleStyle.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_style_Circle.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_style_expressions.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_style_Fill-Fill.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_style_Fill.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_style_Icon-Icon.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_style_Icon.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_style_IconAnchorUnits.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_style_IconImageCache-IconImageCache.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_style_IconImageCache.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_style_IconOrigin.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_style_Image-ImageStyle.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_style_Image.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_style_RegularShape-RegularShape.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_style_RegularShape.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_style_Stroke-Stroke.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_style_Stroke.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_style_Style-Style.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_style_Style.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_style_Text-Text.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_style_Text.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_style_TextPlacement.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_Tile-Tile.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_Tile.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_tilecoord.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_tilegrid.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_tilegrid_TileGrid-TileGrid.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_tilegrid_TileGrid.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_tilegrid_WMTS-WMTSTileGrid.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_tilegrid_WMTS.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_TileState.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_transform.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_util.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_VectorTile-VectorTile.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_VectorTile.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_View-View.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_View.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_webgl.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_webgl_Buffer-WebGLArrayBuffer.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_webgl_Buffer.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_webgl_Helper-WebGLHelper.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_webgl_Helper.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_webgl_PostProcessingPass-WebGLPostProcessingPass.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_webgl_PostProcessingPass.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_webgl_RenderTarget-WebGLRenderTarget.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_webgl_RenderTarget.html" />
+    <Content Include="v6.15.1\apidoc\module-ol_xml.html" />
+    <Content Include="v6.15.1\apidoc\navigation.tmpl.html" />
+    <Content Include="v6.15.1\apidoc\scripts\bootstrap.bundle.min.js" />
+    <Content Include="v6.15.1\apidoc\scripts\jquery.min.js" />
+    <Content Include="v6.15.1\apidoc\scripts\linenumber.js" />
+    <Content Include="v6.15.1\apidoc\scripts\main.js" />
+    <Content Include="v6.15.1\apidoc\scripts\prettify\Apache-License-2.0.txt" />
+    <Content Include="v6.15.1\apidoc\scripts\prettify\lang-css.js" />
+    <Content Include="v6.15.1\apidoc\scripts\prettify\prettify.js" />
+    <Content Include="v6.15.1\apidoc\styles\bootstrap.min.css" />
+    <Content Include="v6.15.1\apidoc\styles\jaguar.css" />
+    <Content Include="v6.15.1\apidoc\styles\prettify-jsdoc.css" />
+    <Content Include="v6.15.1\apidoc\styles\prettify-tomorrow.css" />
+    <Content Include="v6.15.1\apidoc\styles\site.css" />
+    <Content Include="v6.15.1\build\226.ol.js" />
+    <Content Include="v6.15.1\build\231.ol.js" />
+    <Content Include="v6.15.1\build\247.ol.js" />
+    <Content Include="v6.15.1\build\356.ol.js" />
+    <Content Include="v6.15.1\build\382.ol.js" />
+    <Content Include="v6.15.1\build\395.ol.js" />
+    <Content Include="v6.15.1\build\54.ol.js" />
+    <Content Include="v6.15.1\build\54.ol.js.LICENSE.txt" />
+    <Content Include="v6.15.1\build\611.ol.js" />
+    <Content Include="v6.15.1\build\629.ol.js" />
+    <Content Include="v6.15.1\build\ol.js" />
+    <Content Include="v6.15.1\build\ol.js.LICENSE.txt" />
+    <Content Include="v6.15.1\css\ol.css" />
+    <Content Include="v6.15.1\doc\errors\index.html" />
+    <Content Include="v6.15.1\doc\faq.html" />
+    <Content Include="v6.15.1\doc\index.html" />
+    <Content Include="v6.15.1\doc\quickstart.html" />
+    <Content Include="v6.15.1\doc\tutorials\background.html" />
+    <Content Include="v6.15.1\doc\tutorials\bundle.html" />
+    <Content Include="v6.15.1\doc\tutorials\concepts.html" />
+    <Content Include="v6.15.1\doc\tutorials\index.html" />
+    <Content Include="v6.15.1\doc\tutorials\raster-reprojection-resources\double-occurrence.jpg" />
+    <Content Include="v6.15.1\doc\tutorials\raster-reprojection-resources\how-it-works.jpg" />
+    <Content Include="v6.15.1\doc\tutorials\raster-reprojection-resources\iterative-triangulation.png" />
+    <Content Include="v6.15.1\doc\tutorials\raster-reprojection.html" />
+    <Content Include="v6.15.1\examples\1405.js" />
+    <Content Include="v6.15.1\examples\1475.js" />
+    <Content Include="v6.15.1\examples\2874.js" />
+    <Content Include="v6.15.1\examples\4283.js" />
+    <Content Include="v6.15.1\examples\4342.js" />
+    <Content Include="v6.15.1\examples\4890.js" />
+    <Content Include="v6.15.1\examples\5293.js" />
+    <Content Include="v6.15.1\examples\5561.js" />
+    <Content Include="v6.15.1\examples\accessible.css" />
+    <Content Include="v6.15.1\examples\accessible.html" />
+    <Content Include="v6.15.1\examples\accessible.js" />
+    <Content Include="v6.15.1\examples\animated-gif.html" />
+    <Content Include="v6.15.1\examples\animated-gif.js" />
+    <Content Include="v6.15.1\examples\animation.html" />
+    <Content Include="v6.15.1\examples\animation.js" />
+    <Content Include="v6.15.1\examples\arcgis-image.html" />
+    <Content Include="v6.15.1\examples\arcgis-image.js" />
+    <Content Include="v6.15.1\examples\arcgis-tiled.html" />
+    <Content Include="v6.15.1\examples\arcgis-tiled.js" />
+    <Content Include="v6.15.1\examples\attributions.html" />
+    <Content Include="v6.15.1\examples\attributions.js" />
+    <Content Include="v6.15.1\examples\bing-maps.html" />
+    <Content Include="v6.15.1\examples\bing-maps.js" />
+    <Content Include="v6.15.1\examples\box-selection.html" />
+    <Content Include="v6.15.1\examples\box-selection.js" />
+    <Content Include="v6.15.1\examples\button-title.css" />
+    <Content Include="v6.15.1\examples\button-title.html" />
+    <Content Include="v6.15.1\examples\button-title.js" />
+    <Content Include="v6.15.1\examples\canvas-gradient-pattern.html" />
+    <Content Include="v6.15.1\examples\canvas-gradient-pattern.js" />
+    <Content Include="v6.15.1\examples\canvas-tiles-tms.html" />
+    <Content Include="v6.15.1\examples\canvas-tiles-tms.js" />
+    <Content Include="v6.15.1\examples\canvas-tiles.html" />
+    <Content Include="v6.15.1\examples\canvas-tiles.js" />
+    <Content Include="v6.15.1\examples\cartodb.html" />
+    <Content Include="v6.15.1\examples\cartodb.js" />
+    <Content Include="v6.15.1\examples\center.css" />
+    <Content Include="v6.15.1\examples\center.html" />
+    <Content Include="v6.15.1\examples\center.js" />
+    <Content Include="v6.15.1\examples\chaikin.html" />
+    <Content Include="v6.15.1\examples\chaikin.js" />
+    <Content Include="v6.15.1\examples\cluster.html" />
+    <Content Include="v6.15.1\examples\cluster.js" />
+    <Content Include="v6.15.1\examples\clusters-dynamic.html" />
+    <Content Include="v6.15.1\examples\clusters-dynamic.js" />
+    <Content Include="v6.15.1\examples\cog-blob.html" />
+    <Content Include="v6.15.1\examples\cog-blob.js" />
+    <Content Include="v6.15.1\examples\cog-colors.css" />
+    <Content Include="v6.15.1\examples\cog-colors.html" />
+    <Content Include="v6.15.1\examples\cog-colors.js" />
+    <Content Include="v6.15.1\examples\cog-math-multisource.html" />
+    <Content Include="v6.15.1\examples\cog-math-multisource.js" />
+    <Content Include="v6.15.1\examples\cog-math.html" />
+    <Content Include="v6.15.1\examples\cog-math.js" />
+    <Content Include="v6.15.1\examples\cog-overviews.html" />
+    <Content Include="v6.15.1\examples\cog-overviews.js" />
+    <Content Include="v6.15.1\examples\cog-pyramid.html" />
+    <Content Include="v6.15.1\examples\cog-pyramid.js" />
+    <Content Include="v6.15.1\examples\cog-stretch.css" />
+    <Content Include="v6.15.1\examples\cog-stretch.html" />
+    <Content Include="v6.15.1\examples\cog-stretch.js" />
+    <Content Include="v6.15.1\examples\cog-style.html" />
+    <Content Include="v6.15.1\examples\cog-style.js" />
+    <Content Include="v6.15.1\examples\cog.html" />
+    <Content Include="v6.15.1\examples\cog.js" />
+    <Content Include="v6.15.1\examples\color-manipulation.css" />
+    <Content Include="v6.15.1\examples\color-manipulation.html" />
+    <Content Include="v6.15.1\examples\color-manipulation.js" />
+    <Content Include="v6.15.1\examples\common.js" />
+    <Content Include="v6.15.1\examples\css\ol.css" />
+    <Content Include="v6.15.1\examples\custom-circle-render.html" />
+    <Content Include="v6.15.1\examples\custom-circle-render.js" />
+    <Content Include="v6.15.1\examples\custom-controls.css" />
+    <Content Include="v6.15.1\examples\custom-controls.html" />
+    <Content Include="v6.15.1\examples\custom-controls.js" />
+    <Content Include="v6.15.1\examples\custom-hit-detection-renderer.html" />
+    <Content Include="v6.15.1\examples\custom-hit-detection-renderer.js" />
+    <Content Include="v6.15.1\examples\custom-interactions.html" />
+    <Content Include="v6.15.1\examples\custom-interactions.js" />
+    <Content Include="v6.15.1\examples\d3.css" />
+    <Content Include="v6.15.1\examples\d3.html" />
+    <Content Include="v6.15.1\examples\d3.js" />
+    <Content Include="v6.15.1\examples\data-tiles.html" />
+    <Content Include="v6.15.1\examples\data-tiles.js" />
+    <Content Include="v6.15.1\examples\data\arrow.png" />
+    <Content Include="v6.15.1\examples\data\bigdot.png" />
+    <Content Include="v6.15.1\examples\data\Butterfly.png" />
+    <Content Include="v6.15.1\examples\data\dot.png" />
+    <Content Include="v6.15.1\examples\data\dot.svg" />
+    <Content Include="v6.15.1\examples\data\example.tif" />
+    <Content Include="v6.15.1\examples\data\fish.png" />
+    <Content Include="v6.15.1\examples\data\geolocation_marker.png" />
+    <Content Include="v6.15.1\examples\data\geolocation_marker_heading.png" />
+    <Content Include="v6.15.1\examples\data\globe.gif" />
+    <Content Include="v6.15.1\examples\data\icon.png" />
+    <Content Include="v6.15.1\examples\data\icons\emoticon-cool-outline.svg" />
+    <Content Include="v6.15.1\examples\data\icons\emoticon-cool.svg" />
+    <Content Include="v6.15.1\examples\data\IGNWMTSCapabilities.xml" />
+    <Content Include="v6.15.1\examples\data\ogcsample.xml" />
+    <Content Include="v6.15.1\examples\data\square.svg" />
+    <Content Include="v6.15.1\examples\data\ufo_shapes.png" />
+    <Content Include="v6.15.1\examples\data\wmsgetfeatureinfo\osm-restaurant-hotel.xml" />
+    <Content Include="v6.15.1\examples\data\WMTSCapabilities.xml" />
+    <Content Include="v6.15.1\examples\data\world.svg" />
+    <Content Include="v6.15.1\examples\device-orientation.html" />
+    <Content Include="v6.15.1\examples\device-orientation.js" />
+    <Content Include="v6.15.1\examples\drag-and-drop-custom-kmz.css" />
+    <Content Include="v6.15.1\examples\drag-and-drop-custom-kmz.html" />
+    <Content Include="v6.15.1\examples\drag-and-drop-custom-kmz.js" />
+    <Content Include="v6.15.1\examples\drag-and-drop-custom-mvt.css" />
+    <Content Include="v6.15.1\examples\drag-and-drop-custom-mvt.html" />
+    <Content Include="v6.15.1\examples\drag-and-drop-custom-mvt.js" />
+    <Content Include="v6.15.1\examples\drag-and-drop-image-vector.html" />
+    <Content Include="v6.15.1\examples\drag-and-drop-image-vector.js" />
+    <Content Include="v6.15.1\examples\drag-and-drop.html" />
+    <Content Include="v6.15.1\examples\drag-and-drop.js" />
+    <Content Include="v6.15.1\examples\drag-rotate-and-zoom.html" />
+    <Content Include="v6.15.1\examples\drag-rotate-and-zoom.js" />
+    <Content Include="v6.15.1\examples\draw-and-modify-features.html" />
+    <Content Include="v6.15.1\examples\draw-and-modify-features.js" />
+    <Content Include="v6.15.1\examples\draw-and-modify-geodesic.html" />
+    <Content Include="v6.15.1\examples\draw-and-modify-geodesic.js" />
+    <Content Include="v6.15.1\examples\draw-features.html" />
+    <Content Include="v6.15.1\examples\draw-features.js" />
+    <Content Include="v6.15.1\examples\draw-freehand.html" />
+    <Content Include="v6.15.1\examples\draw-freehand.js" />
+    <Content Include="v6.15.1\examples\draw-shapes.html" />
+    <Content Include="v6.15.1\examples\draw-shapes.js" />
+    <Content Include="v6.15.1\examples\dynamic-data.html" />
+    <Content Include="v6.15.1\examples\dynamic-data.js" />
+    <Content Include="v6.15.1\examples\earthquake-clusters.html" />
+    <Content Include="v6.15.1\examples\earthquake-clusters.js" />
+    <Content Include="v6.15.1\examples\earthquake-custom-symbol.html" />
+    <Content Include="v6.15.1\examples\earthquake-custom-symbol.js" />
+    <Content Include="v6.15.1\examples\edit-geographic.html" />
+    <Content Include="v6.15.1\examples\edit-geographic.js" />
+    <Content Include="v6.15.1\examples\epsg-4326.html" />
+    <Content Include="v6.15.1\examples\epsg-4326.js" />
+    <Content Include="v6.15.1\examples\es2015-custom-element.html" />
+    <Content Include="v6.15.1\examples\es2015-custom-element.js" />
+    <Content Include="v6.15.1\examples\examples-info.js" />
+    <Content Include="v6.15.1\examples\export-map.html" />
+    <Content Include="v6.15.1\examples\export-map.js" />
+    <Content Include="v6.15.1\examples\export-pdf.css" />
+    <Content Include="v6.15.1\examples\export-pdf.html" />
+    <Content Include="v6.15.1\examples\export-pdf.js" />
+    <Content Include="v6.15.1\examples\extent-constrained.html" />
+    <Content Include="v6.15.1\examples\extent-constrained.js" />
+    <Content Include="v6.15.1\examples\extent-interaction.html" />
+    <Content Include="v6.15.1\examples\extent-interaction.js" />
+    <Content Include="v6.15.1\examples\external-map.html" />
+    <Content Include="v6.15.1\examples\external-map.js" />
+    <Content Include="v6.15.1\examples\feature-animation.html" />
+    <Content Include="v6.15.1\examples\feature-animation.js" />
+    <Content Include="v6.15.1\examples\feature-move-animation.html" />
+    <Content Include="v6.15.1\examples\feature-move-animation.js" />
+    <Content Include="v6.15.1\examples\filter-points-webgl.html" />
+    <Content Include="v6.15.1\examples\filter-points-webgl.js" />
+    <Content Include="v6.15.1\examples\flight-animation.html" />
+    <Content Include="v6.15.1\examples\flight-animation.js" />
+    <Content Include="v6.15.1\examples\fractal.css" />
+    <Content Include="v6.15.1\examples\fractal.html" />
+    <Content Include="v6.15.1\examples\fractal.js" />
+    <Content Include="v6.15.1\examples\full-screen-drag-rotate-and-zoom.css" />
+    <Content Include="v6.15.1\examples\full-screen-drag-rotate-and-zoom.html" />
+    <Content Include="v6.15.1\examples\full-screen-drag-rotate-and-zoom.js" />
+    <Content Include="v6.15.1\examples\full-screen-source.css" />
+    <Content Include="v6.15.1\examples\full-screen-source.html" />
+    <Content Include="v6.15.1\examples\full-screen-source.js" />
+    <Content Include="v6.15.1\examples\full-screen.css" />
+    <Content Include="v6.15.1\examples\full-screen.html" />
+    <Content Include="v6.15.1\examples\full-screen.js" />
+    <Content Include="v6.15.1\examples\geographic.css" />
+    <Content Include="v6.15.1\examples\geographic.html" />
+    <Content Include="v6.15.1\examples\geographic.js" />
+    <Content Include="v6.15.1\examples\geojson-vt.html" />
+    <Content Include="v6.15.1\examples\geojson-vt.js" />
+    <Content Include="v6.15.1\examples\geojson.html" />
+    <Content Include="v6.15.1\examples\geojson.js" />
+    <Content Include="v6.15.1\examples\geolocation-orientation.html" />
+    <Content Include="v6.15.1\examples\geolocation-orientation.js" />
+    <Content Include="v6.15.1\examples\geolocation.html" />
+    <Content Include="v6.15.1\examples\geolocation.js" />
+    <Content Include="v6.15.1\examples\getfeatureinfo-image.html" />
+    <Content Include="v6.15.1\examples\getfeatureinfo-image.js" />
+    <Content Include="v6.15.1\examples\getfeatureinfo-layers.html" />
+    <Content Include="v6.15.1\examples\getfeatureinfo-layers.js" />
+    <Content Include="v6.15.1\examples\getfeatureinfo-tile.html" />
+    <Content Include="v6.15.1\examples\getfeatureinfo-tile.js" />
+    <Content Include="v6.15.1\examples\gpx.html" />
+    <Content Include="v6.15.1\examples\gpx.js" />
+    <Content Include="v6.15.1\examples\graticule.html" />
+    <Content Include="v6.15.1\examples\graticule.js" />
+    <Content Include="v6.15.1\examples\heatmap-earthquakes.html" />
+    <Content Include="v6.15.1\examples\heatmap-earthquakes.js" />
+    <Content Include="v6.15.1\examples\hit-tolerance.html" />
+    <Content Include="v6.15.1\examples\hit-tolerance.js" />
+    <Content Include="v6.15.1\examples\hitdetect-vector.html" />
+    <Content Include="v6.15.1\examples\hitdetect-vector.js" />
+    <Content Include="v6.15.1\examples\icon-color.html" />
+    <Content Include="v6.15.1\examples\icon-color.js" />
+    <Content Include="v6.15.1\examples\icon-negative.html" />
+    <Content Include="v6.15.1\examples\icon-negative.js" />
+    <Content Include="v6.15.1\examples\icon-scale.html" />
+    <Content Include="v6.15.1\examples\icon-scale.js" />
+    <Content Include="v6.15.1\examples\icon-sprite-webgl.html" />
+    <Content Include="v6.15.1\examples\icon-sprite-webgl.js" />
+    <Content Include="v6.15.1\examples\icon.html" />
+    <Content Include="v6.15.1\examples\icon.js" />
+    <Content Include="v6.15.1\examples\igc.html" />
+    <Content Include="v6.15.1\examples\igc.js" />
+    <Content Include="v6.15.1\examples\iiif.html" />
+    <Content Include="v6.15.1\examples\iiif.js" />
+    <Content Include="v6.15.1\examples\image-filter.html" />
+    <Content Include="v6.15.1\examples\image-filter.js" />
+    <Content Include="v6.15.1\examples\image-load-events.css" />
+    <Content Include="v6.15.1\examples\image-load-events.html" />
+    <Content Include="v6.15.1\examples\image-load-events.js" />
+    <Content Include="v6.15.1\examples\image-vector-layer.html" />
+    <Content Include="v6.15.1\examples\image-vector-layer.js" />
+    <Content Include="v6.15.1\examples\immediate-geographic.html" />
+    <Content Include="v6.15.1\examples\immediate-geographic.js" />
+    <Content Include="v6.15.1\examples\index.html" />
+    <Content Include="v6.15.1\examples\index.js" />
+    <Content Include="v6.15.1\examples\interpolation.css" />
+    <Content Include="v6.15.1\examples\interpolation.html" />
+    <Content Include="v6.15.1\examples\interpolation.js" />
+    <Content Include="v6.15.1\examples\jsts.html" />
+    <Content Include="v6.15.1\examples\jsts.js" />
+    <Content Include="v6.15.1\examples\kml-earthquakes.css" />
+    <Content Include="v6.15.1\examples\kml-earthquakes.html" />
+    <Content Include="v6.15.1\examples\kml-earthquakes.js" />
+    <Content Include="v6.15.1\examples\kml-timezones.css" />
+    <Content Include="v6.15.1\examples\kml-timezones.html" />
+    <Content Include="v6.15.1\examples\kml-timezones.js" />
+    <Content Include="v6.15.1\examples\kml.html" />
+    <Content Include="v6.15.1\examples\kml.js" />
+    <Content Include="v6.15.1\examples\layer-clipping-vector.css" />
+    <Content Include="v6.15.1\examples\layer-clipping-vector.html" />
+    <Content Include="v6.15.1\examples\layer-clipping-vector.js" />
+    <Content Include="v6.15.1\examples\layer-clipping.css" />
+    <Content Include="v6.15.1\examples\layer-clipping.html" />
+    <Content Include="v6.15.1\examples\layer-clipping.js" />
+    <Content Include="v6.15.1\examples\layer-extent.html" />
+    <Content Include="v6.15.1\examples\layer-extent.js" />
+    <Content Include="v6.15.1\examples\layer-group.css" />
+    <Content Include="v6.15.1\examples\layer-group.html" />
+    <Content Include="v6.15.1\examples\layer-group.js" />
+    <Content Include="v6.15.1\examples\layer-opacity.html" />
+    <Content Include="v6.15.1\examples\layer-opacity.js" />
+    <Content Include="v6.15.1\examples\layer-spy.html" />
+    <Content Include="v6.15.1\examples\layer-spy.js" />
+    <Content Include="v6.15.1\examples\layer-swipe.html" />
+    <Content Include="v6.15.1\examples\layer-swipe.js" />
+    <Content Include="v6.15.1\examples\layer-z-index.html" />
+    <Content Include="v6.15.1\examples\layer-z-index.js" />
+    <Content Include="v6.15.1\examples\layer-zoom-limits.html" />
+    <Content Include="v6.15.1\examples\layer-zoom-limits.js" />
+    <Content Include="v6.15.1\examples\lazy-source.css" />
+    <Content Include="v6.15.1\examples\lazy-source.html" />
+    <Content Include="v6.15.1\examples\lazy-source.js" />
+    <Content Include="v6.15.1\examples\line-arrows.html" />
+    <Content Include="v6.15.1\examples\line-arrows.js" />
+    <Content Include="v6.15.1\examples\link.html" />
+    <Content Include="v6.15.1\examples\link.js" />
+    <Content Include="v6.15.1\examples\load-events.css" />
+    <Content Include="v6.15.1\examples\load-events.html" />
+    <Content Include="v6.15.1\examples\load-events.js" />
+    <Content Include="v6.15.1\examples\localized-openstreetmap.html" />
+    <Content Include="v6.15.1\examples\localized-openstreetmap.js" />
+    <Content Include="v6.15.1\examples\magnify.html" />
+    <Content Include="v6.15.1\examples\magnify.js" />
+    <Content Include="v6.15.1\examples\mapbox-layer.css" />
+    <Content Include="v6.15.1\examples\mapbox-layer.html" />
+    <Content Include="v6.15.1\examples\mapbox-layer.js" />
+    <Content Include="v6.15.1\examples\mapbox-style.css" />
+    <Content Include="v6.15.1\examples\mapbox-style.html" />
+    <Content Include="v6.15.1\examples\mapbox-style.js" />
+    <Content Include="v6.15.1\examples\mapbox-vector-layer.html" />
+    <Content Include="v6.15.1\examples\mapbox-vector-layer.js" />
+    <Content Include="v6.15.1\examples\mapbox-vector-tiles-advanced.css" />
+    <Content Include="v6.15.1\examples\mapbox-vector-tiles-advanced.html" />
+    <Content Include="v6.15.1\examples\mapbox-vector-tiles-advanced.js" />
+    <Content Include="v6.15.1\examples\mapbox-vector-tiles.css" />
+    <Content Include="v6.15.1\examples\mapbox-vector-tiles.html" />
+    <Content Include="v6.15.1\examples\mapbox-vector-tiles.js" />
+    <Content Include="v6.15.1\examples\mapguide-untiled.html" />
+    <Content Include="v6.15.1\examples\mapguide-untiled.js" />
+    <Content Include="v6.15.1\examples\measure-style.html" />
+    <Content Include="v6.15.1\examples\measure-style.js" />
+    <Content Include="v6.15.1\examples\measure.css" />
+    <Content Include="v6.15.1\examples\measure.html" />
+    <Content Include="v6.15.1\examples\measure.js" />
+    <Content Include="v6.15.1\examples\min-max-resolution.html" />
+    <Content Include="v6.15.1\examples\min-max-resolution.js" />
+    <Content Include="v6.15.1\examples\min-zoom.html" />
+    <Content Include="v6.15.1\examples\min-zoom.js" />
+    <Content Include="v6.15.1\examples\mobile-full-screen.html" />
+    <Content Include="v6.15.1\examples\mobile-full-screen.js" />
+    <Content Include="v6.15.1\examples\modify-features.html" />
+    <Content Include="v6.15.1\examples\modify-features.js" />
+    <Content Include="v6.15.1\examples\modify-icon.html" />
+    <Content Include="v6.15.1\examples\modify-icon.js" />
+    <Content Include="v6.15.1\examples\modify-scale-and-rotate.html" />
+    <Content Include="v6.15.1\examples\modify-scale-and-rotate.js" />
+    <Content Include="v6.15.1\examples\modify-test.css" />
+    <Content Include="v6.15.1\examples\modify-test.html" />
+    <Content Include="v6.15.1\examples\modify-test.js" />
+    <Content Include="v6.15.1\examples\mouse-position.html" />
+    <Content Include="v6.15.1\examples\mouse-position.js" />
+    <Content Include="v6.15.1\examples\moveend.html" />
+    <Content Include="v6.15.1\examples\moveend.js" />
+    <Content Include="v6.15.1\examples\navigation-controls.html" />
+    <Content Include="v6.15.1\examples\navigation-controls.js" />
+    <Content Include="v6.15.1\examples\numpytile.css" />
+    <Content Include="v6.15.1\examples\numpytile.html" />
+    <Content Include="v6.15.1\examples\numpytile.js" />
+    <Content Include="v6.15.1\examples\offscreen-canvas.css" />
+    <Content Include="v6.15.1\examples\offscreen-canvas.html" />
+    <Content Include="v6.15.1\examples\offscreen-canvas.js" />
+    <Content Include="v6.15.1\examples\offscreen-canvas.worker.js" />
+    <Content Include="v6.15.1\examples\offscreen-canvas.worker.worker.js" />
+    <Content Include="v6.15.1\examples\ogc-map-tiles-geographic.html" />
+    <Content Include="v6.15.1\examples\ogc-map-tiles-geographic.js" />
+    <Content Include="v6.15.1\examples\ogc-map-tiles.html" />
+    <Content Include="v6.15.1\examples\ogc-map-tiles.js" />
+    <Content Include="v6.15.1\examples\ogc-vector-tiles.html" />
+    <Content Include="v6.15.1\examples\ogc-vector-tiles.js" />
+    <Content Include="v6.15.1\examples\osm-vector-tiles.css" />
+    <Content Include="v6.15.1\examples\osm-vector-tiles.html" />
+    <Content Include="v6.15.1\examples\osm-vector-tiles.js" />
+    <Content Include="v6.15.1\examples\overlay.css" />
+    <Content Include="v6.15.1\examples\overlay.html" />
+    <Content Include="v6.15.1\examples\overlay.js" />
+    <Content Include="v6.15.1\examples\overviewmap-custom.css" />
+    <Content Include="v6.15.1\examples\overviewmap-custom.html" />
+    <Content Include="v6.15.1\examples\overviewmap-custom.js" />
+    <Content Include="v6.15.1\examples\overviewmap.html" />
+    <Content Include="v6.15.1\examples\overviewmap.js" />
+    <Content Include="v6.15.1\examples\page-scroll.html" />
+    <Content Include="v6.15.1\examples\page-scroll.js" />
+    <Content Include="v6.15.1\examples\permalink.html" />
+    <Content Include="v6.15.1\examples\permalink.js" />
+    <Content Include="v6.15.1\examples\pinch-zoom.html" />
+    <Content Include="v6.15.1\examples\pinch-zoom.js" />
+    <Content Include="v6.15.1\examples\polygon-styles.html" />
+    <Content Include="v6.15.1\examples\polygon-styles.js" />
+    <Content Include="v6.15.1\examples\popup.css" />
+    <Content Include="v6.15.1\examples\popup.html" />
+    <Content Include="v6.15.1\examples\popup.js" />
+    <Content Include="v6.15.1\examples\preload.html" />
+    <Content Include="v6.15.1\examples\preload.js" />
+    <Content Include="v6.15.1\examples\print-to-scale.css" />
+    <Content Include="v6.15.1\examples\print-to-scale.html" />
+    <Content Include="v6.15.1\examples\print-to-scale.js" />
+    <Content Include="v6.15.1\examples\projection-and-scale.html" />
+    <Content Include="v6.15.1\examples\projection-and-scale.js" />
+    <Content Include="v6.15.1\examples\raster.css" />
+    <Content Include="v6.15.1\examples\raster.html" />
+    <Content Include="v6.15.1\examples\raster.js" />
+    <Content Include="v6.15.1\examples\region-growing.css" />
+    <Content Include="v6.15.1\examples\region-growing.html" />
+    <Content Include="v6.15.1\examples\region-growing.js" />
+    <Content Include="v6.15.1\examples\regularshape.html" />
+    <Content Include="v6.15.1\examples\regularshape.js" />
+    <Content Include="v6.15.1\examples\render-geometry.html" />
+    <Content Include="v6.15.1\examples\render-geometry.js" />
+    <Content Include="v6.15.1\examples\reprojection-by-code.html" />
+    <Content Include="v6.15.1\examples\reprojection-by-code.js" />
+    <Content Include="v6.15.1\examples\reprojection-image.html" />
+    <Content Include="v6.15.1\examples\reprojection-image.js" />
+    <Content Include="v6.15.1\examples\reprojection-wgs84.html" />
+    <Content Include="v6.15.1\examples\reprojection-wgs84.js" />
+    <Content Include="v6.15.1\examples\reprojection.css" />
+    <Content Include="v6.15.1\examples\reprojection.html" />
+    <Content Include="v6.15.1\examples\reprojection.js" />
+    <Content Include="v6.15.1\examples\resources\common.js" />
+    <Content Include="v6.15.1\examples\resources\external-map-map.html" />
+    <Content Include="v6.15.1\examples\resources\Jugl.js" />
+    <Content Include="v6.15.1\examples\resources\layout.css" />
+    <Content Include="v6.15.1\examples\resources\logo-70x70.png" />
+    <Content Include="v6.15.1\examples\resources\map-background.jpg" />
+    <Content Include="v6.15.1\examples\resources\mapbox-streets-v6-style.js" />
+    <Content Include="v6.15.1\examples\resources\prism\prism-1.20.0.css" />
+    <Content Include="v6.15.1\examples\resources\prism\prism-1.20.0.min.js" />
+    <Content Include="v6.15.1\examples\reusable-source.html" />
+    <Content Include="v6.15.1\examples\reusable-source.js" />
+    <Content Include="v6.15.1\examples\rich-text-labels.html" />
+    <Content Include="v6.15.1\examples\rich-text-labels.js" />
+    <Content Include="v6.15.1\examples\rotation.html" />
+    <Content Include="v6.15.1\examples\rotation.js" />
+    <Content Include="v6.15.1\examples\scale-line.html" />
+    <Content Include="v6.15.1\examples\scale-line.js" />
+    <Content Include="v6.15.1\examples\scaleline-indiana-east.html" />
+    <Content Include="v6.15.1\examples\scaleline-indiana-east.js" />
+    <Content Include="v6.15.1\examples\sea-level.css" />
+    <Content Include="v6.15.1\examples\sea-level.html" />
+    <Content Include="v6.15.1\examples\sea-level.js" />
+    <Content Include="v6.15.1\examples\select-features.html" />
+    <Content Include="v6.15.1\examples\select-features.js" />
+    <Content Include="v6.15.1\examples\select-hover-features.html" />
+    <Content Include="v6.15.1\examples\select-hover-features.js" />
+    <Content Include="v6.15.1\examples\select-multiple-features.html" />
+    <Content Include="v6.15.1\examples\select-multiple-features.js" />
+    <Content Include="v6.15.1\examples\semi-transparent-layer.css" />
+    <Content Include="v6.15.1\examples\semi-transparent-layer.html" />
+    <Content Include="v6.15.1\examples\semi-transparent-layer.js" />
+    <Content Include="v6.15.1\examples\shaded-relief.css" />
+    <Content Include="v6.15.1\examples\shaded-relief.html" />
+    <Content Include="v6.15.1\examples\shaded-relief.js" />
+    <Content Include="v6.15.1\examples\side-by-side.css" />
+    <Content Include="v6.15.1\examples\side-by-side.html" />
+    <Content Include="v6.15.1\examples\side-by-side.js" />
+    <Content Include="v6.15.1\examples\simple.html" />
+    <Content Include="v6.15.1\examples\simple.js" />
+    <Content Include="v6.15.1\examples\snap.html" />
+    <Content Include="v6.15.1\examples\snap.js" />
+    <Content Include="v6.15.1\examples\sphere-mollweide.html" />
+    <Content Include="v6.15.1\examples\sphere-mollweide.js" />
+    <Content Include="v6.15.1\examples\stamen.html" />
+    <Content Include="v6.15.1\examples\stamen.js" />
+    <Content Include="v6.15.1\examples\static-image.html" />
+    <Content Include="v6.15.1\examples\static-image.js" />
+    <Content Include="v6.15.1\examples\street-labels.html" />
+    <Content Include="v6.15.1\examples\street-labels.js" />
+    <Content Include="v6.15.1\examples\style-renderer.css" />
+    <Content Include="v6.15.1\examples\style-renderer.html" />
+    <Content Include="v6.15.1\examples\style-renderer.js" />
+    <Content Include="v6.15.1\examples\svg-layer.css" />
+    <Content Include="v6.15.1\examples\svg-layer.html" />
+    <Content Include="v6.15.1\examples\svg-layer.js" />
+    <Content Include="v6.15.1\examples\synthetic-lines.html" />
+    <Content Include="v6.15.1\examples\synthetic-lines.js" />
+    <Content Include="v6.15.1\examples\synthetic-points.html" />
+    <Content Include="v6.15.1\examples\synthetic-points.js" />
+    <Content Include="v6.15.1\examples\teleport.html" />
+    <Content Include="v6.15.1\examples\teleport.js" />
+    <Content Include="v6.15.1\examples\tile-load-events.css" />
+    <Content Include="v6.15.1\examples\tile-load-events.html" />
+    <Content Include="v6.15.1\examples\tile-load-events.js" />
+    <Content Include="v6.15.1\examples\tile-transitions.html" />
+    <Content Include="v6.15.1\examples\tile-transitions.js" />
+    <Content Include="v6.15.1\examples\tilejson.html" />
+    <Content Include="v6.15.1\examples\tilejson.js" />
+    <Content Include="v6.15.1\examples\tissot.html" />
+    <Content Include="v6.15.1\examples\tissot.js" />
+    <Content Include="v6.15.1\examples\topojson.html" />
+    <Content Include="v6.15.1\examples\topojson.js" />
+    <Content Include="v6.15.1\examples\topolis.html" />
+    <Content Include="v6.15.1\examples\topolis.js" />
+    <Content Include="v6.15.1\examples\tracing.html" />
+    <Content Include="v6.15.1\examples\tracing.js" />
+    <Content Include="v6.15.1\examples\translate-features.html" />
+    <Content Include="v6.15.1\examples\translate-features.js" />
+    <Content Include="v6.15.1\examples\turf.html" />
+    <Content Include="v6.15.1\examples\turf.js" />
+    <Content Include="v6.15.1\examples\two-finger-pan-scroll.html" />
+    <Content Include="v6.15.1\examples\two-finger-pan-scroll.js" />
+    <Content Include="v6.15.1\examples\utfgrid.css" />
+    <Content Include="v6.15.1\examples\utfgrid.html" />
+    <Content Include="v6.15.1\examples\utfgrid.js" />
+    <Content Include="v6.15.1\examples\vector-esri-edit.html" />
+    <Content Include="v6.15.1\examples\vector-esri-edit.js" />
+    <Content Include="v6.15.1\examples\vector-esri.html" />
+    <Content Include="v6.15.1\examples\vector-esri.js" />
+    <Content Include="v6.15.1\examples\vector-label-decluttering.html" />
+    <Content Include="v6.15.1\examples\vector-label-decluttering.js" />
+    <Content Include="v6.15.1\examples\vector-labels-justify-text.html" />
+    <Content Include="v6.15.1\examples\vector-labels-justify-text.js" />
+    <Content Include="v6.15.1\examples\vector-labels.css" />
+    <Content Include="v6.15.1\examples\vector-labels.html" />
+    <Content Include="v6.15.1\examples\vector-labels.js" />
+    <Content Include="v6.15.1\examples\vector-layer.html" />
+    <Content Include="v6.15.1\examples\vector-layer.js" />
+    <Content Include="v6.15.1\examples\vector-osm.html" />
+    <Content Include="v6.15.1\examples\vector-osm.js" />
+    <Content Include="v6.15.1\examples\vector-tile-info.css" />
+    <Content Include="v6.15.1\examples\vector-tile-info.html" />
+    <Content Include="v6.15.1\examples\vector-tile-info.js" />
+    <Content Include="v6.15.1\examples\vector-tile-selection.html" />
+    <Content Include="v6.15.1\examples\vector-tile-selection.js" />
+    <Content Include="v6.15.1\examples\vector-tiles-4326.html" />
+    <Content Include="v6.15.1\examples\vector-tiles-4326.js" />
+    <Content Include="v6.15.1\examples\vector-wfs-geographic.html" />
+    <Content Include="v6.15.1\examples\vector-wfs-geographic.js" />
+    <Content Include="v6.15.1\examples\vector-wfs-getfeature.html" />
+    <Content Include="v6.15.1\examples\vector-wfs-getfeature.js" />
+    <Content Include="v6.15.1\examples\vector-wfs.html" />
+    <Content Include="v6.15.1\examples\vector-wfs.js" />
+    <Content Include="v6.15.1\examples\view-padding.css" />
+    <Content Include="v6.15.1\examples\view-padding.html" />
+    <Content Include="v6.15.1\examples\view-padding.js" />
+    <Content Include="v6.15.1\examples\webgl-layer-swipe.html" />
+    <Content Include="v6.15.1\examples\webgl-layer-swipe.js" />
+    <Content Include="v6.15.1\examples\webgl-points-layer.html" />
+    <Content Include="v6.15.1\examples\webgl-points-layer.js" />
+    <Content Include="v6.15.1\examples\webgl-sea-level.css" />
+    <Content Include="v6.15.1\examples\webgl-sea-level.html" />
+    <Content Include="v6.15.1\examples\webgl-sea-level.js" />
+    <Content Include="v6.15.1\examples\webgl-shaded-relief.css" />
+    <Content Include="v6.15.1\examples\webgl-shaded-relief.html" />
+    <Content Include="v6.15.1\examples\webgl-shaded-relief.js" />
+    <Content Include="v6.15.1\examples\webgl-tile-style.css" />
+    <Content Include="v6.15.1\examples\webgl-tile-style.html" />
+    <Content Include="v6.15.1\examples\webgl-tile-style.js" />
+    <Content Include="v6.15.1\examples\webgl-tiles.html" />
+    <Content Include="v6.15.1\examples\webgl-tiles.js" />
+    <Content Include="v6.15.1\examples\wind-arrows.html" />
+    <Content Include="v6.15.1\examples\wind-arrows.js" />
+    <Content Include="v6.15.1\examples\wkb.html" />
+    <Content Include="v6.15.1\examples\wkb.js" />
+    <Content Include="v6.15.1\examples\wkt.html" />
+    <Content Include="v6.15.1\examples\wkt.js" />
+    <Content Include="v6.15.1\examples\wms-capabilities.css" />
+    <Content Include="v6.15.1\examples\wms-capabilities.html" />
+    <Content Include="v6.15.1\examples\wms-capabilities.js" />
+    <Content Include="v6.15.1\examples\wms-custom-proj.html" />
+    <Content Include="v6.15.1\examples\wms-custom-proj.js" />
+    <Content Include="v6.15.1\examples\wms-custom-tilegrid-512x256.html" />
+    <Content Include="v6.15.1\examples\wms-custom-tilegrid-512x256.js" />
+    <Content Include="v6.15.1\examples\wms-getlegendgraphic.html" />
+    <Content Include="v6.15.1\examples\wms-getlegendgraphic.js" />
+    <Content Include="v6.15.1\examples\wms-image-custom-proj.html" />
+    <Content Include="v6.15.1\examples\wms-image-custom-proj.js" />
+    <Content Include="v6.15.1\examples\wms-image.html" />
+    <Content Include="v6.15.1\examples\wms-image.js" />
+    <Content Include="v6.15.1\examples\wms-no-proj.html" />
+    <Content Include="v6.15.1\examples\wms-no-proj.js" />
+    <Content Include="v6.15.1\examples\wms-tiled-wrap-180.html" />
+    <Content Include="v6.15.1\examples\wms-tiled-wrap-180.js" />
+    <Content Include="v6.15.1\examples\wms-tiled.html" />
+    <Content Include="v6.15.1\examples\wms-tiled.js" />
+    <Content Include="v6.15.1\examples\wms-time.html" />
+    <Content Include="v6.15.1\examples\wms-time.js" />
+    <Content Include="v6.15.1\examples\wmts-capabilities.css" />
+    <Content Include="v6.15.1\examples\wmts-capabilities.html" />
+    <Content Include="v6.15.1\examples\wmts-capabilities.js" />
+    <Content Include="v6.15.1\examples\wmts-dimensions.html" />
+    <Content Include="v6.15.1\examples\wmts-dimensions.js" />
+    <Content Include="v6.15.1\examples\wmts-hidpi.css" />
+    <Content Include="v6.15.1\examples\wmts-hidpi.html" />
+    <Content Include="v6.15.1\examples\wmts-hidpi.js" />
+    <Content Include="v6.15.1\examples\wmts-ign.html" />
+    <Content Include="v6.15.1\examples\wmts-ign.js" />
+    <Content Include="v6.15.1\examples\wmts-layer-from-capabilities.html" />
+    <Content Include="v6.15.1\examples\wmts-layer-from-capabilities.js" />
+    <Content Include="v6.15.1\examples\wmts.html" />
+    <Content Include="v6.15.1\examples\wmts.js" />
+    <Content Include="v6.15.1\examples\worker.html" />
+    <Content Include="v6.15.1\examples\worker.js" />
+    <Content Include="v6.15.1\examples\xyz-esri.html" />
+    <Content Include="v6.15.1\examples\xyz-esri.js" />
+    <Content Include="v6.15.1\examples\xyz-retina.html" />
+    <Content Include="v6.15.1\examples\xyz-retina.js" />
+    <Content Include="v6.15.1\examples\xyz.html" />
+    <Content Include="v6.15.1\examples\xyz.js" />
+    <Content Include="v6.15.1\examples\zoom-constrained.html" />
+    <Content Include="v6.15.1\examples\zoom-constrained.js" />
+    <Content Include="v6.15.1\examples\zoomify.html" />
+    <Content Include="v6.15.1\examples\zoomify.js" />
+    <Content Include="v6.15.1\examples\zoomslider.css" />
+    <Content Include="v6.15.1\examples\zoomslider.html" />
+    <Content Include="v6.15.1\examples\zoomslider.js" />
+    <Content Include="Validation.aspx" />
+    <Content Include="ViewParish.aspx" />
+    <Content Include="ViewVariationDocuments.aspx" />
+    <Content Include="Web.config" />
+    <Content Include="WorkplanAuditTrail.aspx" />
+    <Content Include="WorkPlanDashboardDWSCG.aspx" />
+    <Content Include="WorkPlanEscalationReportDWSCG.aspx" />
+    <Content Include="WorkPlanPeriod.aspx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AnnualAttachments.aspx.cs">
+      <DependentUpon>AnnualAttachments.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AnnualAttachments.aspx.designer.cs">
+      <DependentUpon>AnnualAttachments.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="AnnualWorkplanDWSCG.aspx.cs">
+      <DependentUpon>AnnualWorkplanDWSCG.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AnnualWorkplanDWSCG.aspx.designer.cs">
+      <DependentUpon>AnnualWorkplanDWSCG.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ApplyForVariations.aspx.cs">
+      <DependentUpon>ApplyForVariations.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ApplyForVariations.aspx.designer.cs">
+      <DependentUpon>ApplyForVariations.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ApproveDays.aspx.cs">
+      <DependentUpon>ApproveDays.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ApproveDays.aspx.designer.cs">
+      <DependentUpon>ApproveDays.aspx</DependentUpon>
+    </Compile>
+    <Content Include="App_Code\RuwasHandler.cs" />
+    <Content Include="App_Code\RuwasDB.cs" />
+    <Compile Include="BudgetType.aspx.cs">
+      <DependentUpon>BudgetType.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="BudgetType.aspx.designer.cs">
+      <DependentUpon>BudgetType.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Categories.aspx.cs">
+      <DependentUpon>Categories.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Categories.aspx.designer.cs">
+      <DependentUpon>Categories.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Contracts.aspx.cs">
+      <DependentUpon>Contracts.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Contracts.aspx.designer.cs">
+      <DependentUpon>Contracts.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="DashBoard.aspx.cs">
+      <DependentUpon>DashBoard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DashBoard.aspx.designer.cs">
+      <DependentUpon>DashBoard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="DistrictPerformanceReportsDSHCG.aspx.cs">
+      <DependentUpon>DistrictPerformanceReportsDSHCG.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DistrictPerformanceReportsDSHCG.aspx.designer.cs">
+      <DependentUpon>DistrictPerformanceReportsDSHCG.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="DistrictPerformanceReportsDWSCG.aspx.cs">
+      <DependentUpon>DistrictPerformanceReportsDWSCG.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DistrictPerformanceReportsDWSCG.aspx.designer.cs">
+      <DependentUpon>DistrictPerformanceReportsDWSCG.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Districts.aspx.cs">
+      <DependentUpon>Districts.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Districts.aspx.designer.cs">
+      <DependentUpon>Districts.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="DistrictSanitationAndHygieneGrant.aspx.cs">
+      <DependentUpon>DistrictSanitationAndHygieneGrant.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DistrictSanitationAndHygieneGrant.aspx.designer.cs">
+      <DependentUpon>DistrictSanitationAndHygieneGrant.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="EventLog.aspx.cs">
+      <DependentUpon>EventLog.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="EventLog.aspx.designer.cs">
+      <DependentUpon>EventLog.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="FinancialYear.aspx.cs">
+      <DependentUpon>FinancialYear.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="FinancialYear.aspx.designer.cs">
+      <DependentUpon>FinancialYear.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="FundingSource.aspx.cs">
+      <DependentUpon>FundingSource.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="FundingSource.aspx.designer.cs">
+      <DependentUpon>FundingSource.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="LC.aspx.cs">
+      <DependentUpon>LC.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="LC.aspx.designer.cs">
+      <DependentUpon>LC.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Map.aspx.cs">
+      <DependentUpon>Map.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Map.aspx.designer.cs">
+      <DependentUpon>Map.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ModelActivity.aspx.cs">
+      <DependentUpon>ModelActivity.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ModelActivity.aspx.designer.cs">
+      <DependentUpon>ModelActivity.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="NewAnnualAttachment.aspx.cs">
+      <DependentUpon>NewAnnualAttachment.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="NewAnnualAttachment.aspx.designer.cs">
+      <DependentUpon>NewAnnualAttachment.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="NewBudgetType.aspx.cs">
+      <DependentUpon>NewBudgetType.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="NewBudgetType.aspx.designer.cs">
+      <DependentUpon>NewBudgetType.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="NewCategories.aspx.cs">
+      <DependentUpon>NewCategories.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="NewCategories.aspx.designer.cs">
+      <DependentUpon>NewCategories.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="NewContract.aspx.cs">
+      <DependentUpon>NewContract.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="NewContract.aspx.designer.cs">
+      <DependentUpon>NewContract.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="NewDistricts.aspx.cs">
+      <DependentUpon>NewDistricts.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="NewDistricts.aspx.designer.cs">
+      <DependentUpon>NewDistricts.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="NewFinancialYear.aspx.cs">
+      <DependentUpon>NewFinancialYear.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="NewFinancialYear.aspx.designer.cs">
+      <DependentUpon>NewFinancialYear.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="NewFundingSource.aspx.cs">
+      <DependentUpon>NewFundingSource.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="NewFundingSource.aspx.designer.cs">
+      <DependentUpon>NewFundingSource.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="NewLC.aspx.cs">
+      <DependentUpon>NewLC.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="NewLC.aspx.designer.cs">
+      <DependentUpon>NewLC.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="NewModelActivity.aspx.cs">
+      <DependentUpon>NewModelActivity.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="NewModelActivity.aspx.designer.cs">
+      <DependentUpon>NewModelActivity.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="NewParish.aspx.cs">
+      <DependentUpon>NewParish.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="NewParish.aspx.designer.cs">
+      <DependentUpon>NewParish.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="NewPlannedFund.aspx.cs">
+      <DependentUpon>NewPlannedFund.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="NewPlannedFund.aspx.designer.cs">
+      <DependentUpon>NewPlannedFund.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="NewRWSRC.aspx.cs">
+      <DependentUpon>NewRWSRC.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="NewRWSRC.aspx.designer.cs">
+      <DependentUpon>NewRWSRC.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="NewSubCounty.aspx.cs">
+      <DependentUpon>NewSubCounty.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="NewSubCounty.aspx.designer.cs">
+      <DependentUpon>NewSubCounty.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="NewSubTechnology.aspx.cs">
+      <DependentUpon>NewSubTechnology.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="NewSubTechnology.aspx.designer.cs">
+      <DependentUpon>NewSubTechnology.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="NewTechnology.aspx.cs">
+      <DependentUpon>NewTechnology.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="NewTechnology.aspx.designer.cs">
+      <DependentUpon>NewTechnology.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="NewWorkPlanPeriod.aspx.cs">
+      <DependentUpon>NewWorkPlanPeriod.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="NewWorkPlanPeriod.aspx.designer.cs">
+      <DependentUpon>NewWorkPlanPeriod.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Operation.Master.cs">
+      <DependentUpon>Operation.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Operation.Master.designer.cs">
+      <DependentUpon>Operation.Master</DependentUpon>
+    </Compile>
+    <Compile Include="PlannedFundsPerDistricts.aspx.cs">
+      <DependentUpon>PlannedFundsPerDistricts.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PlannedFundsPerDistricts.aspx.designer.cs">
+      <DependentUpon>PlannedFundsPerDistricts.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="PopulationProjection.aspx.cs">
+      <DependentUpon>PopulationProjection.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PopulationProjection.aspx.designer.cs">
+      <DependentUpon>PopulationProjection.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pratice.aspx.cs">
+      <DependentUpon>Pratice.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pratice.aspx.designer.cs">
+      <DependentUpon>Pratice.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ProgressReportDSHCG.aspx.cs">
+      <DependentUpon>ProgressReportDSHCG.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ProgressReportDSHCG.aspx.designer.cs">
+      <DependentUpon>ProgressReportDSHCG.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ProgressReportDWSCG.aspx.cs">
+      <DependentUpon>ProgressReportDWSCG.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ProgressReportDWSCG.aspx.designer.cs">
+      <DependentUpon>ProgressReportDWSCG.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QuarterlyAttachments.aspx.cs">
+      <DependentUpon>QuarterlyAttachments.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="QuarterlyAttachments.aspx.designer.cs">
+      <DependentUpon>QuarterlyAttachments.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="NewQuaterlyAttachment.aspx.cs">
+      <DependentUpon>NewQuaterlyAttachment.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="NewQuaterlyAttachment.aspx.designer.cs">
+      <DependentUpon>NewQuaterlyAttachment.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="QuarterlyProgressDashboardDWSCG.aspx.cs">
+      <DependentUpon>QuarterlyProgressDashboardDWSCG.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="QuarterlyProgressDashboardDWSCG.aspx.designer.cs">
+      <DependentUpon>QuarterlyProgressDashboardDWSCG.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="RWSRC.aspx.cs">
+      <DependentUpon>RWSRC.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="RWSRC.aspx.designer.cs">
+      <DependentUpon>RWSRC.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SanitationAnnualWorkPlanDSHCG.aspx.cs">
+      <DependentUpon>SanitationAnnualWorkPlanDSHCG.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SanitationAnnualWorkPlanDSHCG.aspx.designer.cs">
+      <DependentUpon>SanitationAnnualWorkPlanDSHCG.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SanitationDashboardDSHCG.aspx.cs">
+      <DependentUpon>SanitationDashboardDSHCG.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SanitationDashboardDSHCG.aspx.designer.cs">
+      <DependentUpon>SanitationDashboardDSHCG.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SanitationEscalationReportDSHCG.aspx.cs">
+      <DependentUpon>SanitationEscalationReportDSHCG.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SanitationEscalationReportDSHCG.aspx.designer.cs">
+      <DependentUpon>SanitationEscalationReportDSHCG.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SanitationProgressDashboardDSHCG.aspx.cs">
+      <DependentUpon>SanitationProgressDashboardDSHCG.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SanitationProgressDashboardDSHCG.aspx.designer.cs">
+      <DependentUpon>SanitationProgressDashboardDSHCG.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="StandardReports.aspx.cs">
+      <DependentUpon>StandardReports.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="StandardReports.aspx.designer.cs">
+      <DependentUpon>StandardReports.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SubCounty.aspx.cs">
+      <DependentUpon>SubCounty.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SubCounty.aspx.designer.cs">
+      <DependentUpon>SubCounty.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SubTechnologies.aspx.cs">
+      <DependentUpon>SubTechnologies.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SubTechnologies.aspx.designer.cs">
+      <DependentUpon>SubTechnologies.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Technology.aspx.cs">
+      <DependentUpon>Technology.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Technology.aspx.designer.cs">
+      <DependentUpon>Technology.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Validation.aspx.cs">
+      <DependentUpon>Validation.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Validation.aspx.designer.cs">
+      <DependentUpon>Validation.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ViewParish.aspx.cs">
+      <DependentUpon>ViewParish.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ViewParish.aspx.designer.cs">
+      <DependentUpon>ViewParish.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ViewVariationDocuments.aspx.cs">
+      <DependentUpon>ViewVariationDocuments.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ViewVariationDocuments.aspx.designer.cs">
+      <DependentUpon>ViewVariationDocuments.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkplanAuditTrail.aspx.cs">
+      <DependentUpon>WorkplanAuditTrail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkplanAuditTrail.aspx.designer.cs">
+      <DependentUpon>WorkplanAuditTrail.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkPlanDashboardDWSCG.aspx.cs">
+      <DependentUpon>WorkPlanDashboardDWSCG.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkPlanDashboardDWSCG.aspx.designer.cs">
+      <DependentUpon>WorkPlanDashboardDWSCG.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkPlanEscalationReportDWSCG.aspx.cs">
+      <DependentUpon>WorkPlanEscalationReportDWSCG.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkPlanEscalationReportDWSCG.aspx.designer.cs">
+      <DependentUpon>WorkPlanEscalationReportDWSCG.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="WorkPlanPeriod.aspx.cs">
+      <DependentUpon>WorkPlanPeriod.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkPlanPeriod.aspx.designer.cs">
+      <DependentUpon>WorkPlanPeriod.aspx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Operation.Master" />
+    <Content Include="Datatable\Bootstrap-5-5.3.0\css\bootstrap.css.map" />
+    <Content Include="Datatable\Bootstrap-5-5.3.0\css\bootstrap.min.css.map" />
+    <Content Include="Datatable\Bootstrap-5-5.3.0\js\bootstrap.bundle.js.map" />
+    <Content Include="Datatable\Bootstrap-5-5.3.0\js\bootstrap.bundle.min.js.map" />
+    <Content Include="Datatable\Buttons-2.4.1\css\common.scss" />
+    <Content Include="Datatable\Buttons-2.4.1\css\mixins.scss" />
+    <None Include="packages.config" />
+    <Content Include="v6.15.1\apidoc\scripts\jquery.min.map" />
+    <Content Include="v6.15.1\build\226.ol.js.map" />
+    <Content Include="v6.15.1\build\231.ol.js.map" />
+    <Content Include="v6.15.1\build\247.ol.js.map" />
+    <Content Include="v6.15.1\build\356.ol.js.map" />
+    <Content Include="v6.15.1\build\382.ol.js.map" />
+    <Content Include="v6.15.1\build\395.ol.js.map" />
+    <Content Include="v6.15.1\build\54.ol.js.map" />
+    <Content Include="v6.15.1\build\611.ol.js.map" />
+    <Content Include="v6.15.1\build\629.ol.js.map" />
+    <Content Include="v6.15.1\build\ol.js.map" />
+    <Content Include="v6.15.1\css\ol.css.map" />
+    <Content Include="v6.15.1\examples\1405.js.map" />
+    <Content Include="v6.15.1\examples\1475.js.map" />
+    <Content Include="v6.15.1\examples\2874.js.map" />
+    <Content Include="v6.15.1\examples\4283.js.map" />
+    <Content Include="v6.15.1\examples\4342.js.map" />
+    <Content Include="v6.15.1\examples\4890.js.map" />
+    <Content Include="v6.15.1\examples\5293.js.map" />
+    <Content Include="v6.15.1\examples\5561.js.map" />
+    <Content Include="v6.15.1\examples\accessible.js.map" />
+    <Content Include="v6.15.1\examples\animated-gif.js.map" />
+    <Content Include="v6.15.1\examples\animation.js.map" />
+    <Content Include="v6.15.1\examples\arcgis-image.js.map" />
+    <Content Include="v6.15.1\examples\arcgis-tiled.js.map" />
+    <Content Include="v6.15.1\examples\attributions.js.map" />
+    <Content Include="v6.15.1\examples\bing-maps.js.map" />
+    <Content Include="v6.15.1\examples\box-selection.js.map" />
+    <Content Include="v6.15.1\examples\button-title.js.map" />
+    <Content Include="v6.15.1\examples\canvas-gradient-pattern.js.map" />
+    <Content Include="v6.15.1\examples\canvas-tiles-tms.js.map" />
+    <Content Include="v6.15.1\examples\canvas-tiles.js.map" />
+    <Content Include="v6.15.1\examples\cartodb.js.map" />
+    <Content Include="v6.15.1\examples\center.js.map" />
+    <Content Include="v6.15.1\examples\chaikin.js.map" />
+    <Content Include="v6.15.1\examples\cluster.js.map" />
+    <Content Include="v6.15.1\examples\clusters-dynamic.js.map" />
+    <Content Include="v6.15.1\examples\cog-blob.js.map" />
+    <Content Include="v6.15.1\examples\cog-colors.js.map" />
+    <Content Include="v6.15.1\examples\cog-math-multisource.js.map" />
+    <Content Include="v6.15.1\examples\cog-math.js.map" />
+    <Content Include="v6.15.1\examples\cog-overviews.js.map" />
+    <Content Include="v6.15.1\examples\cog-pyramid.js.map" />
+    <Content Include="v6.15.1\examples\cog-stretch.js.map" />
+    <Content Include="v6.15.1\examples\cog-style.js.map" />
+    <Content Include="v6.15.1\examples\cog.js.map" />
+    <Content Include="v6.15.1\examples\color-manipulation.js.map" />
+    <Content Include="v6.15.1\examples\common.js.map" />
+    <Content Include="v6.15.1\examples\custom-circle-render.js.map" />
+    <Content Include="v6.15.1\examples\custom-controls.js.map" />
+    <Content Include="v6.15.1\examples\custom-hit-detection-renderer.js.map" />
+    <Content Include="v6.15.1\examples\custom-interactions.js.map" />
+    <Content Include="v6.15.1\examples\d3.js.map" />
+    <Content Include="v6.15.1\examples\data-tiles.js.map" />
+    <Content Include="v6.15.1\examples\device-orientation.js.map" />
+    <Content Include="v6.15.1\examples\drag-and-drop-custom-kmz.js.map" />
+    <Content Include="v6.15.1\examples\drag-and-drop-custom-mvt.js.map" />
+    <Content Include="v6.15.1\examples\drag-and-drop-image-vector.js.map" />
+    <Content Include="v6.15.1\examples\drag-and-drop.js.map" />
+    <Content Include="v6.15.1\examples\drag-rotate-and-zoom.js.map" />
+    <Content Include="v6.15.1\examples\draw-and-modify-features.js.map" />
+    <Content Include="v6.15.1\examples\draw-and-modify-geodesic.js.map" />
+    <Content Include="v6.15.1\examples\draw-features.js.map" />
+    <Content Include="v6.15.1\examples\draw-freehand.js.map" />
+    <Content Include="v6.15.1\examples\draw-shapes.js.map" />
+    <Content Include="v6.15.1\examples\dynamic-data.js.map" />
+    <Content Include="v6.15.1\examples\earthquake-clusters.js.map" />
+    <Content Include="v6.15.1\examples\earthquake-custom-symbol.js.map" />
+    <Content Include="v6.15.1\examples\edit-geographic.js.map" />
+    <Content Include="v6.15.1\examples\epsg-4326.js.map" />
+    <Content Include="v6.15.1\examples\es2015-custom-element.js.map" />
+    <Content Include="v6.15.1\examples\export-map.js.map" />
+    <Content Include="v6.15.1\examples\export-pdf.js.map" />
+    <Content Include="v6.15.1\examples\extent-constrained.js.map" />
+    <Content Include="v6.15.1\examples\extent-interaction.js.map" />
+    <Content Include="v6.15.1\examples\external-map.js.map" />
+    <Content Include="v6.15.1\examples\feature-animation.js.map" />
+    <Content Include="v6.15.1\examples\feature-move-animation.js.map" />
+    <Content Include="v6.15.1\examples\filter-points-webgl.js.map" />
+    <Content Include="v6.15.1\examples\flight-animation.js.map" />
+    <Content Include="v6.15.1\examples\fractal.js.map" />
+    <Content Include="v6.15.1\examples\full-screen-drag-rotate-and-zoom.js.map" />
+    <Content Include="v6.15.1\examples\full-screen-source.js.map" />
+    <Content Include="v6.15.1\examples\full-screen.js.map" />
+    <Content Include="v6.15.1\examples\geographic.js.map" />
+    <Content Include="v6.15.1\examples\geojson-vt.js.map" />
+    <Content Include="v6.15.1\examples\geojson.js.map" />
+    <Content Include="v6.15.1\examples\geolocation-orientation.js.map" />
+    <Content Include="v6.15.1\examples\geolocation.js.map" />
+    <Content Include="v6.15.1\examples\getfeatureinfo-image.js.map" />
+    <Content Include="v6.15.1\examples\getfeatureinfo-layers.js.map" />
+    <Content Include="v6.15.1\examples\getfeatureinfo-tile.js.map" />
+    <Content Include="v6.15.1\examples\gpx.js.map" />
+    <Content Include="v6.15.1\examples\graticule.js.map" />
+    <Content Include="v6.15.1\examples\heatmap-earthquakes.js.map" />
+    <Content Include="v6.15.1\examples\hit-tolerance.js.map" />
+    <Content Include="v6.15.1\examples\hitdetect-vector.js.map" />
+    <Content Include="v6.15.1\examples\icon-color.js.map" />
+    <Content Include="v6.15.1\examples\icon-negative.js.map" />
+    <Content Include="v6.15.1\examples\icon-scale.js.map" />
+    <Content Include="v6.15.1\examples\icon-sprite-webgl.js.map" />
+    <Content Include="v6.15.1\examples\icon.js.map" />
+    <Content Include="v6.15.1\examples\igc.js.map" />
+    <Content Include="v6.15.1\examples\iiif.js.map" />
+    <Content Include="v6.15.1\examples\image-filter.js.map" />
+    <Content Include="v6.15.1\examples\image-load-events.js.map" />
+    <Content Include="v6.15.1\examples\image-vector-layer.js.map" />
+    <Content Include="v6.15.1\examples\immediate-geographic.js.map" />
+    <Content Include="v6.15.1\examples\interpolation.js.map" />
+    <Content Include="v6.15.1\examples\jsts.js.map" />
+    <Content Include="v6.15.1\examples\kml-earthquakes.js.map" />
+    <Content Include="v6.15.1\examples\kml-timezones.js.map" />
+    <Content Include="v6.15.1\examples\kml.js.map" />
+    <Content Include="v6.15.1\examples\layer-clipping-vector.js.map" />
+    <Content Include="v6.15.1\examples\layer-clipping.js.map" />
+    <Content Include="v6.15.1\examples\layer-extent.js.map" />
+    <Content Include="v6.15.1\examples\layer-group.js.map" />
+    <Content Include="v6.15.1\examples\layer-opacity.js.map" />
+    <Content Include="v6.15.1\examples\layer-spy.js.map" />
+    <Content Include="v6.15.1\examples\layer-swipe.js.map" />
+    <Content Include="v6.15.1\examples\layer-z-index.js.map" />
+    <Content Include="v6.15.1\examples\layer-zoom-limits.js.map" />
+    <Content Include="v6.15.1\examples\lazy-source.js.map" />
+    <Content Include="v6.15.1\examples\line-arrows.js.map" />
+    <Content Include="v6.15.1\examples\link.js.map" />
+    <Content Include="v6.15.1\examples\load-events.js.map" />
+    <Content Include="v6.15.1\examples\localized-openstreetmap.js.map" />
+    <Content Include="v6.15.1\examples\magnify.js.map" />
+    <Content Include="v6.15.1\examples\mapbox-layer.js.map" />
+    <Content Include="v6.15.1\examples\mapbox-style.js.map" />
+    <Content Include="v6.15.1\examples\mapbox-vector-layer.js.map" />
+    <Content Include="v6.15.1\examples\mapbox-vector-tiles-advanced.js.map" />
+    <Content Include="v6.15.1\examples\mapbox-vector-tiles.js.map" />
+    <Content Include="v6.15.1\examples\mapguide-untiled.js.map" />
+    <Content Include="v6.15.1\examples\measure-style.js.map" />
+    <Content Include="v6.15.1\examples\measure.js.map" />
+    <Content Include="v6.15.1\examples\min-max-resolution.js.map" />
+    <Content Include="v6.15.1\examples\min-zoom.js.map" />
+    <Content Include="v6.15.1\examples\mobile-full-screen.js.map" />
+    <Content Include="v6.15.1\examples\modify-features.js.map" />
+    <Content Include="v6.15.1\examples\modify-icon.js.map" />
+    <Content Include="v6.15.1\examples\modify-scale-and-rotate.js.map" />
+    <Content Include="v6.15.1\examples\modify-test.js.map" />
+    <Content Include="v6.15.1\examples\mouse-position.js.map" />
+    <Content Include="v6.15.1\examples\moveend.js.map" />
+    <Content Include="v6.15.1\examples\navigation-controls.js.map" />
+    <Content Include="v6.15.1\examples\numpytile.js.map" />
+    <Content Include="v6.15.1\examples\offscreen-canvas.js.map" />
+    <Content Include="v6.15.1\examples\offscreen-canvas.worker.worker.js.map" />
+    <Content Include="v6.15.1\examples\ogc-map-tiles-geographic.js.map" />
+    <Content Include="v6.15.1\examples\ogc-map-tiles.js.map" />
+    <Content Include="v6.15.1\examples\ogc-vector-tiles.js.map" />
+    <Content Include="v6.15.1\examples\osm-vector-tiles.js.map" />
+    <Content Include="v6.15.1\examples\overlay.js.map" />
+    <Content Include="v6.15.1\examples\overviewmap-custom.js.map" />
+    <Content Include="v6.15.1\examples\overviewmap.js.map" />
+    <Content Include="v6.15.1\examples\page-scroll.js.map" />
+    <Content Include="v6.15.1\examples\permalink.js.map" />
+    <Content Include="v6.15.1\examples\pinch-zoom.js.map" />
+    <Content Include="v6.15.1\examples\polygon-styles.js.map" />
+    <Content Include="v6.15.1\examples\popup.js.map" />
+    <Content Include="v6.15.1\examples\preload.js.map" />
+    <Content Include="v6.15.1\examples\print-to-scale.js.map" />
+    <Content Include="v6.15.1\examples\projection-and-scale.js.map" />
+    <Content Include="v6.15.1\examples\raster.js.map" />
+    <Content Include="v6.15.1\examples\region-growing.js.map" />
+    <Content Include="v6.15.1\examples\regularshape.js.map" />
+    <Content Include="v6.15.1\examples\render-geometry.js.map" />
+    <Content Include="v6.15.1\examples\reprojection-by-code.js.map" />
+    <Content Include="v6.15.1\examples\reprojection-image.js.map" />
+    <Content Include="v6.15.1\examples\reprojection-wgs84.js.map" />
+    <Content Include="v6.15.1\examples\reprojection.js.map" />
+    <Content Include="v6.15.1\examples\reusable-source.js.map" />
+    <Content Include="v6.15.1\examples\rich-text-labels.js.map" />
+    <Content Include="v6.15.1\examples\rotation.js.map" />
+    <Content Include="v6.15.1\examples\scale-line.js.map" />
+    <Content Include="v6.15.1\examples\scaleline-indiana-east.js.map" />
+    <Content Include="v6.15.1\examples\sea-level.js.map" />
+    <Content Include="v6.15.1\examples\select-features.js.map" />
+    <Content Include="v6.15.1\examples\select-hover-features.js.map" />
+    <Content Include="v6.15.1\examples\select-multiple-features.js.map" />
+    <Content Include="v6.15.1\examples\semi-transparent-layer.js.map" />
+    <Content Include="v6.15.1\examples\shaded-relief.js.map" />
+    <Content Include="v6.15.1\examples\side-by-side.js.map" />
+    <Content Include="v6.15.1\examples\simple.js.map" />
+    <Content Include="v6.15.1\examples\snap.js.map" />
+    <Content Include="v6.15.1\examples\sphere-mollweide.js.map" />
+    <Content Include="v6.15.1\examples\stamen.js.map" />
+    <Content Include="v6.15.1\examples\static-image.js.map" />
+    <Content Include="v6.15.1\examples\street-labels.js.map" />
+    <Content Include="v6.15.1\examples\style-renderer.js.map" />
+    <Content Include="v6.15.1\examples\svg-layer.js.map" />
+    <Content Include="v6.15.1\examples\synthetic-lines.js.map" />
+    <Content Include="v6.15.1\examples\synthetic-points.js.map" />
+    <Content Include="v6.15.1\examples\teleport.js.map" />
+    <Content Include="v6.15.1\examples\tile-load-events.js.map" />
+    <Content Include="v6.15.1\examples\tile-transitions.js.map" />
+    <Content Include="v6.15.1\examples\tilejson.js.map" />
+    <Content Include="v6.15.1\examples\tissot.js.map" />
+    <Content Include="v6.15.1\examples\topojson.js.map" />
+    <Content Include="v6.15.1\examples\topolis.js.map" />
+    <Content Include="v6.15.1\examples\tracing.js.map" />
+    <Content Include="v6.15.1\examples\translate-features.js.map" />
+    <Content Include="v6.15.1\examples\turf.js.map" />
+    <Content Include="v6.15.1\examples\two-finger-pan-scroll.js.map" />
+    <Content Include="v6.15.1\examples\utfgrid.js.map" />
+    <Content Include="v6.15.1\examples\vector-esri-edit.js.map" />
+    <Content Include="v6.15.1\examples\vector-esri.js.map" />
+    <Content Include="v6.15.1\examples\vector-label-decluttering.js.map" />
+    <Content Include="v6.15.1\examples\vector-labels-justify-text.js.map" />
+    <Content Include="v6.15.1\examples\vector-labels.js.map" />
+    <Content Include="v6.15.1\examples\vector-layer.js.map" />
+    <Content Include="v6.15.1\examples\vector-osm.js.map" />
+    <Content Include="v6.15.1\examples\vector-tile-info.js.map" />
+    <Content Include="v6.15.1\examples\vector-tile-selection.js.map" />
+    <Content Include="v6.15.1\examples\vector-tiles-4326.js.map" />
+    <Content Include="v6.15.1\examples\vector-wfs-geographic.js.map" />
+    <Content Include="v6.15.1\examples\vector-wfs-getfeature.js.map" />
+    <Content Include="v6.15.1\examples\vector-wfs.js.map" />
+    <Content Include="v6.15.1\examples\view-padding.js.map" />
+    <Content Include="v6.15.1\examples\webgl-layer-swipe.js.map" />
+    <Content Include="v6.15.1\examples\webgl-points-layer.js.map" />
+    <Content Include="v6.15.1\examples\webgl-sea-level.js.map" />
+    <Content Include="v6.15.1\examples\webgl-shaded-relief.js.map" />
+    <Content Include="v6.15.1\examples\webgl-tile-style.js.map" />
+    <Content Include="v6.15.1\examples\webgl-tiles.js.map" />
+    <Content Include="v6.15.1\examples\wind-arrows.js.map" />
+    <Content Include="v6.15.1\examples\wkb.js.map" />
+    <Content Include="v6.15.1\examples\wkt.js.map" />
+    <Content Include="v6.15.1\examples\wms-capabilities.js.map" />
+    <Content Include="v6.15.1\examples\wms-custom-proj.js.map" />
+    <Content Include="v6.15.1\examples\wms-custom-tilegrid-512x256.js.map" />
+    <Content Include="v6.15.1\examples\wms-getlegendgraphic.js.map" />
+    <Content Include="v6.15.1\examples\wms-image-custom-proj.js.map" />
+    <Content Include="v6.15.1\examples\wms-image.js.map" />
+    <Content Include="v6.15.1\examples\wms-no-proj.js.map" />
+    <Content Include="v6.15.1\examples\wms-tiled-wrap-180.js.map" />
+    <Content Include="v6.15.1\examples\wms-tiled.js.map" />
+    <Content Include="v6.15.1\examples\wms-time.js.map" />
+    <Content Include="v6.15.1\examples\wmts-capabilities.js.map" />
+    <Content Include="v6.15.1\examples\wmts-dimensions.js.map" />
+    <Content Include="v6.15.1\examples\wmts-hidpi.js.map" />
+    <Content Include="v6.15.1\examples\wmts-ign.js.map" />
+    <Content Include="v6.15.1\examples\wmts-layer-from-capabilities.js.map" />
+    <Content Include="v6.15.1\examples\wmts.js.map" />
+    <Content Include="v6.15.1\examples\worker.js.map" />
+    <Content Include="v6.15.1\examples\xyz-esri.js.map" />
+    <Content Include="v6.15.1\examples\xyz-retina.js.map" />
+    <Content Include="v6.15.1\examples\xyz.js.map" />
+    <Content Include="v6.15.1\examples\zoom-constrained.js.map" />
+    <Content Include="v6.15.1\examples\zoomify.js.map" />
+    <Content Include="v6.15.1\examples\zoomslider.js.map" />
+    <Content Include="v6.15.1\examples\data\geolocation-orientation.json" />
+    <Content Include="v6.15.1\examples\data\csv\meteorite_landings.csv" />
+    <Content Include="v6.15.1\examples\data\csv\ufo_sighting_data.csv" />
+    <Content Include="v6.15.1\examples\data\geojson\line-samples.geojson" />
+    <Content Include="v6.15.1\examples\data\geojson\photovoltaic.json" />
+    <Content Include="v6.15.1\examples\data\geojson\point-samples.geojson" />
+    <Content Include="v6.15.1\examples\data\geojson\polygon-samples.geojson" />
+    <Content Include="v6.15.1\examples\data\geojson\roads-seoul.geojson" />
+    <Content Include="v6.15.1\examples\data\geojson\switzerland.geojson" />
+    <Content Include="v6.15.1\examples\data\geojson\vienna-streets.geojson" />
+    <Content Include="v6.15.1\examples\data\geojson\world-cities.geojson" />
+    <Content Include="v6.15.1\examples\data\gpx\fells_loop.gpx" />
+    <Content Include="v6.15.1\examples\data\igc\Clement-Latour.igc" />
+    <Content Include="v6.15.1\examples\data\igc\Damien-de-Baenst.igc" />
+    <Content Include="v6.15.1\examples\data\igc\Sylvain-Dhonneur.igc" />
+    <Content Include="v6.15.1\examples\data\igc\Tom-Payne.igc" />
+    <Content Include="v6.15.1\examples\data\igc\Ulrich-Prinz.igc" />
+    <Content Include="v6.15.1\examples\data\kml\2012-02-10.kml" />
+    <Content Include="v6.15.1\examples\data\kml\2012_Earthquakes_Mag5.kml" />
+    <Content Include="v6.15.1\examples\data\kml\states.kml" />
+    <Content Include="v6.15.1\examples\data\kml\timezones.kml" />
+    <Content Include="v6.15.1\examples\data\kmz\iceland.kmz" />
+    <Content Include="v6.15.1\examples\data\openflights\flights.json" />
+    <Content Include="v6.15.1\examples\data\openweather\weather.json" />
+    <Content Include="v6.15.1\examples\data\polyline\route.json" />
+    <Content Include="v6.15.1\examples\data\topojson\fr-departments.json" />
+    <Content Include="v6.15.1\examples\data\topojson\us.json" />
+    <Content Include="v6.15.1\examples\data\topojson\world-110m.json" />
+    <Content Include="RuwasHandler.ashx" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Models\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>57298</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:57298/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('packages\Microsoft.Extensions.Logging.Abstractions.6.0.0\build\Microsoft.Extensions.Logging.Abstractions.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Extensions.Logging.Abstractions.6.0.0\build\Microsoft.Extensions.Logging.Abstractions.targets'))" />
+  </Target>
+  <Import Project="packages\Microsoft.Extensions.Logging.Abstractions.6.0.0\build\Microsoft.Extensions.Logging.Abstractions.targets" Condition="Exists('packages\Microsoft.Extensions.Logging.Abstractions.6.0.0\build\Microsoft.Extensions.Logging.Abstractions.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
