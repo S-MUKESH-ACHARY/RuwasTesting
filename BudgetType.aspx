@@ -29,7 +29,6 @@
             var e = function (msg) {
                 alert(msg);
             }
-            console.log(data);
             CallHandler(data, s, e);
             location.reload();
         }

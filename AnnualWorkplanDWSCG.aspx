@@ -149,7 +149,7 @@
             var e = function (msg) {
                 alert(msg);
             }
-            //CallHandlerUsingJson_POST(data, s, e)
+            CallHandlerUsingJson_POST(data, s, e)
         }
         function update() {
             removeNullRow();
@@ -356,6 +356,7 @@
         //    CallHandler(data, s, e);
         //}
         function ModelActivityTable() {
+            //document.getElementById("plannedFundsId").innerHTML="";
             document.getElementById("btnSave").style.display = "block";
             document.getElementById("btnUpdate").style.display = "none";
             var data = { 'op': 'ModelActivityTable'}
@@ -382,6 +383,7 @@
                         }
                         
                     })
+                    
                     new DataTable('#myTable', {
                         scrollX: true,
                         paging: false,
@@ -599,6 +601,7 @@
         //}
         
         function getWorkplanId() {
+            $("#slctBudgetTypeId").prop("disabled", false);
             document.getElementById("btnSave").style.display = "none";
             document.getElementById("btnUpdate").style.display = "block";
             let FinancialYear = $("#slctFinancialYearId").val();
@@ -636,6 +639,7 @@
                     $("#dateOfApprovalByCouncilId").val(PreparedDate);
                     $("#txtTotalAnnualBudgetId").val(TotalAprovedBudget);
                     $("#slctBudgetTypeId").val(SlctBudgetTypeId);
+                    
 
                     new DataTable('#myTable', {
                         scrollX: true,
@@ -651,6 +655,7 @@
                         $row.find(".Q").each(function () {
                             if (this.value.length != 0) {
                                 sum += parseFloat(this.value);
+                                $(this).css("background-color", "#FEFFB0");
                             }
                         })
                         $row.find(".txtApprovalAnnualTarget").val(sum);
@@ -663,6 +668,7 @@
                         $row.find(".txtUnitCost").each(function () {
                             if (this.value.length != 0) {
                                 mul = AnnualTarget * parseFloat(this.value);
+                                $(this).css("background-color", "#FEFFB0");
                             }
                         })
                         $row.find(".txtAnnualBudget").val(mul);
@@ -778,7 +784,7 @@
                                         </div>
                                         <div class="col-lg-3 col-sm-6">
                                             <div class="form-floating">
-                                                <select class="form-select" id="slctBudgetTypeId" aria-label="A" onchange="TotalAnnualBudget()">
+                                                <select class="form-select" disabled id="slctBudgetTypeId" aria-label="A" onchange="TotalAnnualBudget()">
                                                     <option value="">Choose from List</option>
                                                 </select>
                                                 <label for="slctBudgetTypeId" onchange="get">Budget Type <span>*</span></label>

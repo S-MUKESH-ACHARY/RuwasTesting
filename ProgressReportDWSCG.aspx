@@ -120,13 +120,26 @@
                                 `<td>` + `<input type="number" class="form-control" placeholder="` + item.QuarterAchieved +`" />` + `</td>` +
                                 `<td>` + `<input disabled type="number" class="form-control" placeholder="0" />` + `</td>` +
                                 `<td>` + `<input disabled type="number" class="form-control" placeholder="0" />` + `</td>` +
-                                `<td>` + `<input type="number" class="form-control" placeholder="` + item.Expanditure +`" />` + `</td>` +
-                                `<td>` + `<input disabled type="number" class="form-control" placeholder="0" />` + `</td>` +
+                                `<td>` + `<input type="number" class="form-control txtExpanditure" placeholder="` + item.Expanditure +`" />` + `</td>` +
+                                `<td>` + `<input disabled type="number" class="form-control CumulativeExpanditure" placeholder="0" />` + `</td>` +
                                 `<td>` + `<input disabled type="number" class="form-control" placeholder="` + item.AnnualBudget + `" />` + `</td>` +
                                 `<td>` + `<textarea typeof="text" class="form-control"></textarea>` + `</td></tr>`
                             $("#myTable").append(row);
                         })
                         /*$("#myTable").DataTable();*/
+                      
+                        $(".txtExpanditure").on('keyup', function () {
+                            var CE = $(".CumulativeExpanditure").val();
+                            var $row = $(this).closest('tr');
+                           
+                            $row.find(".txtExpanditure").each(function () {
+                                if (this.value.length != 0) {
+                                    CE += Number(this.value);
+                                }
+
+                            })
+                            $row.find(".CumulativeExpanditure").val(CE);
+                        })
                     }
                     else { alert("No Rows Found"); }
                 }

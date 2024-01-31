@@ -11,28 +11,16 @@
             let s = function (sms) {
                 sms.forEach(function (item) {
                     let isActive = item.IsActive;
-                    if (isActive == 1) {
+                   
                         var row = `<tr>`
                         row = row + `<td class="1" style="display:none;">` + item.FinancialYr + `</td>` +
                                     `<td class="2">` + item.FinancialYrName + `</td>` +
-                            `<td>` + `<input type="checkbox" class="form-check-input" checked/>` + `</td>` +
+                            `<td class="3">` + `<input type="checkbox" class="form-check-input" ${isActive==1?'checked':''}/>` + `</td>` +
                             `<td>` + `<input type="checkbox" class="form-check-input" />` + `</td>` +
                             `<td>` + '' + `</td>` +
                             `<td>` + `<button class="btn btn-primary" type="button" onclick="EditDistrict(this)" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-pen-to-square"></i></button> ` + `</td></tr>`
                         $("#myTable").append(row);
-                    }
-                    else {
-                        var row = `<tr>`
-                        row = row + `<td class="1" style="display:none;">` + item.FinancialYr + `</td>` +
-                            `<td class="2">` + item.FinancialYrName + `</td>` +
-                            `<td>` + `<input type="checkbox" class="form-check-input"/>` + `</td>` +
-                            `<td>` + `<input type="checkbox" class="form-check-input" />` + `</td>` +
-                            `<td>` + '' + `</td>` +
-                            `<td>` + `<button class="btn btn-primary" type="button" onclick="EditDistrict(this)" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-pen-to-square"></i></button> ` + `</td></tr>`
-                        $("#myTable").append(row);
-                        
-                    }
-                    
+                   
                 })
             }
             let e = function (msg) {
@@ -41,10 +29,11 @@
             CallHandler(data, s, e);
         }
         function EditDistrict(thisId) {
-
             let FinancialYr = $(thisId).closest('tr').find('.1').html();
             console.log(FinancialYr);
             $("#slctFinancialYearId").val(FinancialYr);
+            let ActiveYr = $(thisId).closest('tr').find('.3 input').is(":checked");
+            $("#chkFinancialYrId").prop('checked', ActiveYr);
         }
         function getFinancialYr() {
             var data = {
@@ -96,7 +85,7 @@
                 alert(msg);
             }
             CallHandler(data, s, e);
-            
+            location.reload();
         }
         function CallHandler(d, s, e) {
             $.ajax({

@@ -41,27 +41,17 @@
                  console.log(sms);
                  sms.forEach(function (item) {
                      let IsEnded = item.IsEnded;
-                     if (IsEnded == 1) {
+                     
                          var row = `<tr>`
                          row = row + `<td class="1">` + item.EndDate_string + `</td>` +
                              `<td class="2" style="display:none;">` + item.FinancialYr + `</td>` +
                              `<td>` + item.FinancialYrName + `</td>` +
-                             `<td class="3">` + `<input type="checkbox" class="form-check-input" checked />` + `</td>` +
+                             `<td class="3">` + `<input type="checkbox" class="form-check-input" ${IsEnded==1?'checked':''} />` + `</td>` +
                              `<td class="4">` + item.CreatedBy + `</td>` +
                              `<td class="5">` + item.CreatedDate_string + `</td>` +
                              `<td>` + `<button class="btn btn-primary" type="button" onclick="EditDistrict(this)" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-pen-to-square"></i></button>` + `</td></tr>`
                          $("#myTable").append(row);
-                     } else {
-                         var row = `<tr>`
-                         row = row + `<td class="1">` + item.EndDate_string + `</td>` +
-                             `<td class="2" style="display:none;">` + item.FinancialYr + `</td>` +
-                             `<td>` + item.FinancialYrName + `</td>` +
-                             `<td class="3">` + `<input type="checkbox" class="form-check-input" />` + `</td>` +
-                             `<td class="4">` + item.CreatedBy + `</td>` +
-                             `<td class="5">` + item.CreatedDate_string + `</td>` +
-                             `<td>` + `<button class="btn btn-primary" type="button" onclick="EditDistrict(this)" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-pen-to-square"></i></button>` + `</td></tr>`
-                         $("#myTable").append(row);
-                     }
+                     
                     
                  })
              }

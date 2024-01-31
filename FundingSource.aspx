@@ -10,21 +10,13 @@
              var s = function (sms) {
                  sms.forEach(function (item) {
                      let IsDeleted = item.IsDeleted;
-                     if (IsDeleted == 1) {
+                     
                          let row = `<tr>`
                          row = row + `<td class="1" style="display:none;">` + item.FundingSourceId + `</td>` +
                              `<td class="2">` + item.FundingSourceName + `</td>` +
-                             `<td class="3">` + `<input type="checkbox" class="form-check-input" checked />` + `</td>` +
+                             `<td class="3">` + `<input type="checkbox" class="form-check-input" ${IsDeleted==1?'checked':''} />` + `</td>` +
                              `<td>` + `<button class="btn btn-primary" type="button" onclick="EditDistrict(this)" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-pen-to-square"></i></button>` + `</td></tr>`
                          $("#myTable").append(row);
-                     }else {
-                         let row = `<tr>`
-                         row = row + `<td class="1" style="display:none;">` + item.FundingSourceId + `</td>` +
-                             `<td class="2">` + item.FundingSourceName + `</td>` +
-                             `<td class="3">` + `<input type="checkbox" class="form-check-input" />` + `</td>` +
-                             `<td>` + `<button class="btn btn-primary" type="button" onclick="EditDistrict(this)" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-pen-to-square"></i></button>` + `</td></tr>`
-                         $("#myTable").append(row);
-                     }
                  })
              }
              var e = function (msg) {
@@ -37,6 +29,8 @@
             $("#txtFundingSourceId").val(FundingSource);
             let FundingSourceId = $(thisId).parent().parent().children('.1').html();
             $("#txtFundingSource").html(FundingSourceId);
+            let Deleted = $(thisId).closest('tr').find('.3 input').is('checked');
+            $("#chkDisabled").prop('checked', Deleted);
         }
          function Update() {
              let FundingSourceId = $("#txtFundingSource").text();
@@ -58,6 +52,7 @@
                  alert(msg);
              }
              CallHandler(data, s, e);
+             location.reload();
          }
          function CallHandler(d, s, e) {
              $.ajax({

@@ -216,6 +216,9 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
                 case "UpdateFundingSource":
                     UpdateFundingSource(context);
                     break;
+                case "UpdateDistrict":
+                    UpdateDistrict(context);
+                    break;
                 default:
                     var jsonString = String.Empty;
                     context.Request.InputStream.Position = 0;
@@ -1318,7 +1321,7 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
                     if (CreatedDatee != "")
                     {
                         DateTime CreatedDate = Convert.ToDateTime(dr["createdDate"]);
-                        string CreatedDate_string = CreatedDate.ToString("yyyy/MM/dd");
+                        string CreatedDate_string = CreatedDate.ToString("yyyy-MM-dd");
                         arr.CreatedDate_string = CreatedDate_string;
                     }
                     WorkPlanPeriodTableDataList.Add(arr);
@@ -2555,6 +2558,7 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
     }
     public class AnnualWorkplanDSHCGClass
     {
+        public int Sanitation { get; set; }
         public int SlctFinancialYear { get; set; }
         public int SlctLocalGovernment { get; set; }
         public DateTime DateOfApprovalByCouncil { get; set; }
@@ -2564,10 +2568,12 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
         public int Quarter3Funds { get; set; }
         public int Quarter4Funds { get; set; }
         public int SlctBudgetType { get; set; }
+        public string Type { get; set; }
         public List<ModelActivityOfAnnualWorkplanDSHCGClass> ModelActivityOfAnnualWorkplanDSHCGList { get; set; }
     }
     public class ModelActivityOfAnnualWorkplanDSHCGClass
     {
+        public int SanitationDtlId { get; set; }
         public string TxtSlNo { get; set; }
         public string TxtModelActivity { get; set; }
         public int TxtApprovalAnnualTarget { get; set; }
@@ -2579,12 +2585,13 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
         public int TxtUnitCost { get; set; }
         public string TxtComment { get; set; }
     }
-    public void SaveAnnualWorkplanDSHCG(string jsonstring,HttpContext context)
+    public void SaveAnnualWorkplanDSHCG(string jsonstring, HttpContext context)
     {
         try
         {
-            var js = new JavaScriptSerializer();
+             var js = new JavaScriptSerializer();
             AnnualWorkplanDSHCGClass obj = js.Deserialize<AnnualWorkplanDSHCGClass>(jsonstring);
+            
             int FinancialYr = obj.SlctFinancialYear;
             int District = obj.SlctLocalGovernment;
             DateTime DateOfApprovalByCouncil = obj.DateOfApprovalByCouncil;
@@ -2603,44 +2610,136 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
             int IsQuarterThreeReportSubmitted = 0;
             int IsQuarterFourReportSubmitted = 0;
             int IsResubmitted = 0;
-            NpgsqlCommand cmd = new NpgsqlCommand("insert into \"sanitations\"" +
-                "(\"financialYearId\",\"districtId\",\"preparedDate\",\"totalAprovedBudget\"," +
-                "\"quarterOneFunds\",\"quarterTwoFunds\",\"quarterThreeFunds\",\"quarterFourFunds\",\"budgetTypeId\"," +
-                "\"isSubmitted\",\"isAllowedEdit\",\"level\",\"isReportSubmitted\"," +
-                "\"isQuarterOneReportSubmitted\",\"isQuarterTwoReportSubmitted\"," +
-                "\"isQuarterThreeReportSubmitted\",\"isQuarterFourReportSubmitted\",\"isResubmitted\")" +
-                " values(@FinancialYr,@District,@DateOfApprovalByCouncil," +
-                "@TxtTotalAnnualBudget,@quarterOneFunds,@Quarter2Funds,@Quarter3Funds,@Quarter4Funds,@SlctBudgetType" +
-                "@IsSubmitted,@IsAllowedEdit,@Level,@IsReportSubmitted,@IsQuarterOneReportSubmitted," +
-                "@IsQuarterTwoReportSubmitted,@IsQuarterThreeReportSubmitted," +
-                "@IsQuarterFourReportSubmitted,@IsResubmitted) returning \"sanitationId\"");
-            cmd.Parameters.AddWithValue("@FinancialYr", FinancialYr);
-            cmd.Parameters.AddWithValue("@District", District);
-            cmd.Parameters.AddWithValue("@DateOfApprovalByCouncil", DateOfApprovalByCouncil);
-            cmd.Parameters.AddWithValue("@TxtTotalAnnualBudget", TxtTotalAnnualBudget);
-            cmd.Parameters.AddWithValue("@quarterOneFunds", Quarter1Funds);
-            cmd.Parameters.AddWithValue("@Quarter2Funds", Quarter2Funds);
-            cmd.Parameters.AddWithValue("@Quarter3Funds", Quarter3Funds);
-            cmd.Parameters.AddWithValue("@Quarter4Funds", Quarter4Funds);
-            cmd.Parameters.AddWithValue("@SlctBudgetType", SlctBudgetType);
-            cmd.Parameters.AddWithValue("@IsSubmitted", IsSubmitted);
-            cmd.Parameters.AddWithValue("@IsAllowedEdit", IsAllowedEdit);
-            cmd.Parameters.AddWithValue("@Level", Level);
-            cmd.Parameters.AddWithValue("@IsReportSubmitted", IsReportSubmitted);
-            cmd.Parameters.AddWithValue("@IsQuarterOneReportSubmitted", IsQuarterOneReportSubmitted);
-            cmd.Parameters.AddWithValue("@IsQuarterTwoReportSubmitted", IsQuarterTwoReportSubmitted);
-            cmd.Parameters.AddWithValue("@IsQuarterThreeReportSubmitted", IsQuarterThreeReportSubmitted);
-            cmd.Parameters.AddWithValue("@IsQuarterFourReportSubmitted", IsQuarterFourReportSubmitted);
-            cmd.Parameters.AddWithValue("@IsResubmitted", IsResubmitted);
-            DataSet ds = ruwasdb.Insert_Return(cmd);
-            DataTable dt = ds.Tables[0];
-            if (dt.Rows.Count > 0)
+            string Type = obj.Type;
+            NpgsqlCommand cmd = new NpgsqlCommand();
+            if (Type == "Save")
             {
-                foreach(DataRow dr in dt.Rows)
+                cmd = new NpgsqlCommand("insert into \"sanitations\"" +
+                   "(\"financialYearId\",\"districtId\",\"preparedDate\",\"totalAprovedBudget\"," +
+                   "\"quarterOneFunds\",\"quarterTwoFunds\",\"quarterThreeFunds\",\"quarterFourFunds\",\"budgetTypeId\"," +
+                   "\"isSubmitted\",\"isAllowedEdit\",\"level\",\"isReportSubmitted\"," +
+                   "\"isQuarterOneReportSubmitted\",\"isQuarterTwoReportSubmitted\"," +
+                   "\"isQuarterThreeReportSubmitted\",\"isQuarterFourReportSubmitted\",\"isResubmitted\")" +
+                   " values(@FinancialYr,@District,@DateOfApprovalByCouncil," +
+                   "@TxtTotalAnnualBudget,@quarterOneFunds,@Quarter2Funds,@Quarter3Funds,@Quarter4Funds,@SlctBudgetType," +
+                   "@IsSubmitted,@IsAllowedEdit,@Level,@IsReportSubmitted,@IsQuarterOneReportSubmitted," +
+                   "@IsQuarterTwoReportSubmitted,@IsQuarterThreeReportSubmitted," +
+                   "@IsQuarterFourReportSubmitted,@IsResubmitted) returning \"sanitationId\"");
+                cmd.Parameters.AddWithValue("@FinancialYr", FinancialYr);
+                cmd.Parameters.AddWithValue("@District", District);
+                cmd.Parameters.AddWithValue("@DateOfApprovalByCouncil", DateOfApprovalByCouncil);
+                cmd.Parameters.AddWithValue("@TxtTotalAnnualBudget", TxtTotalAnnualBudget);
+                cmd.Parameters.AddWithValue("@quarterOneFunds", Quarter1Funds);
+                cmd.Parameters.AddWithValue("@Quarter2Funds", Quarter2Funds);
+                cmd.Parameters.AddWithValue("@Quarter3Funds", Quarter3Funds);
+                cmd.Parameters.AddWithValue("@Quarter4Funds", Quarter4Funds);
+                cmd.Parameters.AddWithValue("@SlctBudgetType", SlctBudgetType);
+                cmd.Parameters.AddWithValue("@IsSubmitted", IsSubmitted);
+                cmd.Parameters.AddWithValue("@IsAllowedEdit", IsAllowedEdit);
+                cmd.Parameters.AddWithValue("@Level", Level);
+                cmd.Parameters.AddWithValue("@IsReportSubmitted", IsReportSubmitted);
+                cmd.Parameters.AddWithValue("@IsQuarterOneReportSubmitted", IsQuarterOneReportSubmitted);
+                cmd.Parameters.AddWithValue("@IsQuarterTwoReportSubmitted", IsQuarterTwoReportSubmitted);
+                cmd.Parameters.AddWithValue("@IsQuarterThreeReportSubmitted", IsQuarterThreeReportSubmitted);
+                cmd.Parameters.AddWithValue("@IsQuarterFourReportSubmitted", IsQuarterFourReportSubmitted);
+                cmd.Parameters.AddWithValue("@IsResubmitted", IsResubmitted);
+                DataSet ds = ruwasdb.Insert_Return(cmd);
+                DataTable dt = ds.Tables[0];
+                if (dt.Rows.Count > 0)
                 {
-                    int SanitationId = Convert.ToInt32(dr["sanitationId"]);
-                    foreach(ModelActivityOfAnnualWorkplanDSHCGClass x in obj.ModelActivityOfAnnualWorkplanDSHCGList)
+                    foreach (DataRow dr in dt.Rows)
                     {
+                        int SanitationId = Convert.ToInt32(dr["sanitationId"]);
+                        foreach (ModelActivityOfAnnualWorkplanDSHCGClass x in obj.ModelActivityOfAnnualWorkplanDSHCGList)
+                        {
+                            string TxtSlNo = x.TxtSlNo;
+                            string TxtModelActivity = x.TxtModelActivity;
+                            int TxtApprovalAnnualTarget = x.TxtApprovalAnnualTarget;
+                            int TxtQuarter1 = x.TxtQuarter1;
+                            int TxtQuarter2 = x.TxtQuarter2;
+                            int TxtQuarter3 = x.TxtQuarter3;
+                            int TxtQuarter4 = x.TxtQuarter4;
+                            int TxtAnnualBudget = x.TxtAnnualBudget;
+                            int TxtUnitCost = x.TxtUnitCost;
+                            string TxtComment = x.TxtComment;
+                            int QuarterOneAchieved = 0;
+                            int QuarterTwoAchieved = 0;
+                            int QuarterThreeAchieved = 0;
+                            int QuarterFourAchieved = 0;
+                            int QuarterOneExpenditure = 0;
+                            int QuarterTwoExpenditure = 0;
+                            int QuarterThreeExpenditure = 0;
+                            int QuarterFourExpenditure = 0;
+                            NpgsqlCommand cmd1 = new NpgsqlCommand("insert into \"sanitationDetails\"" +
+                                "(\"sanitationId\",\"sNo\",\"modelActivity\",\"approvedAnnualTarget\",\"quarterOne\"," +
+                                "\"quarterTwo\",\"quarterThree\",\"quarterFour\",\"funds\",\"unitCost\",\"comment\",\"quarterOneAchieved\"," +
+                                "\"quarterTwoAchieved\",\"quarterThreeAchieved\",\"quarterFourAchieved\",\"quarterOneExpenditure\"," +
+                                "\"quarterTwoExpenditure\",\"quarterThreeExpenditure\",\"quarterFourExpenditure\")" +
+                                "values (@SanitationId,@TxtSlNo,@TxtModelActivity,@TxtApprovalAnnualTarget,@TxtQuarter1,@TxtQuarter2," +
+                                "@TxtQuarter3,@TxtQuarter4,@TxtAnnualBudget,@TxtUnitCost,@TxtComment,@QuarterOneAchieved," +
+                                "@QuarterTwoAchieved,@QuarterThreeAchieved,@QuarterFourAchieved,@QuarterOneExpenditure," +
+                                "@QuarterTwoExpenditure,@QuarterThreeExpenditure,@QuarterFourExpenditure)");
+                            cmd1.Parameters.AddWithValue("@SanitationId", SanitationId);
+                            cmd1.Parameters.AddWithValue("@TxtSlNo", TxtSlNo);
+                            cmd1.Parameters.AddWithValue("@TxtModelActivity", TxtModelActivity);
+                            cmd1.Parameters.AddWithValue("@TxtApprovalAnnualTarget", TxtApprovalAnnualTarget);
+                            cmd1.Parameters.AddWithValue("@TxtQuarter1", TxtQuarter1);
+                            cmd1.Parameters.AddWithValue("@TxtQuarter2", TxtQuarter2);
+                            cmd1.Parameters.AddWithValue("@TxtQuarter3", TxtQuarter3);
+                            cmd1.Parameters.AddWithValue("@TxtQuarter4", TxtQuarter4);
+                            cmd1.Parameters.AddWithValue("@TxtAnnualBudget", TxtAnnualBudget);
+                            cmd1.Parameters.AddWithValue("@TxtUnitCost", TxtUnitCost);
+                            cmd1.Parameters.AddWithValue("@TxtComment", TxtComment);
+                            cmd1.Parameters.AddWithValue("@QuarterOneAchieved", QuarterOneAchieved);
+                            cmd1.Parameters.AddWithValue("@QuarterTwoAchieved", QuarterTwoAchieved);
+                            cmd1.Parameters.AddWithValue("@QuarterThreeAchieved", QuarterThreeAchieved);
+                            cmd1.Parameters.AddWithValue("@QuarterFourAchieved", QuarterFourAchieved);
+                            cmd1.Parameters.AddWithValue("@QuarterOneExpenditure", QuarterOneExpenditure);
+                            cmd1.Parameters.AddWithValue("@QuarterTwoExpenditure", QuarterTwoExpenditure);
+                            cmd1.Parameters.AddWithValue("@QuarterThreeExpenditure", QuarterThreeExpenditure);
+                            cmd1.Parameters.AddWithValue("@QuarterFourExpenditure", QuarterFourExpenditure);
+                            ruwasdb.Insert(cmd1);
+                        }
+                    }
+                    string response = GetJson("Saved Successfully.");
+                    context.Response.Write(response);
+                }
+            }
+            else if (Type == "Update")
+            {
+                int Sanitation = obj.Sanitation;
+                cmd = new NpgsqlCommand("update  \"sanitations\" set" +
+                    "\"financialYearId\"=@FinancialYr,\"districtId\"=@District,\"preparedDate\"=@DateOfApprovalByCouncil,\"totalAprovedBudget\"=@TxtTotalAnnualBudget," +
+                    "\"quarterOneFunds\"=@quarterOneFunds,\"quarterTwoFunds\"=@Quarter2Funds,\"quarterThreeFunds\"=@Quarter3Funds,\"quarterFourFunds\"=@Quarter4Funds,\"budgetTypeId\"=@SlctBudgetType," +
+                    "\"isSubmitted\"=@IsSubmitted,\"isAllowedEdit\"=@IsAllowedEdit,\"level\"=@Level,\"isReportSubmitted\"=@IsReportSubmitted," +
+                    "\"isQuarterOneReportSubmitted\"=@IsQuarterOneReportSubmitted,\"isQuarterTwoReportSubmitted\"=@IsQuarterTwoReportSubmitted," +
+                    "\"isQuarterThreeReportSubmitted\"=@IsQuarterThreeReportSubmitted,\"isQuarterFourReportSubmitted\"=@IsQuarterFourReportSubmitted,\"isResubmitted\"=@IsResubmitted" +
+                    " where \"sanitationId\"=@Sanitation");
+                cmd.Parameters.AddWithValue("@Sanitation", Sanitation);
+                cmd.Parameters.AddWithValue("@FinancialYr", FinancialYr);
+                cmd.Parameters.AddWithValue("@District", District);
+                cmd.Parameters.AddWithValue("@DateOfApprovalByCouncil", DateOfApprovalByCouncil);
+                cmd.Parameters.AddWithValue("@TxtTotalAnnualBudget", TxtTotalAnnualBudget);
+                cmd.Parameters.AddWithValue("@quarterOneFunds", Quarter1Funds);
+                cmd.Parameters.AddWithValue("@Quarter2Funds", Quarter2Funds);
+                cmd.Parameters.AddWithValue("@Quarter3Funds", Quarter3Funds);
+                cmd.Parameters.AddWithValue("@Quarter4Funds", Quarter4Funds);
+                cmd.Parameters.AddWithValue("@SlctBudgetType", SlctBudgetType);
+                cmd.Parameters.AddWithValue("@IsSubmitted", IsSubmitted);
+                cmd.Parameters.AddWithValue("@IsAllowedEdit", IsAllowedEdit);
+                cmd.Parameters.AddWithValue("@Level", Level);
+                cmd.Parameters.AddWithValue("@IsReportSubmitted", IsReportSubmitted);
+                cmd.Parameters.AddWithValue("@IsQuarterOneReportSubmitted", IsQuarterOneReportSubmitted);
+                cmd.Parameters.AddWithValue("@IsQuarterTwoReportSubmitted", IsQuarterTwoReportSubmitted);
+                cmd.Parameters.AddWithValue("@IsQuarterThreeReportSubmitted", IsQuarterThreeReportSubmitted);
+                cmd.Parameters.AddWithValue("@IsQuarterFourReportSubmitted", IsQuarterFourReportSubmitted);
+                cmd.Parameters.AddWithValue("@IsResubmitted", IsResubmitted);
+                ruwasdb.Update(cmd);
+                if (Sanitation != 0)
+                {
+                    foreach (ModelActivityOfAnnualWorkplanDSHCGClass x in obj.ModelActivityOfAnnualWorkplanDSHCGList)
+                    {
+                        int SanitationDtlId = x.SanitationDtlId;
                         string TxtSlNo = x.TxtSlNo;
                         string TxtModelActivity = x.TxtModelActivity;
                         int TxtApprovalAnnualTarget = x.TxtApprovalAnnualTarget;
@@ -2659,16 +2758,12 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
                         int QuarterTwoExpenditure = 0;
                         int QuarterThreeExpenditure = 0;
                         int QuarterFourExpenditure = 0;
-                        NpgsqlCommand cmd1 = new NpgsqlCommand("insert into \"sanitationDetails\"" +
-                            "(\"sanitationId\",\"sNo\",\"modelActivity\",\"approvedAnnualTarget\",\"quarterOne\"," +
-                            "\"quarterTwo\",\"quarterThree\",\"quarterFour\",\"funds\",\"unitCost\",\"comment\",\"quarterOneAchieved\"," +
-                            "\"quarterTwoAchieved\",\"quarterThreeAchieved\",\"quarterFourAchieved\",\"quarterOneExpenditure\"," +
-                            "\"quarterTwoExpenditure\",\"quarterThreeExpenditure\",\"quarterFourExpenditure\")" +
-                            "values (@SanitationId,@TxtSlNo,@TxtModelActivity,@TxtApprovalAnnualTarget,@TxtQuarter1,@TxtQuarter2," +
-                            "@TxtQuarter3,@TxtQuarter4,@TxtAnnualBudget,@TxtUnitCost,@TxtComment,@QuarterOneAchieved," +
-                            "@QuarterTwoAchieved,@QuarterThreeAchieved,@QuarterFourAchieved,@QuarterOneExpenditure," +
-                            "@QuarterTwoExpenditure,@QuarterThreeExpenditure,@QuarterFourExpenditure)");
-                        cmd1.Parameters.AddWithValue("@SanitationId", SanitationId);
+                        NpgsqlCommand cmd1 = new NpgsqlCommand("update \"sanitationDetails\" set" +
+                            "\"sNo\"=@TxtSlNo,\"modelActivity\"=@TxtModelActivity,\"approvedAnnualTarget\"=@TxtApprovalAnnualTarget,\"quarterOne\"=@TxtQuarter1," +
+                            "\"quarterTwo\"=@TxtQuarter2,\"quarterThree\"=@TxtQuarter3,\"quarterFour\"=@TxtQuarter4,\"funds\"=@TxtAnnualBudget,\"unitCost\"=@TxtUnitCost,\"comment\"=@TxtComment,\"quarterOneAchieved\"=@QuarterOneAchieved," +
+                            "\"quarterTwoAchieved\"=@QuarterTwoAchieved,\"quarterThreeAchieved\"=@QuarterThreeAchieved,\"quarterFourAchieved\"=@QuarterFourAchieved,\"quarterOneExpenditure\"=@QuarterOneExpenditure," +
+                            "\"quarterTwoExpenditure\"=@QuarterTwoExpenditure,\"quarterThreeExpenditure\"=@QuarterThreeExpenditure,\"quarterFourExpenditure\"=@QuarterFourExpenditure where \"sanitationDetailId\"=@SanitationDtlId");
+                        cmd1.Parameters.AddWithValue("@SanitationDtlId", SanitationDtlId);
                         cmd1.Parameters.AddWithValue("@TxtSlNo", TxtSlNo);
                         cmd1.Parameters.AddWithValue("@TxtModelActivity", TxtModelActivity);
                         cmd1.Parameters.AddWithValue("@TxtApprovalAnnualTarget", TxtApprovalAnnualTarget);
@@ -2687,18 +2782,18 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
                         cmd1.Parameters.AddWithValue("@QuarterTwoExpenditure", QuarterTwoExpenditure);
                         cmd1.Parameters.AddWithValue("@QuarterThreeExpenditure", QuarterThreeExpenditure);
                         cmd1.Parameters.AddWithValue("@QuarterFourExpenditure", QuarterFourExpenditure);
-                        ruwasdb.Insert(cmd1);
+                        ruwasdb.Update(cmd1);
                     }
+                    string response = GetJson("Updated Successfully.");
+                    context.Response.Write(response);
                 }
-                string response = GetJson("Saved Successfully.");
-                context.Response.Write(response);
             }
             else
             {
                 string response = GetJson("No Data Found.");
                 context.Response.Write(response);
             }
-        
+
         }
         catch (Exception ex)
         {
@@ -3104,6 +3199,7 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
     }
     public class GetWorkplanIdOfSanitationsClass
     {
+        public int SanitationDtlId { get; set; }
         public string SlNo { get; set; }
         public string ModelActivity { get; set; }
         public int ApprovalAnualTargrt { get; set; }
@@ -3113,6 +3209,7 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
         public int Quarter4 { get; set; }
         public int AnnualBudget { get; set; }
         public int UnitCost { get; set; }
+        public int SanitationId { get; set; }
         public string Comment { get; set; }
         public string BudgetTypeId { get; set; }
         public string TotalAprovedBudget { get; set; }
@@ -3134,12 +3231,12 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
                 foreach(DataRow dr in dt.Rows)
                 {
                     List<GetWorkplanIdOfSanitationsClass> GetWorkplanIdOfSanitationsList = new List<GetWorkplanIdOfSanitationsClass>();
-                    int workplanId = Convert.ToInt32(dr["sanitationId"]);
+                    int SanitationId = Convert.ToInt32(dr["sanitationId"]);
                     string budgetTypeId = dr["budgetTypeId"].ToString();
                     string TotalAprovedBudget =dr["totalAprovedBudget"].ToString();
                     string PreparedDate = dr["preparedDate"].ToString();
-                    NpgsqlCommand cmd1 =new NpgsqlCommand("select * from \"sanitationDetails\" where \"sanitationId\"=@workplanId");
-                    cmd1.Parameters.AddWithValue("@workplanId", workplanId);
+                    NpgsqlCommand cmd1 =new NpgsqlCommand("select * from \"sanitationDetails\" where \"sanitationId\"=@SanitationId");
+                    cmd1.Parameters.AddWithValue("@SanitationId", SanitationId);
                     DataSet ds1 = ruwasdb.SelectQuery(cmd1);
                     DataTable dt1 = ds1.Tables[0];
                     if (dt1.Rows.Count > 0)
@@ -3147,6 +3244,7 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
                         foreach(DataRow dr1 in dt1.Rows)
                         {
                             GetWorkplanIdOfSanitationsClass arr = new GetWorkplanIdOfSanitationsClass();
+                            arr.SanitationDtlId = Convert.ToInt32(dr1["sanitationDetailId"]);
                             arr.SlNo = dr1["sNo"].ToString();
                             arr.ModelActivity = dr1["modelActivity"].ToString();
                             arr.ApprovalAnualTargrt = Convert.ToInt32(dr1["approvedAnnualTarget"]);
@@ -3157,6 +3255,7 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
                             arr.AnnualBudget = Convert.ToInt32(dr1["funds"]);
                             arr.UnitCost = Convert.ToInt32(dr1["unitCost"]);
                             arr.Comment = dr1["comment"].ToString();
+                            arr.SanitationId = SanitationId;
                             arr.BudgetTypeId = budgetTypeId;
                             arr.TotalAprovedBudget = TotalAprovedBudget;
                             arr.PreparedDate = Convert.ToDateTime(PreparedDate).ToString("yyyy-MM-dd");
@@ -3165,7 +3264,14 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
                         string response = GetJson(GetWorkplanIdOfSanitationsList);
                         context.Response.Write(response);
                     }
+                   
                 }
+            }
+            else
+            {
+                string msg = "No Rows Found";
+                string response = GetJson(msg);
+                context.Response.Write(response);
             }
         }
         catch (Exception ex)
@@ -3546,6 +3652,32 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
                 "\"isDeleted\"=@chkDisabled where \"fundingSourceId\"=@FundingSourceId");
             cmd.Parameters.AddWithValue("@FundingSourceId", FundingSourceId);
             cmd.Parameters.AddWithValue("@chkDisabled", chkDisabled);
+            ruwasdb.Update(cmd);
+            string sms = "Updated successfully";
+            string response = GetJson(sms);
+            context.Response.Write(response);
+        }
+        catch (Exception ex)
+        {
+            string msg = ex.Message;
+            string response = GetJson(msg);
+            context.Response.Write(response);
+        }
+    }
+    public void UpdateDistrict(HttpContext context)
+    {
+        try {
+            int DistrictId = Convert.ToInt32(context.Request["DistrictId"]);
+            int IsDeleted = Convert.ToInt32(context.Request["IsDeleted"]);
+            string Vote = context.Request["Vote"].ToString();
+            int Rwsrc = Convert.ToInt32(context.Request["Rwsrc"]);
+            NpgsqlCommand cmd = new NpgsqlCommand("update \"districts\" set" +
+                "\"isDeleted\"=@IsDeleted,\"vote\"=@Vote," +
+                "\"rwsrcId\"=@Rwsrc where \"districtId\"=@DistrictId");
+            cmd.Parameters.AddWithValue("@DistrictId", DistrictId);
+            cmd.Parameters.AddWithValue("@IsDeleted", IsDeleted);
+            cmd.Parameters.AddWithValue("@Vote", Vote);
+            cmd.Parameters.AddWithValue("@Rwsrc", Rwsrc);
             ruwasdb.Update(cmd);
             string sms = "Updated successfully";
             string response = GetJson(sms);

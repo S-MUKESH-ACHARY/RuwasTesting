@@ -54,29 +54,16 @@
                 console.log(sms);
                 sms.forEach(function (item) {
                     let IsDeleted = item.IsDeleted;
-                    if (IsDeleted == 1) {
+                   
                         var row = `<tr>`
                         row = row + `<td class="1">` + item.Vote + `</td>` +
                             `<td class="2" style="display:none;">` + item.DistrictId + `</td>` +
                             `<td>` + item.District + `</td>` +
                             `<td class="3" style="display:none;">` + item.RWSRCId + `</td>` +
                             `<td>` + item.RWSRC + `</td>` +
-                            `<td>` + `<input type="checkbox" class="form-check-input" checked />` + `</td>` +
+                            `<td class="4">` + `<input type="checkbox" disabled class="form-check-input" ${IsDeleted==1?'checked':''} />` + `</td>` +
                             `<td>` + `<button class="btn btn-primary" type="button" onclick="EditDistrict(this)" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-pen-to-square"></i></button>` + `</td></tr>`
                         $("#myTable").append(row);
-                    }
-                    else {
-                        var row = `<tr>`
-                        row = row + `<td class="1">` + item.Vote + `</td>` +
-                            `<td class="2" style="display:none;">` + item.DistrictId + `</td>` +
-                            `<td>` + item.District + `</td>` +
-                            `<td class="3" style="display:none;">` + item.RWSRCId + `</td>` +
-                            `<td>` + item.RWSRC + `</td>` +
-                            `<td>` + `<input type="checkbox" class="form-check-input" />` + `</td>` +
-                            `<td>` + `<button class="btn btn-primary" type="button" onclick="EditDistrict(this)" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-pen-to-square"></i></button>` + `</td></tr>`
-                        $("#myTable").append(row);
-                    }
-                    
                 })
                 $(".loader-container").hide();
                 $("#myTable").DataTable();
@@ -90,13 +77,39 @@
             $(".loader-container").show();
         }
         function EditDistrict(thisId) {
-        
             let vote = $(thisId).parent().parent().children('.1').html();
             $("#txtVoteId").val(vote);
             let district = $(thisId).parent().parent().children('.2').html();
             $("#slctDistrictId").val(district);
             let rwsrc = $(thisId).parent().parent().children('.3').html();
             $("#slctRWSRCId").val(rwsrc);
+            let IsDeleted = $(thisId).closest('tr').find('.4 input').is(':checked');
+            $("#defaultCheck1").prop('checked', IsDeleted);
+        }
+        function Update() {
+            let DistrictId = $("#slctDistrictId").val();
+            let IsDeleted = 0; /*$("#defaultCheck1")*/
+            let chk = $("#defaultCheck1");
+            if (chk.is(':checked')){
+                IsDeleted = 1;
+            }
+            let Vote = $("#txtVoteId").val();
+            let Rwsrc = $("#slctRWSRCId").val();
+            var data = {
+                "op": "UpdateDistrict",
+                "DistrictId": DistrictId,
+                "IsDeleted": IsDeleted,
+                "Vote": Vote,
+                "Rwsrc": Rwsrc
+            }
+            var s = function (sms) {
+                alert(sms);
+            }
+            var e = function (msg) {
+                alert(msg);
+            }
+            CallHandler(data, s, e);
+            location.reload();
         }
         function CallHandler(d, s, e) {
             $.ajax({
@@ -230,17 +243,17 @@
                                     <div class="row m-1 p-1">
                                         <div class="col-lg-6 col-12">
                                             <div class="form-floating">
-                                                <input type="text" id="txtVoteId" class="form-control" placeholder="Vote" title="Vote" />
-                                                <label for="txtVoteId">Vote</label>
-                                                <span class="invalid-feedback is-invalid">Please enter vote</span>
+                                                <select type="text" id="slctDistrictId" class="form-select" placeholder="District" title="District" disabled>
+                                                </select>
+                                                <label for="txtDistrictId">District</label>
+                                                <span class="invalid-feedback is-invalid">Please enter district</span>
                                             </div>
                                         </div>
                                         <div class="col-lg-6 col-12">
                                             <div class="form-floating">
-                                                <select type="text" id="slctDistrictId" class="form-select" placeholder="District" title="District">
-                                                    </select>
-                                                <label for="txtDistrictId">District</label>
-                                                <span class="invalid-feedback is-invalid">Please enter district</span>
+                                                <input type="number" id="txtVoteId" class="form-control" placeholder="Vote" title="Vote" />
+                                                <label for="txtVoteId">Vote</label>
+                                                <span class="invalid-feedback is-invalid">Please enter vote</span>
                                             </div>
                                         </div>
                                     </div>
@@ -270,7 +283,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                    <button type="button" class="btn btn-primary" onclick="Update()">Save changes</button>
                                 </div>
                             </div>
                         </div>
