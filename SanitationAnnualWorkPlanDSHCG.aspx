@@ -254,8 +254,8 @@
                                 `<td>` + `<input type="number" class="form-control txtQuarter2 Q" placeholder="0" />` + `</td>` +
                                 `<td>` + `<input type="number" class="form-control txtQuarter3 Q" placeholder="0" />` + `</td>` +
                                 `<td>` + `<input type="number" class="form-control txtQuarter4 Q" placeholder="0" />` + `</td>` +
-                                `<td>` + `<input disabled type="number" class="form-control txtAnnualBudget" placeholder="0" />` + `</td>` +
-                                `<td>` + `<input type="number" class="form-control txtUnitCost" placeholder="0" />` + `</td>` +
+                                `<td>` + `<input  type="number" class="form-control txtAnnualBudget" placeholder="0" />` + `</td>` +
+                                `<td>` + `<input disabled type="number" class="form-control txtUnitCost" placeholder="0" />` + `</td>` +
                                 `<td>` + `<textarea typeof="text" class="form-control txtComment"></textarea>` + `</td></tr>`
                             $("#myTable").append(row);
                         }
@@ -311,17 +311,29 @@
                         $row.find(".txtApprovalAnnualTarget").val(sum);
                     })
                     /*Multiplication of UntiCost and txtApprovalAnnualTarget*/
-                    $(".txtUnitCost").on('keyup', function () {
+                    //$(".txtUnitCost").on('keyup', function () {
+                    //    var mul = 0;
+                    //    var $row = $(this).closest('tr');
+                    //    var AnnualTarget = $row.find(".txtApprovalAnnualTarget").val();
+                    //    $row.find(".txtUnitCost").each(function () {
+                    //        if (this.value.length != 0) {
+                    //            mul = AnnualTarget * parseFloat(this.value);
+                    //            $(this).css("background-color", "#FEFFB0");
+                    //        }
+                    //    })
+                    //    $row.find(".txtAnnualBudget").val(mul);
+                    //})
+                    $(".txtAnnualBudget").on('keyup', function () {
                         var mul = 0;
                         var $row = $(this).closest('tr');
                         var AnnualTarget = $row.find(".txtApprovalAnnualTarget").val();
-                        $row.find(".txtUnitCost").each(function () {
+                        $row.find(".txtAnnualBudget").each(function () {
                             if (this.value.length != 0) {
-                                mul = AnnualTarget * parseFloat(this.value);
+                                mul = parseFloat(this.value) / AnnualTarget;
                                 $(this).css("background-color", "#FEFFB0");
                             }
                         })
-                        $row.find(".txtAnnualBudget").val(mul);
+                        $row.find(".txtUnitCost").val(mul);
                     })
                     let annualBudget = 0;
                     $(".txtUnitCost").on('keyup', function () {
@@ -498,8 +510,8 @@
                             `<td>` + `<input type="number" class="form-control txtQuarter2 Q" value="` + item.Quarter2 + `" />` + `</td>` +
                             `<td>` + `<input type="number" class="form-control txtQuarter3 Q" value="` + item.Quarter3 + `" />` + `</td>` +
                             `<td>` + `<input type="number" class="form-control txtQuarter4 Q" value="` + item.Quarter4 + `" />` + `</td>` +
-                            `<td>` + `<input disabled type="number" class="form-control txtAnnualBudget" value="` + item.AnnualBudget + `" />` + `</td>` +
-                            `<td>` + `<input type="number" class="form-control txtUnitCost" value="` + item.UnitCost + `" />` + `</td>` +
+                            `<td>` + `<input  type="number" class="form-control txtAnnualBudget" value="` + item.AnnualBudget + `" />` + `</td>` +
+                            `<td>` + `<input disabled type="number" class="form-control txtUnitCost" value="` + item.UnitCost + `" />` + `</td>` +
                             `<td>` + `<textarea typeof="text" class="form-control txtComment">` + item.Comment + `</textarea>` + `</td></tr>`
                         $("#myTable").append(row);
                         SanitationId = item.SanitationId;
@@ -532,17 +544,29 @@
                         $row.find(".txtApprovalAnnualTarget").val(sum);
                     })
                     /*Multiplication of UntiCost and txtApprovalAnnualTarget*/
-                    $(".txtUnitCost").on('keyup', function () {
+                    //$(".txtUnitCost").on('keyup', function () {
+                    //    var mul = 0;
+                    //    var $row = $(this).closest('tr');
+                    //    var AnnualTarget = $row.find(".txtApprovalAnnualTarget").val();
+                    //    $row.find(".txtUnitCost").each(function () {
+                    //        if (this.value.length != 0) {
+                    //            mul = AnnualTarget * parseFloat(this.value);
+                    //            $(this).css("background-color", "#FEFFB0");
+                    //        }
+                    //    })
+                    //    $row.find(".txtAnnualBudget").val(mul);
+                    //})
+                    $(".txtAnnualBudget").on('keyup', function () {
                         var mul = 0;
                         var $row = $(this).closest('tr');
                         var AnnualTarget = $row.find(".txtApprovalAnnualTarget").val();
-                        $row.find(".txtUnitCost").each(function () {
+                        $row.find(".txtAnnualBudget").each(function () {
                             if (this.value.length != 0) {
-                                mul = AnnualTarget * parseFloat(this.value);
+                                mul = parseFloat(this.value) / AnnualTarget;
                                 $(this).css("background-color", "#FEFFB0");
                             }
                         })
-                        $row.find(".txtAnnualBudget").val(mul);
+                        $row.find(".txtUnitCost").val(mul);
                     })
                     let annualBudget = 0;
                     $(".txtUnitCost").on('keyup', function () {

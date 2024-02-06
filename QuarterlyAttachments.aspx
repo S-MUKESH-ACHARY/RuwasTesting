@@ -6,14 +6,16 @@
             getTableData();
         })
         function getTableData (){
-            var data = { 'op': 'QuarterlyAttachmentData' }
+            var data = { 'op': 'FetchQuarterlyAttachmentData' }
             var s = function (sms) {
                 sms.forEach(function (item) {
                     var row = `<tr>`
-                    row = row + `<td>` + item.FinancialYr+`</td>`+
+                    row = row +
+                        `<td>` + item.FinancialYr + `</td>` +
                         `<td>` + item.LC+`</td>`+
                         `<td>` + item.NewRehabitation+`</td>`+
                         `<td>` + item.Quarter+`</td>`+
+                        `<td>` + item.TeachnologyId+`</td>`+
                         `<td>` + item.Teachnology+`</td>`+
                         `<td>` + item.SubCounty+`</td>`+
                         `<td>` + item.Parish+`</td>`+
@@ -83,6 +85,7 @@
                             <th>Local Government</th>
                             <th>Category</th>
                             <th>Quater</th>
+                            <th>TechnologyId</th>
                             <th>Technology</th>
                             <th>Subcounty</th>
                             <th>Parish</th>

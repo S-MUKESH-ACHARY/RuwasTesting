@@ -281,24 +281,24 @@
             }
             alert("Saved Successfully.");
         }
-        function addNewRow() {
-            let row = '<tr class="row m-1 p-1">';
-            row += '<td class="col-3"><div class="form-floating"><input type="number" min="1" class="form-control" id="sourceNumberId" title="Enter the Source Number" placeholder="Enter Source Number" /><label for="sourceNumberId">Source Number</label></div></td >';
-            row += '<td class="col-3"><div class="form-floating"><input type="text" id="nameOfWaterSourceId" class="form-control" title="Enter the Name of Water Source" placeholder="Enter Name of Water Source" /><label for="nameOfWaterSourceId">Name of Water Source</label></div></td>';
-            row += '<td class="col-3 mt-2"><button type="button" class="btn btn-light" onclick = "addNewRow()"><i class="fa-solid fa-circle-plus fa-1x"></i></button >&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-light" onclick="removeNewRow(this)"><i class="fa-solid fa-circle-minus fa-1x"></i></button></td>';
-            row += '</tr>';
-            $("#add_table").append(row);
-        }
-        function removeNewRow(child) {
-            let rowLength = document.getElementById("add_table").rows.length;
-            if (rowLength == 2) {
-                alert("First row can't be deleted");
-                return;
-            }
-            else {
-                child.parentNode.parentNode.remove();
-            }
-        }
+        //function addNewRow() {
+        //    let row = '<tr class="row m-1 p-1">';
+        //    row += '<td class="col-3"><div class="form-floating"><input type="number" min="1" class="form-control" id="sourceNumberId" title="Enter the Source Number" placeholder="Enter Source Number" /><label for="sourceNumberId">Source Number</label></div></td >';
+        //    row += '<td class="col-3"><div class="form-floating"><input type="text" id="nameOfWaterSourceId" class="form-control" title="Enter the Name of Water Source" placeholder="Enter Name of Water Source" /><label for="nameOfWaterSourceId">Name of Water Source</label></div></td>';
+        //    row += '<td class="col-3 mt-2"><button type="button" class="btn btn-light" onclick = "addNewRow()"><i class="fa-solid fa-circle-plus fa-1x"></i></button >&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-light" onclick="removeNewRow(this)"><i class="fa-solid fa-circle-minus fa-1x"></i></button></td>';
+        //    row += '</tr>';
+        //    $("#add_table").append(row);
+        //}
+        //function removeNewRow(child) {
+        //    let rowLength = document.getElementById("add_table").rows.length;
+        //    if (rowLength == 2) {
+        //        alert("First row can't be deleted");
+        //        return;
+        //    }
+        //    else {
+        //        child.parentNode.parentNode.remove();
+        //    }
+        //}
         function getLocationType() {
             var chkBoxValue = $("input[name='locationType']:checked").val();
             if (chkBoxValue == "UTM") {
@@ -524,7 +524,6 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <section class="container-fluid">
         <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-
             <ol class="breadcrumb d-flex justify-content-start">
                 <li class="breadcrumb-item h6 active"><i class="fa-solid fa-arrow-left" style="cursor:pointer;" onclick="location.href='QuarterlyAttachments.aspx'"></i>&nbsp;&nbsp;Data Entry</li>
                 <li class="breadcrumb-item h6 active">Quarterly Attachments</li>
@@ -549,13 +548,13 @@
                                                 <span class="invalid-feedback is-invalid">please select Financial year</span>
                                             </div>
                                         </div>
-                        <div class="col-lg-3 col-6">
+                        <%--<div class="col-lg-3 col-6">
                             <div class="form-floating">
                                 <input disabled type="text" id="workplanId" class="form-control" title="Enter the Workplan Id" placeholder="Workplan Id" />
                                 <label for="workplanId">Workplan Id</label>
                                 <span class="invalid-feedback is-invalid">please enter the workplan id</span>
                             </div>
-                        </div>
+                        </div>--%>
                     </div>
                     <div class="row p-1 m-1 mb-4">
                         <div class="col-lg-3 col-sm-6">
@@ -583,10 +582,10 @@
                             <div class="form-floating">
                                 <select class="form-select" id="quarterId" title="Quarter">
                                     <option value="">Choose from List</option>
-                                    <option value="1">Q One</option>
-                                    <option value="2">Q Two</option>
-                                    <option value="3">Q Three</option>
-                                    <option value="4">Q Four</option>
+                                    <option value="1">Q One (July-Sept)</option>
+                                    <option value="2">Q Two (Oct-Dec)</option>
+                                    <option value="3">Q Three (Jan-March)</option>
+                                    <option value="4">Q Four (Apr-Jun)</option>
                                 </select>
                                 <label for="quarterId">Quarter <span>*</span></label>
                                 <span class="invalid-feedback is-invalid">please select from list</span>
@@ -794,11 +793,11 @@
                                     <span class="invalid-feedback is-invalid">please enter the name of water source</span>
                                 </div>
                             </td>
-                            <td class="col-3 mt-2">
+                           <%-- <td class="col-3 mt-2">
                                 <button type="button" class="btn btn-light" onclick="addNewRow()"><i class="fa-solid fa-circle-plus fa-1x"></i></button>
                                 &nbsp;&nbsp;
                                 <button type="button" class="btn btn-light" onclick="removeNewRow(this)"><i class="fa-solid fa-circle-minus fa-1x"></i></button>
-                            </td>
+                            </td>--%>
                         </tr>
                     </table>
                     <div class="row ms-2 mt-4"><strong>4.Funding Information</strong></div>

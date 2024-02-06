@@ -7,7 +7,7 @@
             getRWSRC();
             /*fetchLC();*/
         })
-        function save() {
+        function update() {
             let slctFinancialYear = $("#slctFinancialYearId").val();
             if (slctFinancialYear == "") {
                 $("#slctFinancialYearId").addClass("is-invalid");
@@ -44,43 +44,84 @@
                 $("#slctQuarterId").removeClass("is-invalid");
                 $("#slctQuarterId").addClass("is-valid");
             }
-            let titleId = $("#titleId").val();
-            if (titleId == "") {
-                $("#titleId").addClass("is-invalid");
-                $("#titleId").focus();
+            let txtTitle = $("#txtTitleId").val();
+            if (txtTitle == "") {
+                $("#txtTitleId").addClass("is-invalid");
+                $("#txtTitleId").focus();
                 return false;
             } else {
-                $("#titleId").removeClass("is-invalid");
-                $("#titleId").addClass("is-valid");
+                $("#txtTitleId").removeClass("is-invalid");
+                $("#txtTitleId").addClass("is-valid");
             }
-            let formFileL1 = $("#formFileL1Id").val();
-            if (formFileL1 == "") {
-                $("#formFileL1Id").addClass("is-invalid");
-                $("#formFileL1Id").focus();
+            //let docFormFileL1 = $("#docFormFile1Id").val();
+            //if (docFormFileL1 == "") {
+            //    $("#docFormFile1Id").addClass("is-invalid");
+            //    $("#docFormFile1Id").focus();
+            //    return false;
+            //} else {
+            //    $("#docFormFile1Id").removeClass("is-invalid");
+            //    $("#docFormFile1Id").addClass("is-valid");
+            //}
+            let txtCaoLetter = $("#txtCaoLetterId").val();
+            if (txtCaoLetter == "") {
+                $("#txtCaoLetterId").addClass("is-invalid");
+                $("#txtCaoLetterId").focus();
                 return false;
             } else {
-                $("#formFileL1Id").removeClass("is-invalid");
-                $("#formFileL1Id").addClass("is-valid");
+                $("#txtCaoLetterId").removeClass("is-invalid");
+                $("#txtCaoLetterId").addClass("is-valid");
             }
-            let caoLetter = $("#caoLetterId").val();
-            if (caoLetter == "") {
-                $("#caoLetterId").addClass("is-invalid");
-                $("#caoLetterId").focus();
-                return false;
-            } else {
-                $("#caoLetterId").removeClass("is-invalid");
-                $("#caoLetterId").addClass("is-valid");
+            //let docFormFile2 = $("#docFormFile2Id").val();
+            //if (docFormFile2 == "") {
+            //    $("#docFormFile2Id").addClass("is-invalid");
+            //    $("#docFormFile2Id").focus();
+            //    return false;
+            //} else {
+            //    $("#docFormFile2Id").removeClass("is-invalid");
+            //    $("#docFormFile2Id").addClass("is-valid");
+            //}
+            var txtWorkplan = $("#txtWorkplanId").text();
+            var ModelActivityOfDWSCG = [];
+            $("#myTable>tbody>tr").each(function () {
+                let WorkplanDtlId = Number($(this).find(".txtWPDtlId").val());
+                let QuarterAchived = Number($(this).find(".txtQuarterAchived").val());
+                let Expanditure = Number($(this).find(".txtExpanditure").val());
+                let Comments = $(this).find(".txtComment").val();
+                ModelActivityOfDWSCG.push({ WorkplanDtlId: WorkplanDtlId, QuarterAchived: QuarterAchived, Expanditure: Expanditure, Comments: Comments });
+            })
+            var data = {
+                "op": "UpdatePRDWSCG",
+                "txtWorkplan": txtWorkplan,
+                "txtTitle": txtTitle,
+                "txtCaoLetter": txtCaoLetter,
+                "slctQuarter": slctQuarter,
+                "ModelActivityOfDWSCG": ModelActivityOfDWSCG
             }
-            let formFileL2Id = $("#formFileL2Id").val();
-            if (formFileL2Id == "") {
-                $("#formFileL2Id").addClass("is-invalid");
-                $("#formFileL2Id").focus();
-                return false;
-            } else {
-                $("#formFileL2Id").removeClass("is-invalid");
-                $("#formFileL2Id").addClass("is-valid");
+            var s = function (sms) {
+                alert(sms);
             }
+            var e = function (msg) {
+                alert(msg);
+            }
+            CallHandlerUsingJson_POST(data, s, e)
         }
+
+        function CallHandlerUsingJson_POST(d, s, e) {
+            d = JSON.stringify(d);
+            d = encodeURIComponent(d);
+            $.ajax({
+                type: "POST",
+                url: "RuwasHandler.axd",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                data: d,
+                async: true,
+                cache: true,
+                success: s,
+                error: e
+            });
+        }
+       
         function ModelActivityTable() {
             let FinancialYr = $("#slctFinancialYearId").val();
             let LocalGovernment = $("#slctLocalGovernmentId").val();
@@ -107,38 +148,71 @@
                     "LocalGovernment": LocalGovernment,
                     "slctQuarter": slctQuarter
                 }
-                var s = function (sms) {
-                    console.log(sms);
+                var s = function (sms) {                    
                     $("#tBody").html("");
+                    var workPlanId;
+                    var Title;
+                    var caoTitle;
                     if (Array.isArray(sms)) {
-                        sms.forEach(function (item) {
+                        sms.forEach(function (item) {                            
+                            workPlanId = item.WorkPlanId;
+                            Title = item.Title;
+                            caoTitle = item.caoTitle;
                             var row = `<tr>`
-                            row = row + `<td>` + item.SlNo + `</td>` +
+                            row = row +
+                                /*`<td class="txtWPDtlId" style="display:none" id="txtWPDtlId">` + item.WorkPlanDtlId + `</td>` +*/
+                                `<td style = "display:none" id = "txtWPDtlId" >` + `<input disabled type="number" class="form-control txtWPDtlId" style="width:10rem" value="` + item.WorkPlanDtlId + `" />` + `</td>` +
+                                `<td>` + item.SlNo + `</td>` + 
                                 `<td>` + item.ModelActivity + `</td>` +
-                                `<td>` + `<input disabled type="number" class="form-control" placeholder="` + item.ApprovalAnnualTarget + `" />` + `</td>` +
-                                `<td>` + `<input disabled type="number" class="form-control" placeholder="` + item.QuarterTarget + `" />` + `</td>` +
-                                `<td>` + `<input type="number" class="form-control" placeholder="` + item.QuarterAchieved +`" />` + `</td>` +
-                                `<td>` + `<input disabled type="number" class="form-control" placeholder="0" />` + `</td>` +
-                                `<td>` + `<input disabled type="number" class="form-control" placeholder="0" />` + `</td>` +
-                                `<td>` + `<input type="number" class="form-control txtExpanditure" placeholder="` + item.Expanditure +`" />` + `</td>` +
-                                `<td>` + `<input disabled type="number" class="form-control CumulativeExpanditure" placeholder="0" />` + `</td>` +
-                                `<td>` + `<input disabled type="number" class="form-control" placeholder="` + item.AnnualBudget + `" />` + `</td>` +
-                                `<td>` + `<textarea typeof="text" class="form-control"></textarea>` + `</td></tr>`
+                                `<td>` + `<input disabled type="number" class="form-control txtApprovalAnnualTarget" style="width:10rem" placeholder="` + item.ApprovalAnnualTarget + `" />` + `</td>` +
+                                `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="` + item.QuarterTarget + `" />` + `</td>` +
+                                `<td>` + `<input type="number" class="form-control txtQuarterAchived" style="width:10rem" placeholder="` + item.QuarterAchieved +`" />` + `</td>` +
+                                `<td>` + `<input disabled type="number" class="form-control CumulativeAchieved" style="width:10rem" placeholder="` + item.CumulativeAchieved + `" />` + `</td>` +
+                                `<td>` + `<input disabled type="number" class="form-control percentWorkplan" style="width:10rem" placeholder="0" />` + `</td>` +
+                                `<td>` + `<input type="number" class="form-control txtExpanditure" placeholder="` + item.Expanditure + `" style="width:10rem"  value="` + item.Expanditure + `" />` + `</td>` +
+                                `<td>` + `<input disabled type="number" class="form-control CumulativeExpanditure" style="width:10rem" value="` + item.CumulativeExpanditure + `" />` + `</td>` +
+                                `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="` + item.AnnualBudget + `" />` + `</td>` +
+                                `<td>` + `<textarea typeof="text" class="form-control txtComment" style="width:20rem">` + item.Comments +`</textarea>` + `</td></tr>`
                             $("#myTable").append(row);
                         })
-                        /*$("#myTable").DataTable();*/
-                      
-                        $(".txtExpanditure").on('keyup', function () {
-                            var CE = $(".CumulativeExpanditure").val();
-                            var $row = $(this).closest('tr');
-                           
-                            $row.find(".txtExpanditure").each(function () {
-                                if (this.value.length != 0) {
-                                    CE += Number(this.value);
-                                }
+                        $("#txtWorkplanId").html(workPlanId);
+                        $("#txtTitleId").val(Title);
+                        $("#txtCaoLetterId").val(caoTitle);
 
+                        $(".txtExpanditure").on('input', function (event) {
+                            var sum = 0;
+                            var $row = $(this).closest('tr');                           
+                            var txtId = parseInt($row.find(".txtWPDtlId").val());
+                            var TE = parseInt($(this).val()) || 0;
+                            var item = sms.find((item) => item.WorkPlanDtlId == txtId);
+                            sum = TE == 0 ? item.CumulativeExpanditure - item.Expanditure : TE + (item.CumulativeExpanditure - item.Expanditure);           
+                            $row.find(".CumulativeExpanditure").val(sum);
+
+                        })
+
+                        $(".txtQuarterAchived").on('input', function (event) {
+                            var sum1 = 0;
+                            var $row = $(this).closest('tr');                           
+                            var txtId = parseInt($row.find(".txtWPDtlId").val());
+                            var TQ = parseInt($(this).val()) || 0;
+                            var item = sms.find((item) => item.WorkPlanDtlId == txtId);
+                            sum1 = TQ == 0 ? item.CumulativeAchieved - item.QuarterAchieved : TQ + (item.CumulativeAchieved - item.QuarterAchieved);           
+                            $row.find(".CumulativeAchieved").val(sum1);
+
+                        })
+                        $(".txtQuarterAchived").on('keyup', function () {
+                            var mul = 0;
+                            var $row = $(this).closest('tr');
+                            var txtId = parseInt($row.find(".txtWPDtlId").val());
+                            var item = sms.find((item) => item.WorkPlanDtlId == txtId);
+                            //var ApprovalAnnualTarget = parseInt($row.find(".txtApprovalAnnualTarget").val());
+                            $row.find(".CumulativeAchieved").each(function () {
+                                if (this.value.length != 0) {
+                                    mul = (parseFloat(this.value) / item.ApprovalAnnualTarget) * 100;
+                                    $(this).css("background-color", "#FEFFB0");
+                                }
                             })
-                            $row.find(".CumulativeExpanditure").val(CE);
+                            $row.find(".percentWorkplan").val(mul);
                         })
                     }
                     else { alert("No Rows Found"); }
@@ -267,6 +341,7 @@
                 <div class="card m-2 shadow mb-5 bg-white rounded">
                     <div class="card-header text-center h5 alert alert-info">Progress Report (DWSCG)</div>
                     <div class="card-body">
+                        <label style="display:none;" id="txtWorkplanId"></label>
                         <div class="row p-1 m-1">
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-floating">
@@ -325,12 +400,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div style="overflow: auto; height: 600px;" class="ms-3 me-3">
+                        <div style="overflow: scroll; height:420px;">
                             <table id="myTable" class="table table-hover">
-                                <thead>
+                                <thead style="text-align: center;">
                                     <tr class="table-secondary" style="position: sticky; top: 0;">
                                         <th>No</th>
-                                        <th style="width: 100px">Model Activity</th>
+                                        <th>Model Activity</th>
                                         <th>Approved Annual Workplan Target</th>
                                         <th>Quarter Target</th>
                                         <th>Performance in Quarter Achieved</th>
@@ -340,7 +415,7 @@
                                         <th>Cumulative Expenditure(Ugx)</th>
                                         <th>Annual Budget(Ugx)</th>
                                         <th>Comments</th>
-                                        <th></th>
+                                        
                                     </tr>
                                 </thead>
                                 <tbody id="tBody"></tbody>
@@ -375,13 +450,13 @@
                                     <div class="row p-1 m-1">
                                         <div class="col-3">
                                             <div class="form-floating">
-                                                <input type="text" class="form-control" id="titleId" placeholder="Enter the Title of Document" title="Enter the Title of Document" />
-                                                <label for="titleId">Title <span>*</span></label>
+                                                <input type="text" class="form-control" id="txtTitleId" placeholder="Enter the Title of Document" title="Enter the Title of Document" />
+                                                <label for="txtTitleId">Title <span>*</span></label>
                                                 <span class="invalid-feedback is-invalid">please enter the title of document</span>
                                             </div>
                                         </div>
                                         <div class="col-3 mt-2">
-                                            <input class="form-control form-control-lg" id="formFileL1Id" type="file">
+                                            <input class="form-control form-control-lg" id="docFormFile1Id" type="file">
                                             <span class="invalid-feedback is-invalid">please select file</span>
                                         </div>
                                         <div class="col-3 text-sm-start mt-4 fst-italic" style="font-weight: 400">(Document File, Max 10MB) <span>*</span></div>
@@ -393,12 +468,12 @@
                                     <div class="row p-1 m-1">
                                         <div class="col-3">
                                             <div class="form-floating">
-                                                <input type="text" class="form-control" id="caoLetterId" placeholder="Cao Letter" title="Enter the TItle of Coa Letter" />
+                                                <input type="text" class="form-control" id="txtCaoLetterId" placeholder="Cao Letter" title="Enter the TItle of Coa Letter" />
                                                 <label for="caoLetterId">Cao Letter <span>*</span></label>
                                             </div>
                                         </div>
                                         <div class="col-3 mt-2">
-                                            <input class="form-control form-control-lg" id="formFileL2Id" type="file">
+                                            <input class="form-control form-control-lg" id="docFormFile2Id" type="file">
                                             <span class="invalid-feedback is-invalid">please select file</span>
                                         </div>
                                         <div class="col-3 text-sm-start mt-4 fst-italic" style="font-weight: 400">(Document File, Max 10MB) <span>*</span></div>
@@ -409,7 +484,7 @@
                                 <td>
                                     <div class="d-flex justify-content-center">
                                         <div class="p-2">
-                                            <button type="button" id="vtnSId" onclick="save()" class="btn btn-info text-light">Submit</button>&nbsp;
+                                            <button type="button" id="vtnSId" onclick="update()" class="btn btn-info text-light">Submit</button>&nbsp;
                                             <button type="button" id="btnCId" onclick="location.reload();" class="btn btn-danger">Clear</button>
                                         </div>
                                     </div>

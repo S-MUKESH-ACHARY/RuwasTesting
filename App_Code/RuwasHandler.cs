@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.Remoting.Contexts;
 using System.Web;
 using System.Web.Script.Serialization;
+using System.Web.Services.Description;
 using System.Web.SessionState;
 
 
@@ -70,7 +71,7 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
                     SaveSubTechnology(context);
                     break;
                 case "ContractTableData":
-                    FetchContractTableData(context);
+                    ContractTableData(context);
                     break;
                 case "FetchLcTable":
                     FetchLcTable(context);
@@ -96,7 +97,7 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
                 case "FetchTeachnologyTable":
                     FetchTeachnologyTable(context);
                     break;
-                case "SubCountyTableData":
+                case "FetchSubCountyTableData":
                     FetchSubCountyTableData(context);
                     break;
                 case "FetchLCOfRWSRC":
@@ -150,7 +151,7 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
                 case "PlannedFundsPerDistrictsTableData":
                     FetchPlannedFundsPerDistrictsTableData(context);
                     break;
-                case "QuarterlyAttachmentData":
+                case "FetchQuarterlyAttachmentData":
                     FetchQuarterlyAttachmentData(context);
                     break;
                 case "CategoryOfBudgetType":
@@ -176,7 +177,7 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
                 //    break;
                 //case "FetchModelActivityOfSanitation":
                 //    FetchModelActivityOfSanitation(context);
-                    //break;
+                //break;
                 case "UpdateModelActivity":
                     UpdateModelActivity(context);
                     break;
@@ -219,6 +220,12 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
                 case "UpdateDistrict":
                     UpdateDistrict(context);
                     break;
+                case "FetchCStatus":
+                    FetchCStatus(context);
+                    break;
+                case "UpdateContract":
+                    UpdateContract(context);
+                    break;
                 default:
                     var jsonString = String.Empty;
                     context.Request.InputStream.Position = 0;
@@ -236,7 +243,7 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
                             case "SaveCategories":
                                 SaveCategories(jsonString, context);
                                 break;
-                            case "Contracts":
+                            case "SaveContracts":
                                 SaveContracts(jsonString, context);
                                 break;
                             case "SaveModelActivity":
@@ -253,6 +260,9 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
                                 break;
                             case "UpdateAnnualWorkplanDWSCG":
                                 UpdateAnnualWorkplanDWSCG(jsonString, context);
+                                break;
+                            case "UpdatePRDWSCG":
+                                UpdatePRDWSCG(jsonString, context);
                                 break;
                         }
                     }
@@ -638,7 +648,7 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
             context.Response.Write(response);
         }
     }
-    public class FetchContractTableClass
+    public class ContractTableClass
     {
         public string LocalGovernment { get; set; }
         public string FinancialYear { get; set; }
@@ -649,21 +659,23 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
         public string ContractSum { get; set; }
         public string AnnualPaymentUnderContract { get; set; }
         public string Status { get; set; }
+        public int CStatusId { get; set; }
+        public int ContractDetlId { get; set; }
 
     }
-    public void FetchContractTableData(HttpContext context)
+    public void ContractTableData(HttpContext context)
     {
         try
         {
-            List<FetchContractTableClass> ContractList = new List<FetchContractTableClass>();
-            NpgsqlCommand cmd = new NpgsqlCommand("SELECT \"districts\".\"districtName\" AS \"Local Government\",\"financialYears\".\"financialYearName\" AS \"Financial\",\"contractDetails\".\"contractNo\" AS \"Contract No\",\"contractDetails\".\"contractorName\" AS \"Name of Contractor or Consultant/ Company Name\",\"contractDetails\".\"contractorCountry\" AS \"Country of Origin of Contractor or Consultant\",\"contractDetails\".\"descriptionGoods\" AS \"Description of Good, Services or Works Procured\",\"contractDetails\".\"contractSum\" AS \"Contract Sum (Ugx)(000)\",\"contractDetails\".\"annualPaymenttUnderContract\" AS \"Annual Payment Under Contract\",\"cstatuses\".\"contractStatusName\" AS \"Status\" FROM \"districts\" RIGHT OUTER JOIN \"contracts\" ON \"districts\".\"districtId\" = \"contracts\".\"districtId\" LEFT OUTER JOIN \"financialYears\" ON \"contracts\".\"financialYearId\" = \"financialYears\".\"financialYearId\" LEFT OUTER JOIN \"contractDetails\" ON \"contracts\".\"contractId\" = \"contractDetails\".\"contractId\" left join \"cstatuses\" on \"contractDetails\".\"cstatusId\"=\"cstatuses\".\"cstatusId\"");
+            List<ContractTableClass> ContractList = new List<ContractTableClass>();
+            NpgsqlCommand cmd = new NpgsqlCommand("SELECT \"districts\".\"districtName\" AS \"Local Government\",\"cstatuses\".\"cstatusId\" AS \"CStatusId\",\"contractDetails\".\"contractDetailId\" AS \"ContractDetlId\",\"financialYears\".\"financialYearName\" AS \"Financial\",\"contractDetails\".\"contractNo\" AS \"Contract No\",\"contractDetails\".\"contractorName\" AS \"Name of Contractor or Consultant/ Company Name\",\"contractDetails\".\"contractorCountry\" AS \"Country of Origin of Contractor or Consultant\",\"contractDetails\".\"descriptionGoods\" AS \"Description of Good, Services or Works Procured\",\"contractDetails\".\"contractSum\" AS \"Contract Sum (Ugx)(000)\",\"contractDetails\".\"annualPaymenttUnderContract\" AS \"Annual Payment Under Contract\",\"cstatuses\".\"contractStatusName\" AS \"Status\" FROM \"districts\" RIGHT OUTER JOIN \"contracts\" ON \"districts\".\"districtId\" = \"contracts\".\"districtId\" LEFT OUTER JOIN \"financialYears\" ON \"contracts\".\"financialYearId\" = \"financialYears\".\"financialYearId\" LEFT OUTER JOIN \"contractDetails\" ON \"contracts\".\"contractId\" = \"contractDetails\".\"contractId\" join \"cstatuses\" on \"contractDetails\".\"cstatusId\"=\"cstatuses\".\"cstatusId\"");
             DataSet ds = ruwasdb.SelectQuery(cmd);
             DataTable dt = ds.Tables[0];
             if (dt.Rows.Count > 0)
             {
                 foreach (DataRow dr in dt.Rows)
                 {
-                    FetchContractTableClass arr = new FetchContractTableClass();
+                    ContractTableClass arr = new ContractTableClass();
                     arr.LocalGovernment = dr["Local Government"].ToString();
                     arr.FinancialYear = dr["Financial"].ToString();
                     arr.ContractNumber = dr["Contract No"].ToString();
@@ -673,6 +685,8 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
                     arr.ContractSum = dr["Contract Sum (Ugx)(000)"].ToString();
                     arr.AnnualPaymentUnderContract = dr["Annual Payment Under Contract"].ToString();
                     arr.Status = dr["Status"].ToString();
+                    arr.CStatusId = Convert.ToInt32(dr["CStatusId"]);
+                    arr.ContractDetlId = Convert.ToInt32(dr["ContractDetlId"]);
                     ContractList.Add(arr);
                 }
                 string response = GetJson(ContractList);
@@ -1123,6 +1137,7 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
         public string SubCounty { get; set; }
         public int SubCountyId { get; set; }
         public string District { get; set; }
+        public int DistrictId { get; set; }
         public int Population { get; set; }
         public string FinancialYear { get; set; }
     }
@@ -1131,7 +1146,7 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
         try
         {
             List<SubCountyTableDataClass> SubCountyList = new List<SubCountyTableDataClass>();
-            NpgsqlCommand cmd = new NpgsqlCommand("select \"subCountyId\",\"subCountyName\",\"population\",\"districtName\",\"financialYearName\" from \"subCounties\" join \"districts\" on \"subCounties\".\"districtId\"=\"districts\".\"districtId\" join \"financialYears\" on \"subCounties\".\"financialYearId\"=\"financialYears\".\"financialYearId\"");
+            NpgsqlCommand cmd = new NpgsqlCommand("select \"subCountyId\",\"subCountyName\",\"population\",\"subCounties\".\"districtId\",\"districtName\",\"financialYearName\" from \"subCounties\" join \"districts\" on \"subCounties\".\"districtId\"=\"districts\".\"districtId\" join \"financialYears\" on \"subCounties\".\"financialYearId\"=\"financialYears\".\"financialYearId\"");
             DataSet ds = ruwasdb.SelectQuery(cmd);
             DataTable dt = ds.Tables[0];
             if (dt.Rows.Count > 0)
@@ -1141,6 +1156,7 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
                     SubCountyTableDataClass arr = new SubCountyTableDataClass();
                     arr.SubCountyId = Convert.ToInt32(dr["subCountyId"]);
                     arr.SubCounty = dr["subCountyName"].ToString();
+                    arr.DistrictId = Convert.ToInt32(dr["districtId"]);
                     arr.District = dr["districtName"].ToString();
                     arr.Population = Convert.ToInt32(dr["population"]);
                     arr.FinancialYear = dr["financialYearName"].ToString();
@@ -1970,6 +1986,7 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
         public string NewRehabitation { get; set; }
         public int Quarter { get; set; }
         public string Teachnology { get; set; }
+        public int TeachnologyId { get; set; }
         public string SubCounty { get; set; }
         public string Parish { get; set; }
         public string Village { get; set; }
@@ -1987,6 +2004,7 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
             List<QuarterlyAttachmentDataClass> QuarterlyAttachmentDataList = new List<QuarterlyAttachmentDataClass>();
             NpgsqlCommand cmd = new NpgsqlCommand("SELECT  \"financialYears\".\"financialYearName\" AS \"Financial Year\"," +
     "\"technologies\".\"technologyName\" AS \"Technology\"," +
+    "\"technologies\".\"technologyId\" AS \"TechnologyId\"," +
     "\"quarterlyAttachments\".\"newRehabilitated\" AS \"New / Rehabilitated\"," +
     "\"quarterlyAttachments\".\"quarter\" AS \"Quarter\"," +
     "\"quarterlyAttachments\".\"sourceNo\" AS \"Source Number\"," +
@@ -2020,6 +2038,7 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
                     arr.LC = dr["Local Government"].ToString();
                     arr.NewRehabitation = dr["New / Rehabilitated"].ToString();
                     arr.Quarter = Convert.ToInt32(dr["Quarter"]);
+                    arr.TeachnologyId = Convert.ToInt32(dr["TechnologyId"]);
                     arr.Teachnology = dr["Technology"].ToString();
                     arr.SubCounty = dr["Sub-county"].ToString();
                     arr.Parish = dr["Parish"].ToString();
@@ -2428,7 +2447,7 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
         public int TxtUnitCost { get; set; }
         public string TxtComment { get; set; }
     }
-    public void SaveAnnualWorkplanDWSCG(string jsonstring,HttpContext context)
+    public void SaveAnnualWorkplanDWSCG(string jsonstring, HttpContext context)
     {
         try
         {
@@ -2485,10 +2504,10 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
             DataTable dt = ds.Tables[0];
             if (dt.Rows.Count > 0)
             {
-                foreach(DataRow dr in dt.Rows)
+                foreach (DataRow dr in dt.Rows)
                 {
                     int WorkplanId = Convert.ToInt32(dr["workPlanId"]);
-                    foreach(ModelActivityOfAnnualWorkplanClass x in obj.ModelActivityOfAnnualWorkplanList)
+                    foreach (ModelActivityOfAnnualWorkplanClass x in obj.ModelActivityOfAnnualWorkplanList)
                     {
                         string TxtSlNo = x.TxtSlNo;
                         string TxtModelActivity = x.TxtModelActivity;
@@ -2547,7 +2566,7 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
                 string response = GetJson("No Data Found.");
                 context.Response.Write(response);
             }
-        
+
         }
         catch (Exception ex)
         {
@@ -2589,9 +2608,9 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
     {
         try
         {
-             var js = new JavaScriptSerializer();
+            var js = new JavaScriptSerializer();
             AnnualWorkplanDSHCGClass obj = js.Deserialize<AnnualWorkplanDSHCGClass>(jsonstring);
-            
+
             int FinancialYr = obj.SlctFinancialYear;
             int District = obj.SlctLocalGovernment;
             DateTime DateOfApprovalByCouncil = obj.DateOfApprovalByCouncil;
@@ -2806,22 +2825,22 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
     {
         try
         {
-        int TxtOrderNo = Convert.ToInt32(context.Request["txtOrderNo"]);
-        string TxtSlNo = context.Request["txtSlNo"].ToString();
-        string TxtModelActivityName = context.Request["txtModelActivityName"].ToString();
-        string TxtModelActivityDescription = context.Request["txtModelActivityDescription"].ToString();
-        string TxtUnitsForTarget = context.Request["txtUnitsForTarget"].ToString();
+            int TxtOrderNo = Convert.ToInt32(context.Request["txtOrderNo"]);
+            string TxtSlNo = context.Request["txtSlNo"].ToString();
+            string TxtModelActivityName = context.Request["txtModelActivityName"].ToString();
+            string TxtModelActivityDescription = context.Request["txtModelActivityDescription"].ToString();
+            string TxtUnitsForTarget = context.Request["txtUnitsForTarget"].ToString();
             int TxtModelActivityDetailId = Convert.ToInt32(context.Request["txtModelActivityDetailId"]);
             NpgsqlCommand cmd = new NpgsqlCommand("Update \"modelActivityDetails\" set \"orderNo\"=@TxtOrderNo," +
             "\"sNo\"=@TxtSlNo,\"modelActivityName\"=@TxtModelActivityName,\"modelActivityDescription\"=@TxtModelActivityDescription," +
             "\"unitTarget\"=@TxtUnitsForTarget where \"modelActivityDetailId\"=@TxtModelActivityDetailId");
-        cmd.Parameters.AddWithValue("@TxtOrderNo", TxtOrderNo);
-        cmd.Parameters.AddWithValue("@TxtSlNo", TxtSlNo);
-        cmd.Parameters.AddWithValue("@TxtModelActivityName", TxtModelActivityName);
-        cmd.Parameters.AddWithValue("@TxtModelActivityDescription", TxtModelActivityDescription);
-        cmd.Parameters.AddWithValue("@TxtUnitsForTarget", TxtUnitsForTarget);
-        cmd.Parameters.AddWithValue("@TxtModelActivityDetailId", TxtModelActivityDetailId);
-        ruwasdb.Update(cmd);
+            cmd.Parameters.AddWithValue("@TxtOrderNo", TxtOrderNo);
+            cmd.Parameters.AddWithValue("@TxtSlNo", TxtSlNo);
+            cmd.Parameters.AddWithValue("@TxtModelActivityName", TxtModelActivityName);
+            cmd.Parameters.AddWithValue("@TxtModelActivityDescription", TxtModelActivityDescription);
+            cmd.Parameters.AddWithValue("@TxtUnitsForTarget", TxtUnitsForTarget);
+            cmd.Parameters.AddWithValue("@TxtModelActivityDetailId", TxtModelActivityDetailId);
+            ruwasdb.Update(cmd);
             string sms = "Updated successfully";
             string response = GetJson(sms);
             context.Response.Write(response);
@@ -2841,7 +2860,7 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
             int TxtOrderNumberId = Convert.ToInt32(context.Request["txtOrderNumberId"]);
             string TxtCategoryNameId = context.Request["txtCategoryNameId"].ToString();
             string TxtCategoryInformationId = context.Request["txtCategoryInformationId"].ToString();
-            NpgsqlCommand cmd=new NpgsqlCommand("update \"categoryDetails\" set \"orderNo\"=@TxtOrderNumberId," +
+            NpgsqlCommand cmd = new NpgsqlCommand("update \"categoryDetails\" set \"orderNo\"=@TxtOrderNumberId," +
                 "\"categoryName\"=@TxtCategoryNameId,\"categoryDescription\"=@TxtCategoryInformationId where \"categoryDetailId\"=@TxtCategoriesId");
             cmd.Parameters.AddWithValue("@TxtOrderNumberId", TxtOrderNumberId);
             cmd.Parameters.AddWithValue("@TxtCategoryNameId", TxtCategoryNameId);
@@ -2861,13 +2880,20 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
     }
     public class PReportDWSCGClass
     {
+        public int WorkPlanId { get; set; }
+        public int WorkPlanDtlId { get; set; }
         public string SlNo { get; set; }
         public string ModelActivity { get; set; }
-        public int  ApprovalAnnualTarget { get; set; }
+        public int ApprovalAnnualTarget { get; set; }
         public int QuarterTarget { get; set; }
         public int AnnualBudget { get; set; }
         public int QuarterAchieved { get; set; }
         public int Expanditure { get; set; }
+        public int CumulativeExpanditure { get; set; }
+        public int CumulativeAchieved { get; set; }
+        public string Comments { get; set; }
+        public string Title { get; set; }
+        public string caoTitle { get; set; }
     }
     public void FetchPReportDWSCG(HttpContext context)
     {
@@ -2880,42 +2906,48 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
             NpgsqlCommand cmd = new NpgsqlCommand();
             if (Quarter == "quarterOne")
             {
-                 cmd = new NpgsqlCommand("select \"workPlanDetailId\",\"sNo\"," +
-                    "\"modelActivity\",\"approvedAnnualTarget\",\"quarterOne\",\"funds\",\"quarterOneAchieved\",\"quarterOneExpenditure\" from" +
-                    " \"workPlans\" join \"workPlanDetails\" on \"workPlans\".\"workPlanId\" =" +
-                    " \"workPlanDetails\".\"workPlanId\" where \"districtId\" = @LocalGV and" +
-                    " \"financialYearId\" = @FinancialYr and \"approvedAnnualTarget\" not in (0) order by \"sNo\" asc");
-            }else if (Quarter == "quarterTwo")
+                cmd = new NpgsqlCommand("select \"workPlanDetails\".\"workPlanId\",\"workPlanDetailId\",\"sNo\",\"quarterOneComment\"," +
+                   "\"modelActivity\",\"approvedAnnualTarget\",\"quarterOne\",\"funds\",\"title\",\"caoTitle\"," +
+                   "\"quarterOneAchieved\",\"quarterOneExpenditure\" from" +
+                   " \"workPlans\" join \"workPlanDetails\" on \"workPlans\".\"workPlanId\" =" +
+                   " \"workPlanDetails\".\"workPlanId\" where \"districtId\" = @LocalGV and" +
+                   " \"financialYearId\" = @FinancialYr and \"approvedAnnualTarget\" not in (0) order by \"sNo\" asc");
+            } else if (Quarter == "quarterTwo")
             {
-                 cmd = new NpgsqlCommand("select \"workPlanDetailId\",\"sNo\"," +
-                    "\"modelActivity\",\"approvedAnnualTarget\",\"quarterTwo\",\"funds\",\"quarterTwoAchieved\",\"quarterTwoExpenditure\" from" +
-                    " \"workPlans\" join \"workPlanDetails\" on \"workPlans\".\"workPlanId\" =" +
-                    " \"workPlanDetails\".\"workPlanId\" where \"districtId\" = @LocalGV and" +
-                    " \"financialYearId\" = @FinancialYr and \"approvedAnnualTarget\" not in (0) order by \"sNo\" asc");
-            }else if (Quarter == "quarterThree")
+                cmd = new NpgsqlCommand("select \"workPlanDetails\".\"workPlanId\",\"workPlanDetailId\",\"sNo\",\"quarterTwoComment\"," +
+                   "\"modelActivity\",\"approvedAnnualTarget\",\"quarterTwo\",\"funds\",\"quarterOneAchieved\",\"title\",\"caoTitle\"," +
+                   "\"quarterTwoAchieved\",\"quarterOneExpenditure\",\"quarterTwoExpenditure\" from" +
+                   " \"workPlans\" join \"workPlanDetails\" on \"workPlans\".\"workPlanId\" =" +
+                   " \"workPlanDetails\".\"workPlanId\" where \"districtId\" = @LocalGV and" +
+                   " \"financialYearId\" = @FinancialYr and \"approvedAnnualTarget\" not in (0) order by \"sNo\" asc");
+            } else if (Quarter == "quarterThree")
             {
-                 cmd = new NpgsqlCommand("select \"workPlanDetailId\",\"sNo\"," +
-                    "\"modelActivity\",\"approvedAnnualTarget\",\"quarterThree\",\"funds\",\"quarterThreeAchieved\",\"quarterThreeExpenditure\" from" +
-                    " \"workPlans\" join \"workPlanDetails\" on \"workPlans\".\"workPlanId\" =" +
-                    " \"workPlanDetails\".\"workPlanId\" where \"districtId\" = @LocalGV and" +
-                    " \"financialYearId\" = @FinancialYr and \"approvedAnnualTarget\" not in (0) order by \"sNo\" asc");
-            }else if (Quarter == "quarterFour")
+                cmd = new NpgsqlCommand("select \"workPlanDetails\".\"workPlanId\",\"workPlanDetailId\",\"sNo\",\"quarterThreeComment\"," +
+                   "\"modelActivity\",\"approvedAnnualTarget\",\"quarterThree\",\"funds\",\"quarterOneAchieved\",\"title\",\"caoTitle\"," +
+                   "\"quarterTwoAchieved\",\"quarterThreeAchieved\",\"quarterOneExpenditure\",\"quarterTwoExpenditure\",\"quarterThreeExpenditure\" from" +
+                   " \"workPlans\" join \"workPlanDetails\" on \"workPlans\".\"workPlanId\" =" +
+                   " \"workPlanDetails\".\"workPlanId\" where \"districtId\" = @LocalGV and" +
+                   " \"financialYearId\" = @FinancialYr and \"approvedAnnualTarget\" not in (0) order by \"sNo\" asc");
+            } else if (Quarter == "quarterFour")
             {
-                 cmd = new NpgsqlCommand("select \"workPlanDetailId\",\"sNo\"," +
-                    "\"modelActivity\",\"approvedAnnualTarget\",\"quarterFour\",\"funds\",\"quarterFourAchieved\",\"quarterFourExpenditure\" from" +
-                    " \"workPlans\" join \"workPlanDetails\" on \"workPlans\".\"workPlanId\" =" +
-                    " \"workPlanDetails\".\"workPlanId\" where \"districtId\" = @LocalGV and" +
-                    " \"financialYearId\" = @FinancialYr and \"approvedAnnualTarget\" not in (0) order by \"sNo\" asc");
+                cmd = new NpgsqlCommand("select \"workPlanDetails\".\"workPlanId\",\"workPlanDetailId\",\"sNo\",\"quarterFourComment\"," +
+                   "\"modelActivity\",\"approvedAnnualTarget\",\"quarterFour\",\"funds\",\"quarterOneAchieved\",\"title\",\"caoTitle\"," +
+                   "\"quarterTwoAchieved\",\"quarterThreeAchieved\",\"quarterFourAchieved\",\"quarterOneExpenditure\",\"quarterTwoExpenditure\",\"quarterThreeExpenditure\",\"quarterFourExpenditure\" from" +
+                   " \"workPlans\" join \"workPlanDetails\" on \"workPlans\".\"workPlanId\" =" +
+                   " \"workPlanDetails\".\"workPlanId\" where \"districtId\" = @LocalGV and" +
+                   " \"financialYearId\" = @FinancialYr and \"approvedAnnualTarget\" not in (0) order by \"sNo\" asc");
             }
             cmd.Parameters.AddWithValue("@FinancialYr", FinancialYr);
             cmd.Parameters.AddWithValue("@LocalGV", LocalGV);
-            DataSet ds =ruwasdb.SelectQuery(cmd);
+            DataSet ds = ruwasdb.SelectQuery(cmd);
             DataTable dt = ds.Tables[0];
             if (dt.Rows.Count > 0)
             {
-                foreach(DataRow dr in dt.Rows)
+                foreach (DataRow dr in dt.Rows)
                 {
                     PReportDWSCGClass arr = new PReportDWSCGClass();
+                    arr.WorkPlanId = Convert.ToInt32(dr["workPlanId"]);
+                    arr.WorkPlanDtlId = Convert.ToInt32(dr["workPlanDetailId"]);
                     arr.SlNo = dr["sNo"].ToString();
                     arr.ModelActivity = dr["modelActivity"].ToString();
                     arr.ApprovalAnnualTarget = Convert.ToInt32(dr["approvedAnnualTarget"]);
@@ -2923,27 +2955,41 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
                     {
                         arr.QuarterTarget = Convert.ToInt32(dr["quarterOne"]);
                         arr.QuarterAchieved = Convert.ToInt32(dr["quarterOneAchieved"]);
+                        arr.CumulativeAchieved = Convert.ToInt32(dr["quarterOneAchieved"]);
                         arr.Expanditure = Convert.ToInt32(dr["quarterOneExpenditure"]);
+                        arr.CumulativeExpanditure = Convert.ToInt32(dr["quarterOneExpenditure"]);
+                        arr.Comments = dr["quarterOneComment"].ToString();
                     }
                     else if (Quarter == "quarterTwo")
                     {
                         arr.QuarterTarget = Convert.ToInt32(dr["quarterTwo"]);
                         arr.QuarterAchieved = Convert.ToInt32(dr["quarterTwoAchieved"]);
+                        arr.CumulativeAchieved = Convert.ToInt32(dr["quarterOneAchieved"]) + Convert.ToInt32(dr["quarterTwoAchieved"]);
                         arr.Expanditure = Convert.ToInt32(dr["quarterTwoExpenditure"]);
+                        arr.CumulativeExpanditure = Convert.ToInt32(dr["quarterOneExpenditure"]) + Convert.ToInt32(dr["quarterTwoExpenditure"]);
+                        arr.Comments = dr["quarterTwoComment"].ToString();
                     }
                     else if (Quarter == "quarterThree")
                     {
                         arr.QuarterTarget = Convert.ToInt32(dr["quarterThree"]);
                         arr.QuarterAchieved = Convert.ToInt32(dr["quarterThreeAchieved"]);
+                        arr.CumulativeAchieved = Convert.ToInt32(dr["quarterOneAchieved"]) + Convert.ToInt32(dr["quarterTwoAchieved"]) + Convert.ToInt32(dr["quarterThreeAchieved"]);
                         arr.Expanditure = Convert.ToInt32(dr["quarterThreeExpenditure"]);
+                        arr.CumulativeExpanditure = Convert.ToInt32(dr["quarterOneExpenditure"]) + Convert.ToInt32(dr["quarterTwoExpenditure"]) + Convert.ToInt32(dr["quarterThreeExpenditure"]);
+                        arr.Comments = dr["quarterThreeComment"].ToString();
                     }
                     else if (Quarter == "quarterFour")
                     {
                         arr.QuarterTarget = Convert.ToInt32(dr["quarterFour"]);
                         arr.QuarterAchieved = Convert.ToInt32(dr["quarterFourAchieved"]);
+                        arr.CumulativeAchieved = Convert.ToInt32(dr["quarterOneAchieved"]) + Convert.ToInt32(dr["quarterTwoAchieved"]) + Convert.ToInt32(dr["quarterThreeAchieved"]) + Convert.ToInt32(dr["quarterFourAchieved"]);
                         arr.Expanditure = Convert.ToInt32(dr["quarterFourExpenditure"]);
+                        arr.CumulativeExpanditure = Convert.ToInt32(dr["quarterOneExpenditure"]) + Convert.ToInt32(dr["quarterTwoExpenditure"]) + Convert.ToInt32(dr["quarterThreeExpenditure"]) + Convert.ToInt32(dr["quarterFourExpenditure"]);
+                        arr.Comments = dr["quarterFourComment"].ToString();
                     }
                     arr.AnnualBudget = Convert.ToInt32(dr["funds"]);
+                    arr.Title = dr["title"].ToString();
+                    arr.caoTitle = dr["caoTitle"].ToString();
                     PReportDWSCGList.Add(arr);
                 }
                 string response = GetJson(PReportDWSCGList);
@@ -2963,15 +3009,216 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
             context.Response.Write(response);
         }
     }
+    public class UpdatePRDWSCGClass
+    {
+        public int txtWorkplan { get; set; }
+        public string txtTitle { get; set; }
+        public string txtCaoLetter { get; set; }
+        public string slctQuarter { get; set; }
+        public List<ModelActivityOfDWSCGClass> ModelActivityOfDWSCG { get; set; }
+    }
+    public class ModelActivityOfDWSCGClass
+    {
+        public int WorkplanDtlId { get; set; }
+        public int QuarterAchived { get; set; }
+        public int Expanditure { get; set; }
+        public string Comments { get; set; }
+    }
+    public void UpdatePRDWSCG(string jsonstring, HttpContext context)
+    {
+        try
+        {
+            var js = new JavaScriptSerializer();
+            UpdatePRDWSCGClass obj = js.Deserialize<UpdatePRDWSCGClass>(jsonstring);
+            int Workplan = obj.txtWorkplan;
+            string Title = obj.txtTitle;
+            string CaoLetter = obj.txtCaoLetter;
+            string Quarter = obj.slctQuarter;
+            NpgsqlCommand cmd = new NpgsqlCommand("update \"workPlans\" set " +
+                "\"title\"=@Title,\"caoTitle\"=@CaoLetter where \"workPlanId\"=@Workplan");
+            cmd.Parameters.AddWithValue("@Workplan", Workplan);
+            cmd.Parameters.AddWithValue("@Title", Title);
+            cmd.Parameters.AddWithValue("@CaoLetter", CaoLetter);
+            ruwasdb.Update(cmd);
+            if (Workplan != 0)
+            {
+                foreach (ModelActivityOfDWSCGClass x in obj.ModelActivityOfDWSCG)
+                {
+                    int WorkplanDtlId = x.WorkplanDtlId;
+                    int QuarterAchived = x.QuarterAchived;
+                    int Expanditure = x.Expanditure;
+                    string Comments = x.Comments;
+                    NpgsqlCommand cmd1 = new NpgsqlCommand();
+                    if (Quarter == "quarterOne") {
+                        cmd1 = new NpgsqlCommand("update \"workPlanDetails\" set " +
+                        "\"quarterOneAchieved\"=@QuarterAchived,\"quarterOneExpenditure\"=@Expanditure,\"quarterOneComment\"=@Comments where \"workPlanDetailId\"=@WorkplanDtlId ");
+                    }
+                    else if (Quarter == "quarterTwo") {
+                        cmd1 = new NpgsqlCommand("update \"workPlanDetails\" set " +
+                    "\"quarterTwoAchieved\"=@QuarterAchived,\"quarterTwoExpenditure\"=@Expanditure,\"quarterTwoComment\"=@Comments where \"workPlanDetailId\"=@WorkplanDtlId ");
+                    }
+                    else if (Quarter == "quarterThree")
+                    {
+                        cmd1 = new NpgsqlCommand("update \"workPlanDetails\" set " +
+                        "\"quarterThreeAchieved\"=@QuarterAchived,\"quarterThreeExpenditure\"=@Expanditure,\"quarterThreeComment\"=@Comments where \"workPlanDetailId\"=@WorkplanDtlId ");
+                    }
+                    else if (Quarter == "quarterFour")
+                    {
+                        cmd1 = new NpgsqlCommand("update \"workPlanDetails\" set " +
+                        "\"quarterFourAchieved\"=@QuarterAchived,\"quarterFourExpenditure\"=@Expanditure,\"quarterFourComment\"=@Comments where \"workPlanDetailId\"=@WorkplanDtlId ");
+                    }
+                    cmd1.Parameters.AddWithValue("@WorkplanDtlId", WorkplanDtlId);
+                    cmd1.Parameters.AddWithValue("@QuarterAchived", QuarterAchived);
+                    cmd1.Parameters.AddWithValue("@Expanditure", Expanditure);
+                    cmd1.Parameters.AddWithValue("@Comments", Comments);
+                    ruwasdb.Update(cmd1);
+                }
+                string response = GetJson("Updated Successfully.");
+                context.Response.Write(response);
+            }
+            else
+            {
+                string response = GetJson("No Data Found.");
+                context.Response.Write(response);
+            }
+        }
+        catch (Exception ex)
+        {
+            string msg = ex.Message;
+            string response = GetJson(msg);
+            context.Response.Write(response);
+        }
+    }
+    //public class FetchPReportDSHCGClass
+    //{
+    //    public string SlNo { get; set; }
+    //    public string ModelActivity { get; set; }
+    //    public int  ApprovalAnnualTarget { get; set; }
+    //    public int QuarterTarget { get; set; }
+    //    public int AnnualBudget { get; set; }
+    //    public int QuarterAchieved { get; set; }
+    //    public int Expanditure { get; set; }
+    //}
+    //public void FetchPReportDSHCG(HttpContext context)
+    //{
+    //    try
+    //    {
+    //        List<FetchPReportDSHCGClass> FetchPReportDSHCGList = new List<FetchPReportDSHCGClass>();
+    //        int FinancialYr = Convert.ToInt32(context.Request["FinancialYr"]);
+    //        int LocalGV = Convert.ToInt32(context.Request["LocalGovernment"]);
+    //        string Quarter = context.Request["slctQuarter"].ToString();
+    //        NpgsqlCommand cmd = new NpgsqlCommand();
+    //        if (Quarter == "quarterOne")
+    //        {
+    //             cmd = new NpgsqlCommand("select \"sanitationDetailId\",\"sNo\"," +
+    //                "\"modelActivity\",\"approvedAnnualTarget\",\"quarterOne\",\"funds\",\"quarterOneAchieved\",\"quarterOneExpenditure\" from" +
+    //                " \"sanitations\" join \"sanitationDetails\" on \"sanitations\".\"sanitationId\" =" +
+    //                " \"sanitationDetails\".\"sanitationId\" where \"districtId\" = @LocalGV and" +
+    //                " \"financialYearId\" = @FinancialYr and \"approvedAnnualTarget\" not in (0) order by \"sNo\" asc");
+    //        }else if (Quarter == "quarterTwo")
+    //        {
+    //             cmd = new NpgsqlCommand("select \"sanitationDetailId\",\"sNo\"," +
+    //                "\"modelActivity\",\"approvedAnnualTarget\",\"quarterTwo\",\"funds\",\"quarterTwoAchieved\",\"quarterTwoExpenditure\" from" +
+    //                " \"sanitations\" join \"sanitationDetails\" on \"sanitations\".\"sanitationId\" =" +
+    //                " \"sanitationDetails\".\"sanitationId\" where \"districtId\" = @LocalGV and" +
+    //                " \"financialYearId\" = @FinancialYr and \"approvedAnnualTarget\" not in (0) order by \"sNo\" asc");
+    //        }else if (Quarter == "quarterThree")
+    //        {
+    //             cmd = new NpgsqlCommand("select \"sanitationDetailId\",\"sNo\"," +
+    //                " \"modelActivity\",\"approvedAnnualTarget\",\"quarterThree\",\"funds\",\"quarterThreeAchieved\",\"quarterThreeExpenditure\" from" +
+    //                " \"sanitations\" join \"sanitationDetails\" on \"sanitations\".\"sanitationId\" =" +
+    //                " \"sanitationDetails\".\"sanitationId\" where \"districtId\" = @LocalGV and" +
+    //                " \"financialYearId\" = @FinancialYr and \"approvedAnnualTarget\" not in (0) order by \"sNo\" asc");
+    //        }else if (Quarter == "quarterFour")
+    //        {
+    //             cmd = new NpgsqlCommand("select \"sanitationDetailId\",\"sNo\"," +
+    //                "\"modelActivity\",\"approvedAnnualTarget\",\"quarterFour\",\"funds\",\"quarterFourAchieved\",\"quarterFourExpenditure\" from" +
+    //                " \"sanitations\" join \"sanitationDetails\" on \"sanitations\".\"sanitationId\" =" +
+    //                " \"sanitationDetails\".\"sanitationId\" where \"districtId\" = @LocalGV and" +
+    //                " \"financialYearId\" = @FinancialYr and \"approvedAnnualTarget\" not in (0) order by \"sNo\" asc");
+    //        }
+    //        cmd.Parameters.AddWithValue("@FinancialYr", FinancialYr);
+    //        cmd.Parameters.AddWithValue("@LocalGV", LocalGV);
+    //        DataSet ds =ruwasdb.SelectQuery(cmd);
+    //        DataTable dt = ds.Tables[0];
+    //        if (dt.Rows.Count > 0)
+    //        {
+    //            foreach(DataRow dr in dt.Rows)
+    //            {
+    //                FetchPReportDSHCGClass arr = new FetchPReportDSHCGClass();
+    //                arr.SlNo = dr["sNo"].ToString();
+    //                arr.ModelActivity = dr["modelActivity"].ToString();
+    //                arr.ApprovalAnnualTarget = Convert.ToInt32(dr["approvedAnnualTarget"]);
+    //                if (Quarter == "quarterOne")
+    //                {
+    //                    arr.QuarterTarget = Convert.ToInt32(dr["quarterOne"]);
+    //                    arr.QuarterAchieved = Convert.ToInt32(dr["quarterOneAchieved"]);
+    //                    arr.Expanditure = Convert.ToInt32(dr["quarterOneExpenditure"]);
+
+    //                }
+    //                else if (Quarter == "quarterTwo")
+    //                {
+    //                    arr.QuarterTarget = Convert.ToInt32(dr["quarterTwo"]);
+    //                    arr.QuarterAchieved = Convert.ToInt32(dr["quarterTwoAchieved"]);
+    //                    arr.Expanditure = Convert.ToInt32(dr["quarterTwoExpenditure"]);
+    //                }
+    //                else if (Quarter == "quarterThree")
+    //                {
+    //                    arr.QuarterTarget = Convert.ToInt32(dr["quarterThree"]);
+    //                    arr.QuarterAchieved = Convert.ToInt32(dr["quarterThreeAchieved"]);
+    //                    arr.Expanditure = Convert.ToInt32(dr["quarterThreeExpenditure"]);
+    //                }
+    //                else if (Quarter == "quarterFour")
+    //                {
+    //                    arr.QuarterTarget = Convert.ToInt32(dr["quarterFour"]);
+    //                    arr.QuarterAchieved = Convert.ToInt32(dr["quarterFourAchieved"]);
+    //                    arr.Expanditure = Convert.ToInt32(dr["quarterFourExpenditure"]);
+    //                }
+    //                arr.AnnualBudget = Convert.ToInt32(dr["funds"]);
+    //                FetchPReportDSHCGList.Add(arr);
+    //            }
+    //            string response = GetJson(FetchPReportDSHCGList);
+    //            context.Response.Write(response);
+    //        }
+    //        else
+    //        {
+    //            string sms = "No Rows Found";
+    //            string response = GetJson(sms);
+    //            context.Response.Write(response);
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        string msg = ex.Message;
+    //        string response = GetJson(msg);
+    //        context.Response.Write(response);
+    //    }
+    //}
     public class FetchPReportDSHCGClass
     {
+        public int Sanitation { get; set; }
+        public int SanitationDetailId { get; set; }
         public string SlNo { get; set; }
         public string ModelActivity { get; set; }
-        public int  ApprovalAnnualTarget { get; set; }
-        public int QuarterTarget { get; set; }
+        public int ApprovalAnnualTarget { get; set; }
+        public int QuarterTarget1 { get; set; }
+        public int QuarterTarget2 { get; set; }
+        public int QuarterTarget3 { get; set; }
+        public int QuarterTarget4 { get; set; }
         public int AnnualBudget { get; set; }
-        public int QuarterAchieved { get; set; }
-        public int Expanditure { get; set; }
+        public int QuarterAchieved1 { get; set; }
+        public int QuarterAchieved2 { get; set; }
+        public int QuarterAchieved3 { get; set; }
+        public int QuarterAchieved4 { get; set; }
+        public int Expanditure1 { get; set; }
+        public int Expanditure2 { get; set; }
+        public int Expanditure3 { get; set; }
+        public int Expanditure4 { get; set; }
+        public string Comment1 { get; set; }
+        public string Comment2 { get; set; }
+        public string Comment3 { get; set; }
+        public string Comment4 { get; set; }
+        public string Title { get; set; }
     }
     public void FetchPReportDSHCG(HttpContext context)
     {
@@ -2982,73 +3229,44 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
             int LocalGV = Convert.ToInt32(context.Request["LocalGovernment"]);
             string Quarter = context.Request["slctQuarter"].ToString();
             NpgsqlCommand cmd = new NpgsqlCommand();
-            if (Quarter == "quarterOne")
-            {
-                 cmd = new NpgsqlCommand("select \"sanitationDetailId\",\"sNo\"," +
-                    "\"modelActivity\",\"approvedAnnualTarget\",\"quarterOne\",\"funds\",\"quarterOneAchieved\",\"quarterOneExpenditure\" from" +
-                    " \"sanitations\" join \"sanitationDetails\" on \"sanitations\".\"sanitationId\" =" +
-                    " \"sanitationDetails\".\"sanitationId\" where \"districtId\" = @LocalGV and" +
-                    " \"financialYearId\" = @FinancialYr and \"approvedAnnualTarget\" not in (0) order by \"sNo\" asc");
-            }else if (Quarter == "quarterTwo")
-            {
-                 cmd = new NpgsqlCommand("select \"sanitationDetailId\",\"sNo\"," +
-                    "\"modelActivity\",\"approvedAnnualTarget\",\"quarterTwo\",\"funds\",\"quarterTwoAchieved\",\"quarterTwoExpenditure\" from" +
-                    " \"sanitations\" join \"sanitationDetails\" on \"sanitations\".\"sanitationId\" =" +
-                    " \"sanitationDetails\".\"sanitationId\" where \"districtId\" = @LocalGV and" +
-                    " \"financialYearId\" = @FinancialYr and \"approvedAnnualTarget\" not in (0) order by \"sNo\" asc");
-            }else if (Quarter == "quarterThree")
-            {
-                 cmd = new NpgsqlCommand("select \"sanitationDetailId\",\"sNo\"," +
-                    " \"modelActivity\",\"approvedAnnualTarget\",\"quarterThree\",\"funds\",\"quarterThreeAchieved\",\"quarterThreeExpenditure\" from" +
-                    " \"sanitations\" join \"sanitationDetails\" on \"sanitations\".\"sanitationId\" =" +
-                    " \"sanitationDetails\".\"sanitationId\" where \"districtId\" = @LocalGV and" +
-                    " \"financialYearId\" = @FinancialYr and \"approvedAnnualTarget\" not in (0) order by \"sNo\" asc");
-            }else if (Quarter == "quarterFour")
-            {
-                 cmd = new NpgsqlCommand("select \"sanitationDetailId\",\"sNo\"," +
-                    "\"modelActivity\",\"approvedAnnualTarget\",\"quarterFour\",\"funds\",\"quarterFourAchieved\",\"quarterFourExpenditure\" from" +
-                    " \"sanitations\" join \"sanitationDetails\" on \"sanitations\".\"sanitationId\" =" +
-                    " \"sanitationDetails\".\"sanitationId\" where \"districtId\" = @LocalGV and" +
-                    " \"financialYearId\" = @FinancialYr and \"approvedAnnualTarget\" not in (0) order by \"sNo\" asc");
-            }
+            cmd = new NpgsqlCommand("select \"sanitationDetailId\",\"sanitationDetails\".\"sanitationId\",\"title\",\"sNo\"," +
+               " \"modelActivity\",\"approvedAnnualTarget\",\"quarterOne\",\"quarterTwo\",\"quarterThree\",\"quarterFour\"," +
+               " \"funds\",\"quarterOneAchieved\",\"quarterTwoAchieved\",\"quarterThreeAchieved\",\"quarterFourAchieved\"," +
+               " \"quarterOneExpenditure\",\"quarterTwoExpenditure\",\"quarterThreeExpenditure\",\"quarterFourExpenditure\"," +
+               " \"quarterOneComment\",\"quarterTwoComment\",\"quarteThreeComment\",\"quarterFourComment\" from" +
+               " \"sanitations\" join \"sanitationDetails\" on \"sanitations\".\"sanitationId\" =" +
+               " \"sanitationDetails\".\"sanitationId\" where \"districtId\" = @LocalGV and" +
+               " \"financialYearId\" = @FinancialYr and \"approvedAnnualTarget\" not in (0) order by \"sNo\" asc");
             cmd.Parameters.AddWithValue("@FinancialYr", FinancialYr);
             cmd.Parameters.AddWithValue("@LocalGV", LocalGV);
-            DataSet ds =ruwasdb.SelectQuery(cmd);
+            DataSet ds = ruwasdb.SelectQuery(cmd);
             DataTable dt = ds.Tables[0];
             if (dt.Rows.Count > 0)
             {
-                foreach(DataRow dr in dt.Rows)
+                foreach (DataRow dr in dt.Rows)
                 {
                     FetchPReportDSHCGClass arr = new FetchPReportDSHCGClass();
                     arr.SlNo = dr["sNo"].ToString();
                     arr.ModelActivity = dr["modelActivity"].ToString();
                     arr.ApprovalAnnualTarget = Convert.ToInt32(dr["approvedAnnualTarget"]);
-                    if (Quarter == "quarterOne")
-                    {
-                        arr.QuarterTarget = Convert.ToInt32(dr["quarterOne"]);
-                        arr.QuarterAchieved = Convert.ToInt32(dr["quarterOneAchieved"]);
-                        arr.Expanditure = Convert.ToInt32(dr["quarterOneExpenditure"]);
-
-                    }
-                    else if (Quarter == "quarterTwo")
-                    {
-                        arr.QuarterTarget = Convert.ToInt32(dr["quarterTwo"]);
-                        arr.QuarterAchieved = Convert.ToInt32(dr["quarterTwoAchieved"]);
-                        arr.Expanditure = Convert.ToInt32(dr["quarterTwoExpenditure"]);
-                    }
-                    else if (Quarter == "quarterThree")
-                    {
-                        arr.QuarterTarget = Convert.ToInt32(dr["quarterThree"]);
-                        arr.QuarterAchieved = Convert.ToInt32(dr["quarterThreeAchieved"]);
-                        arr.Expanditure = Convert.ToInt32(dr["quarterThreeExpenditure"]);
-                    }
-                    else if (Quarter == "quarterFour")
-                    {
-                        arr.QuarterTarget = Convert.ToInt32(dr["quarterFour"]);
-                        arr.QuarterAchieved = Convert.ToInt32(dr["quarterFourAchieved"]);
-                        arr.Expanditure = Convert.ToInt32(dr["quarterFourExpenditure"]);
-                    }
+                    arr.QuarterTarget1 = Convert.ToInt32(dr["quarterOne"]);
+                    arr.QuarterTarget2 = Convert.ToInt32(dr["quarterTwo"]);
+                    arr.QuarterTarget3 = Convert.ToInt32(dr["quarterThree"]);
+                    arr.QuarterTarget4 = Convert.ToInt32(dr["quarterFour"]);
+                    arr.QuarterAchieved1 = Convert.ToInt32(dr["quarterOneAchieved"]);
+                    arr.QuarterAchieved2 = Convert.ToInt32(dr["quarterTwoAchieved"]);
+                    arr.QuarterAchieved3 = Convert.ToInt32(dr["quarterThreeAchieved"]);
+                    arr.QuarterAchieved4 = Convert.ToInt32(dr["quarterFourAchieved"]);
+                    arr.Expanditure1 = Convert.ToInt32(dr["quarterOneExpenditure"]);
+                    arr.Expanditure2 = Convert.ToInt32(dr["quarterTwoExpenditure"]);
+                    arr.Expanditure3 = Convert.ToInt32(dr["quarterThreeExpenditure"]);
+                    arr.Expanditure4 = Convert.ToInt32(dr["quarterFourExpenditure"]);
                     arr.AnnualBudget = Convert.ToInt32(dr["funds"]);
+                    arr.Comment1 = dr["quarterOneComment"].ToString();
+                    arr.Comment2 = dr["quarterTwoComment"].ToString();
+                    arr.Comment3 = dr["quarteThreeComment"].ToString();
+                    arr.Comment4 = dr["quarterFourComment"].ToString();
+                    arr.Title = dr["title"].ToString();
                     FetchPReportDSHCGList.Add(arr);
                 }
                 string response = GetJson(FetchPReportDSHCGList);
@@ -3111,6 +3329,46 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
             string sms = "Updated Successfully";
             string response = GetJson(sms);
             context.Response.Write(response);
+        }
+        catch (Exception ex)
+        {
+            string msg = ex.Message;
+            string response = GetJson(msg);
+            context.Response.Write(response);
+        }
+    }
+    public class CStatusClass
+    {
+        public int CStatusId { get; set; }
+        public string CStatusName { get; set; }
+    }
+    public void FetchCStatus(HttpContext context)
+    {
+        try
+        {
+            List<CStatusClass> CStatusList = new List<CStatusClass>();
+            NpgsqlCommand cmd = new NpgsqlCommand("select * from \"cstatuses\"");
+            DataSet ds = ruwasdb.SelectQuery(cmd);
+            DataTable dt = ds.Tables[0];
+            if (dt.Rows.Count > 0)
+            {
+                foreach(DataRow dr in dt.Rows)
+                {
+                    CStatusClass arr = new CStatusClass();
+                    arr.CStatusId = Convert.ToInt32(dr["cstatusId"]);
+                    arr.CStatusName = dr["contractStatusName"].ToString();
+                    CStatusList.Add(arr);
+                    
+                }
+                string response = GetJson(CStatusList);
+                context.Response.Write(response);
+            }
+            else
+            {
+                string sms = "No Rows Found";
+                string response = GetJson(sms);
+                context.Response.Write(response);
+            }
         }
         catch (Exception ex)
         {
@@ -3678,6 +3936,40 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
             cmd.Parameters.AddWithValue("@IsDeleted", IsDeleted);
             cmd.Parameters.AddWithValue("@Vote", Vote);
             cmd.Parameters.AddWithValue("@Rwsrc", Rwsrc);
+            ruwasdb.Update(cmd);
+            string sms = "Updated successfully";
+            string response = GetJson(sms);
+            context.Response.Write(response);
+        }
+        catch (Exception ex)
+        {
+            string msg = ex.Message;
+            string response = GetJson(msg);
+            context.Response.Write(response);
+        }
+    }
+    public void UpdateContract(HttpContext context)
+    {
+        try
+        {
+            int ContractDtl = Convert.ToInt32(context.Request["ContractDtl"]);
+            string NameOfContractop = context.Request["NameOfContractopr"].ToString();
+            string ContractorCountry = context.Request["ContractorCountry"].ToString();
+            string DescriptionGoods = context.Request["DescriptionGoods"].ToString();
+            int ContractSum = Convert.ToInt32(context.Request["ContractSum"]);
+            int AnnualPaymenttUnderContract = Convert.ToInt32(context.Request["AnnualPaymenttUnderContract"]);
+            int slctStatus = Convert.ToInt32(context.Request["slctStatus"]);
+            NpgsqlCommand cmd = new NpgsqlCommand("update \"contractDetails\" set " +
+                "\"contractorName\"=@NameOfContractop,\"contractorCountry\"=@ContractorCountry,\"descriptionGoods\"=@DescriptionGoods," +
+                "\"contractSum\"=@ContractSum,\"annualPaymenttUnderContract\"=@AnnualPaymenttUnderContract," +
+                "\"cstatusId\"=@slctStatus where \"contractDetailId\"=@ContractDtl");
+            cmd.Parameters.AddWithValue("@ContractDtl", ContractDtl);
+            cmd.Parameters.AddWithValue("@NameOfContractop", NameOfContractop);
+            cmd.Parameters.AddWithValue("@ContractorCountry", ContractorCountry);
+            cmd.Parameters.AddWithValue("@DescriptionGoods", DescriptionGoods);
+            cmd.Parameters.AddWithValue("@ContractSum", ContractSum);
+            cmd.Parameters.AddWithValue("@AnnualPaymenttUnderContract", AnnualPaymenttUnderContract);
+            cmd.Parameters.AddWithValue("@slctStatus", slctStatus);
             ruwasdb.Update(cmd);
             string sms = "Updated successfully";
             string response = GetJson(sms);

@@ -150,7 +150,16 @@
                     <div class="row">
                         <div class="col-lg-3 col-12">
                             <div class="form-floating">
-                                <input type="text" class="form-control" id="slctSubCountyId" placeholder="Sub-County" title="Sub-County"  />
+                                <select class="form-select" id="slctFinancialYearId" title="Financial Year">
+                                    <option value="">Choose from List</option>
+                                </select>
+                                <label class="slctFinancialYearId">Financial Year</label>
+                                <span class="invalid-feedback is-invalid">please selectr Financial year</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-12">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="slctSubCountyId" placeholder="Sub-County" title="Sub-County" />
                                 <label class="slctSubCountyId">Sub-County</label>
                                 <span class="invalid-feedback is-invalid">please enter sub county</span>
                             </div>
@@ -166,20 +175,12 @@
                         </div>
                         <div class="col-lg-3 col-12">
                             <div class="form-floating">
-                                <input type="number" class="form-control" id="txtPopulationId" placeholder="Population" title="Population"/>
+                                <input type="number" class="form-control" id="txtPopulationId" placeholder="Population" title="Population" />
                                 <label class="txtPopulationId">Population</label>
                                 <span class="invalid-feedback is-invalid">please enter population</span>
                             </div>
                         </div>
-                        <div class="col-lg-3 col-12">
-                            <div class="form-floating">
-                                <select  class="form-select" id="slctFinancialYearId"  title="Financial Year">
-                                    <option value="">Choose from List</option>
-                                </select>
-                                <label class="slctFinancialYearId">Financial Year</label>
-                                <span class="invalid-feedback is-invalid">please selectr Financial year</span>
-                            </div>
-                        </div>
+
                         <div class="text-center mt-3">
                             <button type="button" class="btn btn-primary" onclick="saveSubCounty()">Save</button>
                         </div>

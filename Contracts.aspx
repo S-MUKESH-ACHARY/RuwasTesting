@@ -5,8 +5,36 @@
             document.getElementById("dataEntryId").classList.add("DE");
             getTableData();
             getFinancialYr();
-            fetchLC();
+           // fetchLC();
+            CStatus();
         })
+        function saveChanges(){
+            let ContractDtl = $("#ContractDtlId").html();
+            let NameOfContractopr = $("#txtContractName").val();
+            let ContractorCountry = $("#txtContractorCountry").val();
+            let DescriptionGoods = $("#txtDescriptionGoodsId").val();
+            let ContractSum = parseFloat($("#txtContractSum").val());
+            let AnnualPaymenttUnderContract = parseInt($("#txtAnnualPaymenttUnderContract").val());
+            let slctStatus = $("#slctStatusId").val();
+            var data = {
+                "op": "UpdateContract",
+                "ContractDtl": ContractDtl,
+                "NameOfContractopr": NameOfContractopr,
+                "ContractorCountry": ContractorCountry,
+                "DescriptionGoods": DescriptionGoods,
+                "ContractSum": ContractSum,
+                "AnnualPaymenttUnderContract": AnnualPaymenttUnderContract,
+                "slctStatus": slctStatus
+            }
+            var s = function (sms) {
+                alert(sms);
+            }
+            var e = function (msg) {
+                alert(msg);
+            }
+            CallHandler(data, s, e);
+            console.log(data);
+        }
         
         function getTableData() {
             var data = {
@@ -15,14 +43,17 @@
             var s = function (sms) {
                 sms.forEach(function (item) {
                     var row = '<tr>'
-                    row = row + `<td>` + item.LocalGovernment + `</td>` +
-                        `<td>` + item.FinancialYear+`</td>`+
-                        `<td>` + item.ContractNumber+`</td>`+
-                        `<td>` + item.NameofContractor+`</td>`+
-                        `<td>` + item.ContractorCountry+`</td>`+
-                        `<td>` + item.DescriptionOfGoods+`</td>`+
-                        `<td>` + item.ContractSum+`</td>`+
-                        `<td>` + item.AnnualPaymentUnderContract+`</td>`+
+                    row = row + `<td class="1">` + item.LocalGovernment + `</td>` +
+                        
+                        `<td class="2">` + item.FinancialYear+`</td>`+
+                        `<td class="3">` + item.ContractNumber+`</td>`+
+                        `<td class="4">` + item.NameofContractor+`</td>`+
+                        `<td class="5">` + item.ContractorCountry+`</td>`+
+                        `<td class="6">` + item.DescriptionOfGoods+`</td>`+
+                        `<td class="7">` + item.ContractSum+`</td>`+
+                        `<td class="8">` + item.AnnualPaymentUnderContract+`</td>`+
+                        `<td class="9">` + item.CStatusId + `</td>` +
+                        `<td class="10">` + item.ContractDetlId + `</td>` +
                         `<td>` + item.Status+`</td>`+
                         `<td>` + `<button class="btn btn-primary" type="button" onclick="EditSubCounty(this)" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-pen-to-square"></i></button> ` + `</td></tr>`
                     $("#myTable").append(row);
@@ -33,6 +64,28 @@
                 alert(msg);
             }
             CallHandler(data, s, e);
+        }
+         function EditSubCounty(thisId) {
+             var Lc = $(thisId).closest('tr').find('.1').html();
+             $("#txtDistrictId").val(Lc);
+             var FinancialYr = $(thisId).closest('tr').find('.2').html();
+             $("#slctFinancialYearId").val(FinancialYr);
+             let ContractNumner = $(thisId).closest('tr').find('.3').html();
+             $("#txtContractNumberId").val(ContractNumner);
+             let NameOfContractopr = $(thisId).closest('tr').find('.4').text();
+             $("#txtContractName").val(NameOfContractopr);
+             let ContractorCountry = $(thisId).closest('tr').find('.5').text();
+             $("#txtContractorCountry").val(ContractorCountry);
+             let DescriptionGoods = $(thisId).closest('tr').find('.6').text();
+             $("#txtDescriptionGoodsId").val(DescriptionGoods);
+             let ContractSum = $(thisId).closest('tr').find('.7').html();
+             $("#txtContractSum").val(ContractSum);
+             let AnnualPaymenttUnderContract = $(thisId).closest('tr').find('.8').html();
+             $("#txtAnnualPaymenttUnderContract").val(AnnualPaymenttUnderContract);
+             let slctStatus = $(thisId).closest('tr').find('.9').html();
+             $("#slctStatusId").val(slctStatus);
+             let ContractDtl = $(thisId).closest('tr').find('.10').html();
+             $("#ContractDtlId").html(ContractDtl);
         }
         function getFinancialYr() {
             var data = {
@@ -64,27 +117,52 @@
             }
             CallHandler(data, s, e);
         }
-        function fetchLC() {
-            let data = { "op": "FetchLC" };
-            let s = function (sms) {
+        function CStatus() {
+            var data = {
+                "op": "FetchCStatus"
+            }
+            var s = function (sms) {
                 if (Array.isArray(sms)) {
-                    let LC = document.getElementById("txtDistrictId");
-                    sms.forEach((msg) => {
+                    let CStatus = document.getElementById("slctStatusId");
+                    sms.forEach(function (item) {
                         let option = document.createElement('option');
-                        option.value = msg.LCId;
-                        option.text = msg.LCName;
-                        LC.appendChild(option);
+                        option.value = item.CStatusId;
+                        option.text = item.CStatusName;
+                        CStatus.append(option);
                     })
                 }
                 else {
                     alert(sms);
                 }
             }
-            let e = function (msg) {
+            var e = function (msg) {
                 alert(msg);
             }
             CallHandler(data, s, e);
         }
+        //function fetchLC() {
+        //    let data = { "op": "FetchLC" };
+        //    let s = function (sms) {
+             
+        //        if (Array.isArray(sms)) {
+        //            let local_govt = document.getElementById("txtDistrictId");
+        //            sms.forEach((msg) => {
+        //                let option = document.createElement('option');
+        //                option.value = msg.LCId;
+        //                option.text = msg.LCName;
+                        
+        //                local_govt.append(option);
+        //            })
+        //        }
+        //        else {
+        //            alert(sms);
+        //        }
+        //    }
+        //    let e = function (msg) {
+        //        alert(msg);
+        //    }
+        //    CallHandler(data, s, e);
+        //}
         function CallHandler(d, s, e) {
             $.ajax({
                 type: "GET",
@@ -160,6 +238,7 @@
                                 <thead>
                                     <tr class="table-secondary">
                                         <th>Local Government</th>
+                                        <th>ContractDetlId</th>
                                         <th>Financial Year</th>
                                         <th>Contract Number</th>
                                         <th>Name of Contractor or Consultant/Company Name</th>
@@ -167,6 +246,7 @@
                                         <th style="width: 10%;">Description of Goods,Services or Works Procured</th>
                                         <th>Contract Sum (UGX)(000)</th>
                                         <th>Annual Payment Under Contract</th>
+                                        <th>StatusID</th>
                                         <th>Status</th>
                                         <th>Edit</th>
                                         <%-- <th>Edit</th>--%>
@@ -190,41 +270,38 @@
                      <div class="modal-body">
                          <label style="display: none;" id="txtContractId"></label>
                          <div class="row m-1 p-1">
+                             <label id="ContractDtlId"></label>
                              <div class="col-lg-4 col-md-6 col-sm-12">
                                  <div class="form-floating">
-                                     <select id="txtLCId" class="form-select" placeholder="LC" title="LC">
-                                         <option value="">Choose from List</option>
-                                     </select>
+                                     <input disabled id="txtDistrictId" class="form-control" placeholder="LC" title="LC"/>
                                      <label for="txtDistrictId">Local Government</label>
                                      <span class="invalid-feedback is-invalid">Please enter local government</span>
                                  </div>
                              </div>
                              <div class="col-lg-4 col-md-6 col-sm-12">
                                  <div class="form-floating">
-                                     <select class="form-select" id="slctFinancialYearId" title="Financial Year">
-                                         <option value="">Choose from List</option>
-                                     </select>
+                                      <input disabled id="slctFinancialYearId" class="form-control" placeholder="Financial Year" title="Financial Year"/>
                                      <label class="slctFinancialYearId">Financial Year</label>
                                      <span class="invalid-feedback is-invalid">please select Financial year</span>
                                  </div>
                              </div>
-                             <div class="col-lg-4 col-md-6 col-sm-12">
+                             <div class="col-lg-4 col-md-12 col-sm-12">
                                  <div class="form-floating">
-                                     <input id="txtContractNumberId" type="number" class="form-control" placeholder="Contract Number" title="Contract Number" />
+                                     <input disabled id="txtContractNumberId" type="text" class="form-control" placeholder="Contract Number" title="Contract Number" />
                                      <label for="txtContractNumberId">Contract Number</label>
                                      <span class="invalid-feedback is-invalid">Contract Number</span>
                                  </div>
                              </div>
                          </div>
                          <div class="row m-1 p-1">
-                             <div class="col-lg-6 col-md-6 col-sm-12">
+                             <div class="col-lg-6 col-md-12 col-sm-12">
                                  <div class="form-floating">
                                      <input id="txtContractName" type="text" class="form-control" placeholder="Name of Contractor or Consultant/Company Name" title="Name of Contractor or Consultant/Company Name" />
                                      <label for="txtContractName">Name of Contractor or Consultant/Company Name</label>
                                      <span class="invalid-feedback is-invalid">please enter contract</span>
                                  </div>
                              </div>
-                             <div class="col-lg-6 col-md-6 col-sm-12">
+                             <div class="col-lg-6 col-md-12 col-sm-12">
                                  <div class="form-floating">
                                      <input id="txtContractorCountry" type="text" class="form-control" placeholder="Country of Origin of Contractor or Consultant" title="Country of Origin of Contractor or Consultant" />
                                      <label for="txtContractorCountry">Country of Origin of Contractor or Consultant</label>
@@ -233,16 +310,16 @@
                              </div>
                              </div>
                          <div class="row m-1 p-1">
-                             <div class="col-lg-6 col-md-6 col-sm-12">
+                             <div class="col-lg-6 col-md-12 col-sm-12">
                                  <div class="form-floating">
-                                     <input id="txtDescriptionGoodsId" type="number" class="form-control" placeholder="Description of Goods,Services or Works Procured" title="Description of Goods,Services or Works Procured" />
+                                     <input id="txtDescriptionGoodsId" type="text" class="form-control" placeholder="Description of Goods,Services or Works Procured" title="Description of Goods,Services or Works Procured" />
                                      <label for="txtDescriptionGoodsId">Description of Goods,Services or Works Procured</label>
                                      <span class="invalid-feedback is-invalid">Description of Goods,Services or Works Procured</span>
                                  </div>
                              </div>
-                             <div class="col-lg-6 col-md-6 col-sm-12">
+                             <div class="col-lg-6 col-md-12 col-sm-12">
                                  <div class="form-floating">
-                                     <input id="txtContractSum" type="text" class="form-control" placeholder="Contract Sum (UGX)(000)" title="Contract Sum (UGX)(000)" />
+                                     <input id="txtContractSum" type="number" class="form-control" placeholder="Contract Sum (UGX)(000)" title="Contract Sum (UGX)(000)" />
                                      <label for="txtContractSum">Contract Sum (UGX)(000)</label>
                                      <span class="invalid-feedback is-invalid">please enter contract</span>
                                  </div>
@@ -251,15 +328,14 @@
                          <div class="row m-1 p-1">
                              <div class="col-lg-6 col-md-6 col-sm-12">
                                  <div class="form-floating">
-                                     <input id="txtAnnualPaymenttUnderContract" type="text" class="form-control" placeholder="Annual Payment Under Contract" title="Annual Payment Under Contract" />
+                                     <input id="txtAnnualPaymenttUnderContract" type="number" class="form-control" placeholder="Annual Payment Under Contract" title="Annual Payment Under Contract" />
                                      <label for="txtAnnualPaymenttUnderContract">Annual Payment Under Contract</label>
                                      <span class="invalid-feedback is-invalid">please enter contract</span>
                                  </div>
                              </div>
                              <div class="col-lg-6 col-md-6 col-sm-12">
                                  <div class="form-floating">
-                                     <input id="txtStatusId" type="number" class="form-control" placeholder="Status" title="Status" />
-                                     <label for="txtStatusId">Status</label>
+                                     <select id="slctStatusId"  class="form-select" ></select>
                                      <span class="invalid-feedback is-invalid">Status</span>
                                  </div>
                              </div>

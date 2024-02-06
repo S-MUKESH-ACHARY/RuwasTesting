@@ -6,15 +6,16 @@
             getTableData()
         })
          function getTableData() {
-             var data = { 'op': 'SubCountyTableData' }
+             var data = { 'op': 'FetchSubCountyTableData' }
              var s = function (sms) {
                  sms.forEach(function (item) {
                      console.log(item);
                      var row = `<tr>`
                      row = row + `<td class="1">` + item.SubCounty+`</td>`+
                          `<td>` + item.District+`</td>`+
-                         `<td>` + item.Population+`</td>`+
-                         `<td>` + item.FinancialYear+`</td>`+
+                         `<td class="2">` + item.DistrictId+`</td>`+
+                         `<td class="3">` + item.Population+`</td>`+
+                         `<td class="4">` + item.FinancialYear+`</td>`+
                          `<td>` +`<button class="btn btn-primary" type="button" onclick="EditSubCounty(this)" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-pen-to-square"></i></button> `+`</td></tr>`
                      $("#myTable").append(row);
                  })
@@ -29,8 +30,14 @@
              $(".loader-container").show();
          }
          function EditSubCounty(thisId) {
-             let Subcounty = $(thisId).parent().patent().children('.1').html();
+             getFinancialYr();
+             fetchLC();
+             let Subcounty = $(thisId).closest('tr').find('.1').html();
              $("#txtSunCountyId").val(Subcounty);
+             let District = $(thisId).closest('tr').find('.2').html();
+             $("#txtDistrictId").val(District);
+             let Population = $(thisId).closest('tr').find('.3').html();
+             $("#txtPopulationId").val(Population);
          }
          function getFinancialYr() {
              var data = {
@@ -84,10 +91,7 @@
              }
              CallHandler(data, s, e);
          }
-         function EditSubCounty(thisId) {
-             getFinancialYr();
-             fetchLC();
-         }
+         
          function CallHandler(d, s, e) {
              $.ajax({
                  type: "GET",
@@ -133,6 +137,7 @@
                         <tr class="table-secondary">
                             <th class="text-center">Sub-County</th>
                             <th class="text-center">District</th>
+                            <th class="text-center">DistrictId</th>
                             <th class="text-center">Population</th>
                             <th class="text-center">Financial Year</th>
                             <th class="text-center">Edit</th>

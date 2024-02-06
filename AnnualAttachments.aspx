@@ -290,6 +290,8 @@
                    </div>
                    <div style="overflow-x: auto; white-space: nowrap;">
                        <table id="myTable" class="table table-hover table-bordered" style="text-align: center; width: 100%">
+                   <%--<div style="overflow: scroll; white-space: nowrap;">
+                       <table id="myTable" class="table table-hover table-bordered">--%>
                            <thead>
                                <tr class="table-secondary">
                                    <th>Location</th>

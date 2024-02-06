@@ -3,9 +3,10 @@
     <script>
         $(function () {
             document.getElementById("dataEntryId").classList.add("DE");
-            addNewRow()
-            fetchLC()
-            loadFinancialYr()
+            addNewRow();
+            fetchLC();
+            loadFinancialYr();
+            CStatus();
         })
         function saveNewContract() {
             let slctLc = $("#slctLcId").val();
@@ -39,7 +40,7 @@
                 CategoryDetailList.push({ ContractsNumber: ContractsNumber, ContractorName: ContractorName, ContractorCountry: ContractorCountry, DescriptionGoods: DescriptionGoods, ContractSum: ContractSum, AnnualPaymenttUnderContract: AnnualPaymenttUnderContract, Status: Status });
             })
             let data = {
-                "op": "Contracts",
+                "op": "SaveContracts",
                 "LocalGovernment": slctLc,
                 "FinancialYr": slctFinancialYr,
                 "CategoryDetailList": CategoryDetailList
@@ -75,7 +76,7 @@
             row += '<td><input id="txtDescriptionGoodsId" type="text" class="form-control" /></td>';
             row += '<td><input id="txtContractSumId" type="number" class="form-control" /></td>';
             row += '<td><input id="txtAnnualPaymenttUnderContractId" type="number" class="form-control" /></td>';
-            row += '<td><select id="slctStatusId"  class="form-select" ><option value="1">Signed</option><option value="2">Awarded</option></select></td>';
+            row += '<td><select id="slctStatusId"  class="form-select" ></select></td>';
             row += '<td class="d-flex"><button type="button" class="btn btn-light" onclick="addNewRow()"><i class="fa-solid fa-circle-plus fa-1x"></i></button>&nbsp;&nbsp;<button type="button" class="btn btn-light" onclick="removeNewRow(this)"><i class="fa-solid fa-circle-minus fa-1x"></i></button></td >';
             row += '</tr>';
             $("#myTable").append(row);
@@ -88,6 +89,29 @@
             } else {
                 child.parentNode.parentNode.remove();
             }
+        }
+        function CStatus() {
+            var data = {
+                "op":"FetchCStatus"
+            }
+            var s = function (sms) {
+                if (Array.isArray(sms)) {
+                    let CStatus = document.getElementById("slctStatusId");
+                    sms.forEach(function (item) {
+                        let option = document.createElement('option');
+                        option.value = item.CStatusId;
+                        option.text = item.CStatusName;
+                        CStatus.append(option);
+                    })
+                }
+                else {
+                    alert(sms);
+                }
+            }
+            var e = function (msg) {
+                alert(msg);
+            }
+            CallHandler(data, s, e);
         }
         function loadFinancialYr() {
             var data = {
@@ -185,15 +209,6 @@
                         <div class="row">
                             <div class="col-lg-3 col-12">
                                 <div class="form-floating">
-                                    <select class="form-select" id="slctLcId" title="Local Government">
-                                        <option value="">Choose from List</option>
-                                    </select>
-                                    <label>Local Government <span>*</span></label>
-                                    <span class="invalid-feedback is-invalid">Please select from list</span>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-12">
-                                <div class="form-floating">
                                     <select class="form-select" id="slctFinancialYrId" title="Financial Year">
                                         <option value="">Choose from List</option>
                                     </select>
@@ -201,6 +216,16 @@
                                     <span class="invalid-feedback is-invalid">Please select from list</span>
                                 </div>
                             </div>
+                            <div class="col-lg-3 col-12">
+                                <div class="form-floating">
+                                    <select class="form-select" id="slctLcId" title="Local Government">
+                                        <option value="">Choose from List</option>
+                                    </select>
+                                    <label>Local Government <span>*</span></label>
+                                    <span class="invalid-feedback is-invalid">Please select from list</span>
+                                </div>
+                            </div>
+
                         </div>
                         <table id="contractDtlTableId"  class="table p-1 mt-5" style="text-align:center;width:100%;">
                             <thead>
