@@ -123,6 +123,7 @@
         }
        
         function ModelActivityTable() {
+            
             let FinancialYr = $("#slctFinancialYearId").val();
             let LocalGovernment = $("#slctLocalGovernmentId").val();
             let slctQuarter = $("#slctQuarterId").val();
@@ -163,7 +164,7 @@
                                 /*`<td class="txtWPDtlId" style="display:none" id="txtWPDtlId">` + item.WorkPlanDtlId + `</td>` +*/
                                 `<td style = "display:none" id = "txtWPDtlId" >` + `<input disabled type="number" class="form-control txtWPDtlId" style="width:10rem" value="` + item.WorkPlanDtlId + `" />` + `</td>` +
                                 `<td>` + item.SlNo + `</td>` + 
-                                `<td>` + item.ModelActivity + `</td>` +
+                                `<td> ` + `<label style="width:20rem">` + item.ModelActivity + `</label>`+ `</td>` +
                                 `<td>` + `<input disabled type="number" class="form-control txtApprovalAnnualTarget" style="width:10rem" placeholder="` + item.ApprovalAnnualTarget + `" />` + `</td>` +
                                 `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="` + item.QuarterTarget + `" />` + `</td>` +
                                 `<td>` + `<input type="number" class="form-control txtQuarterAchived" style="width:10rem" placeholder="` + item.QuarterAchieved +`" />` + `</td>` +
@@ -171,10 +172,12 @@
                                 `<td>` + `<input disabled type="number" class="form-control percentWorkplan" style="width:10rem" placeholder="0" />` + `</td>` +
                                 `<td>` + `<input type="number" class="form-control txtExpanditure" placeholder="` + item.Expanditure + `" style="width:10rem"  value="` + item.Expanditure + `" />` + `</td>` +
                                 `<td>` + `<input disabled type="number" class="form-control CumulativeExpanditure" style="width:10rem" value="` + item.CumulativeExpanditure + `" />` + `</td>` +
-                                `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="` + item.AnnualBudget + `" />` + `</td>` +
+                                `<td>` + `<input disabled type="number" class="form-control AnnualBudget" style="width:10rem" value="` + item.AnnualBudget + `" />` + `</td>` +
                                 `<td>` + `<textarea typeof="text" class="form-control txtComment" style="width:20rem">` + item.Comments +`</textarea>` + `</td></tr>`
                             $("#myTable").append(row);
+                            
                         })
+                        total();
                         $("#txtWorkplanId").html(workPlanId);
                         $("#txtTitleId").val(Title);
                         $("#txtCaoLetterId").val(caoTitle);
@@ -214,6 +217,7 @@
                             })
                             $row.find(".percentWorkplan").val(mul);
                         })
+                       
                     }
                     else { alert("No Rows Found"); }
                 }
@@ -227,6 +231,26 @@
             }
             
             CallHandler(data, s, e);
+        }
+        function total() {
+            var sum = 0;
+            $('#myTable tbody tr').each(function () {
+                var values = parseFloat($(this).find('.txtExpanditure').val());
+                sum += isNaN(values) ? 0 : values;
+            })
+            $("#Total1").val(sum);
+            var sum = 0;
+            $('#myTable tbody tr').each(function () {
+                var values = parseFloat($(this).find('.CumulativeExpanditure').val());
+                sum += isNaN(values) ? 0:values;
+            })
+            $("#Total2").val(sum);
+            var sum = 0;
+            $('#myTable tbody tr').each(function () {
+                var values = parseFloat($(this).find('.AnnualBudget').val());
+                sum += isNaN(values) ? 0:values;
+            })
+            $("#Total3").val(sum);
         }
         function getFinancialYr() {
             var data = { 'op': 'FetchFinancialYear' }
@@ -427,10 +451,10 @@
                                          <td></td>
                                          <td></td>
                                          <td></td>
-                                         <td></td>
-                                         <td><input disabled type="text" class="form-control" placeholder="Total"  /></td>
-                                         <td><input disabled type="text" class="form-control" placeholder="Total"  /></td>
-                                         <td><input disabled type="text" class="form-control" placeholder="Total"  /></td>
+                                         <td><button type="button" class="btn btn-secondary w-100" onclick="total()">Total</button></td>
+                                         <td><input disabled type="text" id="Total1" class="form-control" placeholder="Total"  /></td>
+                                         <td><input disabled type="text" id="Total2" class="form-control" placeholder="Total"  /></td>
+                                         <td><input disabled type="text" id="Total3" class="form-control" placeholder="Total"  /></td>
                                          <td></td>
                                      </tr>
                                  </tfoot>

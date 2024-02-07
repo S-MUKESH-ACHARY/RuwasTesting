@@ -44,7 +44,6 @@
                 sms.forEach(function (item) {
                     var row = '<tr>'
                     row = row + `<td class="1">` + item.LocalGovernment + `</td>` +
-                        
                         `<td class="2">` + item.FinancialYear+`</td>`+
                         `<td class="3">` + item.ContractNumber+`</td>`+
                         `<td class="4">` + item.NameofContractor+`</td>`+

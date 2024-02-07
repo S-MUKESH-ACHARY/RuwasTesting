@@ -264,6 +264,9 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
                             case "UpdatePRDWSCG":
                                 UpdatePRDWSCG(jsonString, context);
                                 break;
+                            case "UpdatePRDSHCG":
+                                UpdatePRDSHCG(jsonString, context);
+                                break;
                         }
                     }
                     else
@@ -3089,135 +3092,97 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
             context.Response.Write(response);
         }
     }
-    //public class FetchPReportDSHCGClass
-    //{
-    //    public string SlNo { get; set; }
-    //    public string ModelActivity { get; set; }
-    //    public int  ApprovalAnnualTarget { get; set; }
-    //    public int QuarterTarget { get; set; }
-    //    public int AnnualBudget { get; set; }
-    //    public int QuarterAchieved { get; set; }
-    //    public int Expanditure { get; set; }
-    //}
-    //public void FetchPReportDSHCG(HttpContext context)
-    //{
-    //    try
-    //    {
-    //        List<FetchPReportDSHCGClass> FetchPReportDSHCGList = new List<FetchPReportDSHCGClass>();
-    //        int FinancialYr = Convert.ToInt32(context.Request["FinancialYr"]);
-    //        int LocalGV = Convert.ToInt32(context.Request["LocalGovernment"]);
-    //        string Quarter = context.Request["slctQuarter"].ToString();
-    //        NpgsqlCommand cmd = new NpgsqlCommand();
-    //        if (Quarter == "quarterOne")
-    //        {
-    //             cmd = new NpgsqlCommand("select \"sanitationDetailId\",\"sNo\"," +
-    //                "\"modelActivity\",\"approvedAnnualTarget\",\"quarterOne\",\"funds\",\"quarterOneAchieved\",\"quarterOneExpenditure\" from" +
-    //                " \"sanitations\" join \"sanitationDetails\" on \"sanitations\".\"sanitationId\" =" +
-    //                " \"sanitationDetails\".\"sanitationId\" where \"districtId\" = @LocalGV and" +
-    //                " \"financialYearId\" = @FinancialYr and \"approvedAnnualTarget\" not in (0) order by \"sNo\" asc");
-    //        }else if (Quarter == "quarterTwo")
-    //        {
-    //             cmd = new NpgsqlCommand("select \"sanitationDetailId\",\"sNo\"," +
-    //                "\"modelActivity\",\"approvedAnnualTarget\",\"quarterTwo\",\"funds\",\"quarterTwoAchieved\",\"quarterTwoExpenditure\" from" +
-    //                " \"sanitations\" join \"sanitationDetails\" on \"sanitations\".\"sanitationId\" =" +
-    //                " \"sanitationDetails\".\"sanitationId\" where \"districtId\" = @LocalGV and" +
-    //                " \"financialYearId\" = @FinancialYr and \"approvedAnnualTarget\" not in (0) order by \"sNo\" asc");
-    //        }else if (Quarter == "quarterThree")
-    //        {
-    //             cmd = new NpgsqlCommand("select \"sanitationDetailId\",\"sNo\"," +
-    //                " \"modelActivity\",\"approvedAnnualTarget\",\"quarterThree\",\"funds\",\"quarterThreeAchieved\",\"quarterThreeExpenditure\" from" +
-    //                " \"sanitations\" join \"sanitationDetails\" on \"sanitations\".\"sanitationId\" =" +
-    //                " \"sanitationDetails\".\"sanitationId\" where \"districtId\" = @LocalGV and" +
-    //                " \"financialYearId\" = @FinancialYr and \"approvedAnnualTarget\" not in (0) order by \"sNo\" asc");
-    //        }else if (Quarter == "quarterFour")
-    //        {
-    //             cmd = new NpgsqlCommand("select \"sanitationDetailId\",\"sNo\"," +
-    //                "\"modelActivity\",\"approvedAnnualTarget\",\"quarterFour\",\"funds\",\"quarterFourAchieved\",\"quarterFourExpenditure\" from" +
-    //                " \"sanitations\" join \"sanitationDetails\" on \"sanitations\".\"sanitationId\" =" +
-    //                " \"sanitationDetails\".\"sanitationId\" where \"districtId\" = @LocalGV and" +
-    //                " \"financialYearId\" = @FinancialYr and \"approvedAnnualTarget\" not in (0) order by \"sNo\" asc");
-    //        }
-    //        cmd.Parameters.AddWithValue("@FinancialYr", FinancialYr);
-    //        cmd.Parameters.AddWithValue("@LocalGV", LocalGV);
-    //        DataSet ds =ruwasdb.SelectQuery(cmd);
-    //        DataTable dt = ds.Tables[0];
-    //        if (dt.Rows.Count > 0)
-    //        {
-    //            foreach(DataRow dr in dt.Rows)
-    //            {
-    //                FetchPReportDSHCGClass arr = new FetchPReportDSHCGClass();
-    //                arr.SlNo = dr["sNo"].ToString();
-    //                arr.ModelActivity = dr["modelActivity"].ToString();
-    //                arr.ApprovalAnnualTarget = Convert.ToInt32(dr["approvedAnnualTarget"]);
-    //                if (Quarter == "quarterOne")
-    //                {
-    //                    arr.QuarterTarget = Convert.ToInt32(dr["quarterOne"]);
-    //                    arr.QuarterAchieved = Convert.ToInt32(dr["quarterOneAchieved"]);
-    //                    arr.Expanditure = Convert.ToInt32(dr["quarterOneExpenditure"]);
-
-    //                }
-    //                else if (Quarter == "quarterTwo")
-    //                {
-    //                    arr.QuarterTarget = Convert.ToInt32(dr["quarterTwo"]);
-    //                    arr.QuarterAchieved = Convert.ToInt32(dr["quarterTwoAchieved"]);
-    //                    arr.Expanditure = Convert.ToInt32(dr["quarterTwoExpenditure"]);
-    //                }
-    //                else if (Quarter == "quarterThree")
-    //                {
-    //                    arr.QuarterTarget = Convert.ToInt32(dr["quarterThree"]);
-    //                    arr.QuarterAchieved = Convert.ToInt32(dr["quarterThreeAchieved"]);
-    //                    arr.Expanditure = Convert.ToInt32(dr["quarterThreeExpenditure"]);
-    //                }
-    //                else if (Quarter == "quarterFour")
-    //                {
-    //                    arr.QuarterTarget = Convert.ToInt32(dr["quarterFour"]);
-    //                    arr.QuarterAchieved = Convert.ToInt32(dr["quarterFourAchieved"]);
-    //                    arr.Expanditure = Convert.ToInt32(dr["quarterFourExpenditure"]);
-    //                }
-    //                arr.AnnualBudget = Convert.ToInt32(dr["funds"]);
-    //                FetchPReportDSHCGList.Add(arr);
-    //            }
-    //            string response = GetJson(FetchPReportDSHCGList);
-    //            context.Response.Write(response);
-    //        }
-    //        else
-    //        {
-    //            string sms = "No Rows Found";
-    //            string response = GetJson(sms);
-    //            context.Response.Write(response);
-    //        }
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        string msg = ex.Message;
-    //        string response = GetJson(msg);
-    //        context.Response.Write(response);
-    //    }
-    //}
+    public class UpdatePRDSHCGClass
+    {
+        public int SanitationId { get; set; }
+        public string Title { get; set; }
+        public string Quarter { get; set; }
+        public List<ModelActivutyOfDSHCGClass> ModelActivutyOfDSHCG { get; set; }
+    }
+    public class ModelActivutyOfDSHCGClass
+    {
+        public int SanitationDtlId { get; set; }
+        public int QuarterAchived { get; set; }
+        public int Expanditure { get; set; }
+        public string Comment { get; set; }
+    }
+    public void UpdatePRDSHCG(string jsonstring ,HttpContext context)
+    {
+        try { 
+        var js = new JavaScriptSerializer();
+        UpdatePRDSHCGClass Obj = js.Deserialize<UpdatePRDSHCGClass>(jsonstring);
+        int SanitationId = Obj.SanitationId;
+        string Title = Obj.Title;
+        string Quarter = Obj.Quarter;
+        NpgsqlCommand cmd = new NpgsqlCommand("update \"sanitations\" set \"title\"=@Title where \"sanitationId\"=@SanitationId");
+        cmd.Parameters.AddWithValue("@Title", Title);
+        cmd.Parameters.AddWithValue("@SanitationId", SanitationId);
+        ruwasdb.Update(cmd);
+        if (SanitationId != 0)
+        {
+            foreach(ModelActivutyOfDSHCGClass x in Obj.ModelActivutyOfDSHCG)
+            {
+                int SanitationDtlId = x.SanitationDtlId;
+                int QuarterAchived = x.QuarterAchived;
+                int Expanditure = x.Expanditure;
+                string Comments = x.Comment;
+                NpgsqlCommand cmd1 = new NpgsqlCommand();
+                if (Quarter == "quarterOne")
+                {
+                    cmd1 = new NpgsqlCommand("update \"sanitationDetails\" set " +
+                    "\"quarterOneAchieved\"=@QuarterAchived,\"quarterOneExpenditure\"=@Expanditure,\"quarterOneComment\"=@Comments where \"sanitationDetailId\"=@SanitationDtlId ");
+                }
+                else if (Quarter == "quarterTwo")
+                {
+                    cmd1 = new NpgsqlCommand("update \"sanitationDetails\" set " +
+                "\"quarterTwoAchieved\"=@QuarterAchived,\"quarterTwoExpenditure\"=@Expanditure,\"quarterTwoComment\"=@Comments where \"sanitationDetailId\"=@SanitationDtlId ");
+                }
+                else if (Quarter == "quarterThree")
+                {
+                    cmd1 = new NpgsqlCommand("update \"sanitationDetails\" set " +
+                    "\"quarterThreeAchieved\"=@QuarterAchived,\"quarterThreeExpenditure\"=@Expanditure,\"quarteThreeComment\"=@Comments where \"sanitationDetailId\"=@SanitationDtlId ");
+                }
+                else if (Quarter == "quarterFour")
+                {
+                    cmd1 = new NpgsqlCommand("update \"sanitationDetails\" set " +
+                    "\"quarterFourAchieved\"=@QuarterAchived,\"quarterFourExpenditure\"=@Expanditure,\"quarterFourComment\"=@Comments where \"sanitationDetailId\"=@SanitationDtlId ");
+                }
+                cmd1.Parameters.AddWithValue("@SanitationDtlId", SanitationDtlId);
+                cmd1.Parameters.AddWithValue("@QuarterAchived", QuarterAchived);
+                cmd1.Parameters.AddWithValue("@Expanditure", Expanditure);
+                cmd1.Parameters.AddWithValue("@Comments", Comments);
+                ruwasdb.Update(cmd1);
+            }
+                string response = GetJson("Updated Successfully.");
+                context.Response.Write(response);
+            }
+            else
+            {
+                string response = GetJson("No Data Found.");
+                context.Response.Write(response);
+            }
+        }
+        catch (Exception ex)
+        {
+            string msg = ex.Message;
+            string response = GetJson(msg);
+            context.Response.Write(response);
+        }
+    }
     public class FetchPReportDSHCGClass
     {
         public int Sanitation { get; set; }
-        public int SanitationDetailId { get; set; }
+        public int SanitationDtl { get; set; }
         public string SlNo { get; set; }
         public string ModelActivity { get; set; }
         public int ApprovalAnnualTarget { get; set; }
-        public int QuarterTarget1 { get; set; }
-        public int QuarterTarget2 { get; set; }
-        public int QuarterTarget3 { get; set; }
-        public int QuarterTarget4 { get; set; }
+        public int QuarterTarget { get; set; }
         public int AnnualBudget { get; set; }
-        public int QuarterAchieved1 { get; set; }
-        public int QuarterAchieved2 { get; set; }
-        public int QuarterAchieved3 { get; set; }
-        public int QuarterAchieved4 { get; set; }
-        public int Expanditure1 { get; set; }
-        public int Expanditure2 { get; set; }
-        public int Expanditure3 { get; set; }
-        public int Expanditure4 { get; set; }
-        public string Comment1 { get; set; }
-        public string Comment2 { get; set; }
-        public string Comment3 { get; set; }
-        public string Comment4 { get; set; }
+        public int QuarterAchieved { get; set; }
+        public int CumulativeAchieved { get; set; }
+        public int Expanditure { get; set; }
+        public int CumulativeExpanditure { get; set; }
+        public string Comments { get; set; }
         public string Title { get; set; }
     }
     public void FetchPReportDSHCG(HttpContext context)
@@ -3229,14 +3194,44 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
             int LocalGV = Convert.ToInt32(context.Request["LocalGovernment"]);
             string Quarter = context.Request["slctQuarter"].ToString();
             NpgsqlCommand cmd = new NpgsqlCommand();
-            cmd = new NpgsqlCommand("select \"sanitationDetailId\",\"sanitationDetails\".\"sanitationId\",\"title\",\"sNo\"," +
-               " \"modelActivity\",\"approvedAnnualTarget\",\"quarterOne\",\"quarterTwo\",\"quarterThree\",\"quarterFour\"," +
-               " \"funds\",\"quarterOneAchieved\",\"quarterTwoAchieved\",\"quarterThreeAchieved\",\"quarterFourAchieved\"," +
-               " \"quarterOneExpenditure\",\"quarterTwoExpenditure\",\"quarterThreeExpenditure\",\"quarterFourExpenditure\"," +
-               " \"quarterOneComment\",\"quarterTwoComment\",\"quarteThreeComment\",\"quarterFourComment\" from" +
-               " \"sanitations\" join \"sanitationDetails\" on \"sanitations\".\"sanitationId\" =" +
-               " \"sanitationDetails\".\"sanitationId\" where \"districtId\" = @LocalGV and" +
-               " \"financialYearId\" = @FinancialYr and \"approvedAnnualTarget\" not in (0) order by \"sNo\" asc");
+            if (Quarter == "quarterOne")
+            {
+                cmd = new NpgsqlCommand("select \"sanitationDetails\".\"sanitationId\",\"sanitationDetailId\",\"sNo\",\"title\"," +
+                   "\"modelActivity\",\"approvedAnnualTarget\",\"quarterOne\",\"funds\",\"quarterOneAchieved\",\"quarterOneExpenditure\",\"quarterOneComment\" from" +
+                   " \"sanitations\" join \"sanitationDetails\" on \"sanitations\".\"sanitationId\" =" +
+                   " \"sanitationDetails\".\"sanitationId\" where \"districtId\" = @LocalGV and" +
+                   " \"financialYearId\" = @FinancialYr and \"approvedAnnualTarget\" not in (0) order by \"sNo\" asc");
+            }
+            else if (Quarter == "quarterTwo")
+            {
+                cmd = new NpgsqlCommand("select \"sanitationDetails\".\"sanitationId\",\"sanitationDetailId\",\"sNo\",\"title\"," +
+                   "\"modelActivity\",\"approvedAnnualTarget\",\"quarterTwo\",\"funds\"," +
+                   "\"quarterOneAchieved\",\"quarterTwoAchieved\"," +
+                   "\"quarterOneExpenditure\",\"quarterTwoExpenditure\",\"quarterTwoComment\" from" +
+                   " \"sanitations\" join \"sanitationDetails\" on \"sanitations\".\"sanitationId\" =" +
+                   " \"sanitationDetails\".\"sanitationId\" where \"districtId\" = @LocalGV and" +
+                   " \"financialYearId\" = @FinancialYr and \"approvedAnnualTarget\" not in (0) order by \"sNo\" asc");
+            }
+            else if (Quarter == "quarterThree")
+            {
+                cmd = new NpgsqlCommand("select \"sanitationDetails\".\"sanitationId\",\"sanitationDetailId\",\"sNo\",\"title\"," +
+                   " \"modelActivity\",\"approvedAnnualTarget\",\"quarterThree\",\"funds\"," +
+                   "\"quarterOneAchieved\",\"quarterTwoAchieved\",\"quarterThreeAchieved\"," +
+                   "\"quarterOneExpenditure\",\"quarterTwoExpenditure\",\"quarterThreeExpenditure\",\"quarteThreeComment\" from" +
+                   " \"sanitations\" join \"sanitationDetails\" on \"sanitations\".\"sanitationId\" =" +
+                   " \"sanitationDetails\".\"sanitationId\" where \"districtId\" = @LocalGV and" +
+                   " \"financialYearId\" = @FinancialYr and \"approvedAnnualTarget\" not in (0) order by \"sNo\" asc");
+            }
+            else if (Quarter == "quarterFour")
+            {
+                cmd = new NpgsqlCommand("select \"sanitationDetails\".\"sanitationId\",\"sanitationDetailId\",\"sNo\",\"title\"," +
+                   "\"modelActivity\",\"approvedAnnualTarget\",\"quarterFour\",\"funds\"," +
+                   "\"quarterOneAchieved\",\"quarterTwoAchieved\",\"quarterThreeAchieved\",\"quarterFourAchieved\"," +
+                   "\"quarterOneExpenditure\",\"quarterTwoExpenditure\",\"quarterThreeExpenditure\",\"quarterFourExpenditure\",\"quarterFourComment\" from" +
+                   " \"sanitations\" join \"sanitationDetails\" on \"sanitations\".\"sanitationId\" =" +
+                   " \"sanitationDetails\".\"sanitationId\" where \"districtId\" = @LocalGV and" +
+                   " \"financialYearId\" = @FinancialYr and \"approvedAnnualTarget\" not in (0) order by \"sNo\" asc");
+            }
             cmd.Parameters.AddWithValue("@FinancialYr", FinancialYr);
             cmd.Parameters.AddWithValue("@LocalGV", LocalGV);
             DataSet ds = ruwasdb.SelectQuery(cmd);
@@ -3246,27 +3241,49 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
                 foreach (DataRow dr in dt.Rows)
                 {
                     FetchPReportDSHCGClass arr = new FetchPReportDSHCGClass();
+                    arr.Sanitation = Convert.ToInt32(dr["sanitationId"]);
+                    arr.SanitationDtl = Convert.ToInt32(dr["sanitationDetailId"]);
                     arr.SlNo = dr["sNo"].ToString();
                     arr.ModelActivity = dr["modelActivity"].ToString();
                     arr.ApprovalAnnualTarget = Convert.ToInt32(dr["approvedAnnualTarget"]);
-                    arr.QuarterTarget1 = Convert.ToInt32(dr["quarterOne"]);
-                    arr.QuarterTarget2 = Convert.ToInt32(dr["quarterTwo"]);
-                    arr.QuarterTarget3 = Convert.ToInt32(dr["quarterThree"]);
-                    arr.QuarterTarget4 = Convert.ToInt32(dr["quarterFour"]);
-                    arr.QuarterAchieved1 = Convert.ToInt32(dr["quarterOneAchieved"]);
-                    arr.QuarterAchieved2 = Convert.ToInt32(dr["quarterTwoAchieved"]);
-                    arr.QuarterAchieved3 = Convert.ToInt32(dr["quarterThreeAchieved"]);
-                    arr.QuarterAchieved4 = Convert.ToInt32(dr["quarterFourAchieved"]);
-                    arr.Expanditure1 = Convert.ToInt32(dr["quarterOneExpenditure"]);
-                    arr.Expanditure2 = Convert.ToInt32(dr["quarterTwoExpenditure"]);
-                    arr.Expanditure3 = Convert.ToInt32(dr["quarterThreeExpenditure"]);
-                    arr.Expanditure4 = Convert.ToInt32(dr["quarterFourExpenditure"]);
-                    arr.AnnualBudget = Convert.ToInt32(dr["funds"]);
-                    arr.Comment1 = dr["quarterOneComment"].ToString();
-                    arr.Comment2 = dr["quarterTwoComment"].ToString();
-                    arr.Comment3 = dr["quarteThreeComment"].ToString();
-                    arr.Comment4 = dr["quarterFourComment"].ToString();
                     arr.Title = dr["title"].ToString();
+                    if (Quarter == "quarterOne")
+                    {
+                        arr.QuarterTarget = Convert.ToInt32(dr["quarterOne"]);
+                        arr.QuarterAchieved = Convert.ToInt32(dr["quarterOneAchieved"]);
+                        arr.CumulativeAchieved = Convert.ToInt32(dr["quarterOneAchieved"]);
+                        arr.Expanditure = Convert.ToInt32(dr["quarterOneExpenditure"]);
+                        arr.CumulativeExpanditure = Convert.ToInt32(dr["quarterOneExpenditure"]);
+                        arr.Comments = dr["quarterOneComment"].ToString();
+                    }
+                    else if (Quarter == "quarterTwo")
+                    {
+                        arr.QuarterTarget = Convert.ToInt32(dr["quarterTwo"]);
+                        arr.QuarterAchieved = Convert.ToInt32(dr["quarterTwoAchieved"]);
+                        arr.CumulativeAchieved = Convert.ToInt32(dr["quarterOneAchieved"]) + Convert.ToInt32(dr["quarterTwoAchieved"]);
+                        arr.Expanditure = Convert.ToInt32(dr["quarterTwoExpenditure"]);
+                        arr.CumulativeExpanditure = Convert.ToInt32(dr["quarterOneExpenditure"]) + Convert.ToInt32(dr["quarterTwoExpenditure"]);
+                        arr.Comments = dr["quarterTwoComment"].ToString();
+                    }
+                    else if (Quarter == "quarterThree")
+                    {
+                        arr.QuarterTarget = Convert.ToInt32(dr["quarterThree"]);
+                        arr.QuarterAchieved = Convert.ToInt32(dr["quarterThreeAchieved"]);
+                        arr.CumulativeAchieved = Convert.ToInt32(dr["quarterOneAchieved"]) + Convert.ToInt32(dr["quarterTwoAchieved"]) + Convert.ToInt32(dr["quarterThreeAchieved"]);
+                        arr.Expanditure = Convert.ToInt32(dr["quarterThreeExpenditure"]);
+                        arr.CumulativeExpanditure= Convert.ToInt32(dr["quarterOneExpenditure"]) + Convert.ToInt32(dr["quarterTwoExpenditure"])+ Convert.ToInt32(dr["quarterThreeExpenditure"]);
+                        arr.Comments = dr["quarteThreeComment"].ToString();
+                    }
+                    else if (Quarter == "quarterFour")
+                    {
+                        arr.QuarterTarget = Convert.ToInt32(dr["quarterFour"]);
+                        arr.QuarterAchieved = Convert.ToInt32(dr["quarterFourAchieved"]);
+                        arr.CumulativeAchieved = Convert.ToInt32(dr["quarterOneAchieved"]) + Convert.ToInt32(dr["quarterTwoAchieved"]) + Convert.ToInt32(dr["quarterThreeAchieved"])+ Convert.ToInt32(dr["quarterFourAchieved"]);
+                        arr.Expanditure = Convert.ToInt32(dr["quarterFourExpenditure"]);
+                        arr.CumulativeExpanditure = Convert.ToInt32(dr["quarterOneExpenditure"]) + Convert.ToInt32(dr["quarterTwoExpenditure"]) + Convert.ToInt32(dr["quarterThreeExpenditure"])+ Convert.ToInt32(dr["quarterFourExpenditure"]);
+                        arr.Comments = dr["quarterFourComment"].ToString();
+                    }
+                    arr.AnnualBudget = Convert.ToInt32(dr["funds"]);
                     FetchPReportDSHCGList.Add(arr);
                 }
                 string response = GetJson(FetchPReportDSHCGList);
@@ -3286,6 +3303,98 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
             context.Response.Write(response);
         }
     }
+    //public class FetchPReportDSHCGClass
+    //{
+    //    public int Sanitation { get; set; }
+    //    public int SanitationDetailId { get; set; }
+    //    public string SlNo { get; set; }
+    //    public string ModelActivity { get; set; }
+    //    public int ApprovalAnnualTarget { get; set; }
+    //    public int QuarterTarget1 { get; set; }
+    //    public int QuarterTarget2 { get; set; }
+    //    public int QuarterTarget3 { get; set; }
+    //    public int QuarterTarget4 { get; set; }
+    //    public int AnnualBudget { get; set; }
+    //    public int QuarterAchieved1 { get; set; }
+    //    public int QuarterAchieved2 { get; set; }
+    //    public int QuarterAchieved3 { get; set; }
+    //    public int QuarterAchieved4 { get; set; }
+    //    public int Expanditure1 { get; set; }
+    //    public int Expanditure2 { get; set; }
+    //    public int Expanditure3 { get; set; }
+    //    public int Expanditure4 { get; set; }
+    //    public string Comment1 { get; set; }
+    //    public string Comment2 { get; set; }
+    //    public string Comment3 { get; set; }
+    //    public string Comment4 { get; set; }
+    //    public string Title { get; set; }
+    //}
+    //public void FetchPReportDSHCG(HttpContext context)
+    //{
+    //    try
+    //    {
+    //        List<FetchPReportDSHCGClass> FetchPReportDSHCGList = new List<FetchPReportDSHCGClass>();
+    //        int FinancialYr = Convert.ToInt32(context.Request["FinancialYr"]);
+    //        int LocalGV = Convert.ToInt32(context.Request["LocalGovernment"]);
+    //        string Quarter = context.Request["slctQuarter"].ToString();
+    //        NpgsqlCommand cmd = new NpgsqlCommand();
+    //        cmd = new NpgsqlCommand("select \"sanitationDetailId\",\"sanitationDetails\".\"sanitationId\",\"title\",\"sNo\"," +
+    //           " \"modelActivity\",\"approvedAnnualTarget\",\"quarterOne\",\"quarterTwo\",\"quarterThree\",\"quarterFour\"," +
+    //           " \"funds\",\"quarterOneAchieved\",\"quarterTwoAchieved\",\"quarterThreeAchieved\",\"quarterFourAchieved\"," +
+    //           " \"quarterOneExpenditure\",\"quarterTwoExpenditure\",\"quarterThreeExpenditure\",\"quarterFourExpenditure\"," +
+    //           " \"quarterOneComment\",\"quarterTwoComment\",\"quarteThreeComment\",\"quarterFourComment\" from" +
+    //           " \"sanitations\" join \"sanitationDetails\" on \"sanitations\".\"sanitationId\" =" +
+    //           " \"sanitationDetails\".\"sanitationId\" where \"districtId\" = @LocalGV and" +
+    //           " \"financialYearId\" = @FinancialYr and \"approvedAnnualTarget\" not in (0) order by \"sNo\" asc");
+    //        cmd.Parameters.AddWithValue("@FinancialYr", FinancialYr);
+    //        cmd.Parameters.AddWithValue("@LocalGV", LocalGV);
+    //        DataSet ds = ruwasdb.SelectQuery(cmd);
+    //        DataTable dt = ds.Tables[0];
+    //        if (dt.Rows.Count > 0)
+    //        {
+    //            foreach (DataRow dr in dt.Rows)
+    //            {
+    //                FetchPReportDSHCGClass arr = new FetchPReportDSHCGClass();
+    //                arr.SlNo = dr["sNo"].ToString();
+    //                arr.ModelActivity = dr["modelActivity"].ToString();
+    //                arr.ApprovalAnnualTarget = Convert.ToInt32(dr["approvedAnnualTarget"]);
+    //                arr.QuarterTarget1 = Convert.ToInt32(dr["quarterOne"]);
+    //                arr.QuarterTarget2 = Convert.ToInt32(dr["quarterTwo"]);
+    //                arr.QuarterTarget3 = Convert.ToInt32(dr["quarterThree"]);
+    //                arr.QuarterTarget4 = Convert.ToInt32(dr["quarterFour"]);
+    //                arr.QuarterAchieved1 = Convert.ToInt32(dr["quarterOneAchieved"]);
+    //                arr.QuarterAchieved2 = Convert.ToInt32(dr["quarterTwoAchieved"]);
+    //                arr.QuarterAchieved3 = Convert.ToInt32(dr["quarterThreeAchieved"]);
+    //                arr.QuarterAchieved4 = Convert.ToInt32(dr["quarterFourAchieved"]);
+    //                arr.Expanditure1 = Convert.ToInt32(dr["quarterOneExpenditure"]);
+    //                arr.Expanditure2 = Convert.ToInt32(dr["quarterTwoExpenditure"]);
+    //                arr.Expanditure3 = Convert.ToInt32(dr["quarterThreeExpenditure"]);
+    //                arr.Expanditure4 = Convert.ToInt32(dr["quarterFourExpenditure"]);
+    //                arr.AnnualBudget = Convert.ToInt32(dr["funds"]);
+    //                arr.Comment1 = dr["quarterOneComment"].ToString();
+    //                arr.Comment2 = dr["quarterTwoComment"].ToString();
+    //                arr.Comment3 = dr["quarteThreeComment"].ToString();
+    //                arr.Comment4 = dr["quarterFourComment"].ToString();
+    //                arr.Title = dr["title"].ToString();
+    //                FetchPReportDSHCGList.Add(arr);
+    //            }
+    //            string response = GetJson(FetchPReportDSHCGList);
+    //            context.Response.Write(response);
+    //        }
+    //        else
+    //        {
+    //            string sms = "No Rows Found";
+    //            string response = GetJson(sms);
+    //            context.Response.Write(response);
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        string msg = ex.Message;
+    //        string response = GetJson(msg);
+    //        context.Response.Write(response);
+    //    }
+    //}
     public void UpdateBudgetType(HttpContext context)
     {
         try

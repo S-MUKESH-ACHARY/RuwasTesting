@@ -7,7 +7,7 @@
            getRWSRC();
            /*fetchLC();*/
        })
-       function save() {
+       function saveChanges() {
            let slctFinancialYear = $("#slctFinancialYearId").val();
            if (slctFinancialYear == "") {
                $("#slctFinancialYearId").addClass("is-invalid");
@@ -44,8 +44,8 @@
                $("#slctQuarterId").removeClass("is-invalid");
                $("#slctQuarterId").addClass("is-valid");
            }
-           let titleId = $("#titleId").val();
-           if (titleId == "") {
+           let Title = $("#titleId").val();
+           if (Title == "") {
                $("#titleId").addClass("is-invalid");
                $("#titleId").focus();
                return false;
@@ -62,10 +62,168 @@
                $("#formFileL1Id").removeClass("is-invalid");
                $("#formFileL1Id").addClass("is-valid");
            }
+           var SanitationId = $("#txtSanitation").html();
            ModelActivutyOfDSHCG = [];
            $("#myTable>tbody>tr").each(function () {
-               let QuarterAchive=Number($(thsi).find("."))
+               let SanitationDtlId = Number($(this).find(".txtSDtlId").val());
+               let QuarterAchived =Number($(this).find(".txtQuarterAchived").val());
+               let Expanditure = Number($(this).find(".txtExpanditure").val());
+               let Comment = $(this).find(".txtComment").val();
+               ModelActivutyOfDSHCG.push({ SanitationDtlId: SanitationDtlId, QuarterAchived: QuarterAchived, Expanditure: Expanditure, Comment: Comment })
            })
+           var data = {
+               "op": "UpdatePRDSHCG",
+               "SanitationId": SanitationId,
+               "Title": Title,
+               "Quarter": slctQuarter,
+               "ModelActivutyOfDSHCG": ModelActivutyOfDSHCG
+           }
+           var s = function (sms) {
+               alert(sms);
+           }
+           var e = function (msg) {
+               alert(msg);
+           }
+           CallHandlerUsingJson_POST(data, s, e);
+           console.log(data);
+       }
+       function CallHandlerUsingJson_POST(d, s, e) {
+           d = JSON.stringify(d);
+           d = encodeURIComponent(d);
+           $.ajax({
+               type: "POST",
+               url: "RuwasHandler.axd",
+               dataType: "json",
+               contentType: "application/json; charset=utf-8",
+               data: d,
+               async: true,
+               cache: true,
+               success: s,
+               error: e
+           });
+       }
+       function ModelActivityTable() {
+           $("#myTable").css("display", "block");
+           let FinancialYr = $("#slctFinancialYearId").val();
+           let LocalGovernment = $("#slctLocalGovernmentId").val();
+           let slctQuarter = $("#slctQuarterId").val();
+           let data = {
+               'op': "FundsRecivedDSHCG",
+               "FinancialYr": FinancialYr,
+               "LocalGovernment": LocalGovernment,
+               "slctQuarter": slctQuarter
+           }
+           var s = function (sms) {
+               let FinancialYr = $("#slctFinancialYearId").val();
+               let LocalGovernment = $("#slctLocalGovernmentId").val();
+               let slctQuarter = $("#slctQuarterId").val();
+               if (Array.isArray(sms)) {
+                   sms.forEach(function (item) {
+                       console.log(item);
+                       $("#txtFundsRecivedId").val(item.FundsRecived);
+                   })
+               }
+               var data = {
+                   'op': 'FetchPReportDSHCG',
+                   "FinancialYr": FinancialYr,
+                   "LocalGovernment": LocalGovernment,
+                   "slctQuarter": slctQuarter
+               }
+               var s = function (sms) {
+                   console.log(sms);
+                   $("#tBody").html("");
+                   var Sanitation;
+                   var Title;
+                   if (Array.isArray(sms)) {
+                       sms.forEach(function (item) {
+                            Sanitation = item.Sanitation;
+                           Title = item.Title;
+                           var row = `<tr>`
+                           row = row + `<td id = "txtSDtlId" style="display:none;">` + `<input disabled type="number" class="form-control txtSDtlId" style="width:10rem" value="` + item.SanitationDtl + `" />` + `</td>` +
+                               `<td>` + item.SlNo + `</td>` +
+                               `<td> ` + `<label style="width:20rem">` + item.ModelActivity + `</label>` + `</td>` +
+                               `<td>` + `<input disabled type="number" class="form-control txtApprovalAnnualTarget" style="width:10rem" placeholder="` + item.ApprovalAnnualTarget + `" />` + `</td>` +
+                               `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="` + item.QuarterTarget + `" />` + `</td>` +
+                               `<td>` + `<input type="number" class="form-control txtQuarterAchived" style="width:10rem" placeholder="` + item.QuarterAchieved + `" />` + `</td>` +
+                               `<td>` + `<input disabled type="number" class="form-control CumulativeAchieved" style="width:10rem" placeholder="` + item.CumulativeAchieved + `" />` + `</td>` +
+                               `<td>` + `<input disabled type="number" class="form-control percentWorkplan" style="width:10rem" placeholder="0" />` + `</td>` +
+                               `<td>` + `<input type="number" class="form-control txtExpanditure" placeholder="` + item.Expanditure + `" style="width:10rem"  value="` + item.Expanditure + `" />` + `</td>` +
+                               `<td>` + `<input disabled type="number" class="form-control CumulativeExpanditure" style="width:10rem" value="` + item.CumulativeExpanditure + `" />` + `</td>` +
+                               `<td>` + `<input disabled type="number" class="form-control AnnualBudget" style="width:10rem" value="` + item.AnnualBudget + `" />` + `</td>` +
+                               `<td>` + `<textarea typeof="text" class="form-control txtComment" style="width:20rem">` + item.Comments + `</textarea>` + `</td></tr>`
+                           $("#myTable").append(row);
+                       })
+                       $("#txtSanitation").html(Sanitation);
+                       $("#titleId").val(Title);
+                       total();
+                       $(".txtExpanditure").on('input', function (event) {
+                           var sum = 0;
+                           var $row = $(this).closest('tr');
+                           var txtId = parseInt($row.find(".txtSDtlId").val());
+                           var TE = parseInt($(this).val()) || 0;
+                           var item = sms.find((item) => item.SanitationDtl == txtId);
+                           sum = TE == 0 ? item.CumulativeExpanditure - item.Expanditure : TE + (item.CumulativeExpanditure - item.Expanditure);
+                           $row.find(".CumulativeExpanditure").val(sum);
+
+                       })
+
+                       $(".txtQuarterAchived").on('input', function (event) {
+                           var sum1 = 0;
+                           var $row = $(this).closest('tr');
+                           var txtId = parseInt($row.find(".txtSDtlId").val());
+                           var TQ = parseInt($(this).val()) || 0;
+                           var item = sms.find((item) => item.SanitationDtl == txtId);
+                           sum1 = TQ == 0 ? item.CumulativeAchieved - item.QuarterAchieved : TQ + (item.CumulativeAchieved - item.QuarterAchieved);
+                           $row.find(".CumulativeAchieved").val(sum1);
+
+                       })
+                       $(".txtQuarterAchived").on('keyup', function () {
+                           var mul = 0;
+                           var $row = $(this).closest('tr');
+                           var txtId = parseInt($row.find(".txtSDtlId").val());
+                           var item = sms.find((item) => item.SanitationDtl == txtId);
+                           //var ApprovalAnnualTarget = parseInt($row.find(".txtApprovalAnnualTarget").val());
+                           $row.find(".CumulativeAchieved").each(function () {
+                               if (this.value.length != 0) {
+                                   mul = (parseFloat(this.value) / item.ApprovalAnnualTarget) * 100;
+                                   $(this).css("background-color", "#FEFFB0");
+                               }
+                           })
+                           $row.find(".percentWorkplan").val(mul);
+                       })
+                   }
+                   else { alert("No Rows Found"); }
+               }
+               var e = function (msg) {
+                   alert(msg);
+               }
+               CallHandler(data, s, e);
+           }
+           var e = function (msg) {
+               alert(msg);
+           }
+
+           CallHandler(data, s, e);
+       }
+       function total() {
+           var sum = 0;
+           $('#myTable tbody tr').each(function () {
+               var values = parseInt($(this).find('.txtExpanditure').val());
+               sum += isNaN(values) ? 0 : values;
+           })
+           $("#Total1").val(sum);
+           var sum = 0;
+           $("#myTable tbody tr").each(function () {
+               var values = parseInt($(this).find('.CumulativeExpanditure').val());
+               sum += isNaN(values) ? 0 : values;
+           })
+           $("#Total2").val(sum);
+           sum = 0;
+           $("#myTable tbody tr").each(function () {
+               var values = parseInt($(this).find('.AnnualBudget').val());
+               sum += isNaN(values) ? 0 : values;
+           })
+           $("#Total3").val(sum);
        }
        //function ModelActivityTable() {
        //    let FinancialYr = $("#slctFinancialYearId").val();
@@ -98,20 +256,70 @@
        //            $("#tBody").html("");
        //            if (Array.isArray(sms)) {
        //                sms.forEach(function (item) {
-       //                    var row = `<tr>`
-       //                    row = row + `<td style = "display:none" id = "txtWPDtlId" >` + `<input disabled type="number" class="form-control txtWPDtlId" style="width:10rem" value="` + item.WorkPlanDtlId + `" />` + `</td>` +
-       //                        `<td>` + item.SlNo + `</td>` +
-       //                        `<td>` + item.ModelActivity + `</td>` +
-       //                        `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="` + item.ApprovalAnnualTarget + `" />` + `</td>` +
-       //                        `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="` + item.QuarterTarget + `" />` + `</td>` +
-       //                        `<td>` + `<input type="number" class="form-control txtQuarterAchived" style="width:10rem" placeholder="` + item.QuarterAchieved + `" />` + `</td>` +
-       //                        `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="` + item.CumulativeAchieved + `" />` + `</td>` +
-       //                        `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="0" />` + `</td>` +
-       //                        `<td>` + `<input type="number" class="form-control txtExpanditure" placeholder="` + item.Expanditure + `" style="width:10rem"  value="` + item.Expanditure + `" />` + `</td>` +
-       //                        `<td>` + `<input disabled type="number" class="form-control CumulativeExpanditure" style="width:10rem" value="` + item.CumulativeExpanditure + `" />` + `</td>` +
-       //                        `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="` + item.AnnualBudget + `" />` + `</td>` +
-       //                        `<td>` + `<textarea typeof="text" class="form-control txtComment" style="width:20rem">` + item.Comments + `</textarea>` + `</td></tr>`
-       //                    $("#myTable").append(row);
+       //                    if (slctQuarter == "quarterOne") {
+       //                        var row = `<tr>`
+       //                        row = row + `<td style = "display:none" id = "txtWPDtlId" >` + `<input disabled type="number" class="form-control txtWPDtlId" style="width:10rem" value="` + item.WorkPlanDtlId + `" />` + `</td>` +
+       //                            `<td>` + item.SlNo + `</td>` +
+       //                            `<td>` + item.ModelActivity + `</td>` +
+       //                            `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="` + item.ApprovalAnnualTarget + `" />` + `</td>` +
+       //                            `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="` + item.QuarterTarget1 + `" />` + `</td>` +
+       //                            `<td>` + `<input type="number" class="form-control txtQuarterAchived" style="width:10rem" placeholder="` + item.QuarterAchieved1 + `" />` + `</td>` +
+       //                            `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="${item.QuarterAchieved1}" />` + `</td>` +
+       //                            `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="0" />` + `</td>` +
+       //                            `<td>` + `<input type="number" class="form-control txtExpanditure" placeholder="` + item.Expanditure1 + `" style="width:10rem"  value="` + item.Expanditure1 + `" />` + `</td>` +
+       //                            `<td>` + `<input disabled type="number" class="form-control CumulativeExpanditure" style="width:10rem" value="` + item.Expanditure1 + `" />` + `</td>` +
+       //                            `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="` + item.AnnualBudget + `" />` + `</td>` +
+       //                            `<td>` + `<textarea typeof="text" class="form-control txtComment" style="width:20rem">` + item.Comment1 + `</textarea>` + `</td></tr>`
+       //                        $("#myTable").append(row);
+       //                    }
+       //                    else if (slctQuarter == "quarterTwo") {
+       //                        var row = `<tr>`
+       //                        row = row + `<td style = "display:none" id = "txtWPDtlId" >` + `<input disabled type="number" class="form-control txtWPDtlId" style="width:10rem" value="` + item.WorkPlanDtlId + `" />` + `</td>` +
+       //                            `<td>` + item.SlNo + `</td>` +
+       //                            `<td>` + item.ModelActivity + `</td>` +
+       //                            `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="` + item.ApprovalAnnualTarget + `" />` + `</td>` +
+       //                            `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="` + item.QuarterTarget2 + `" />` + `</td>` +
+       //                            `<td>` + `<input type="number" class="form-control txtQuarterAchived" style="width:10rem" placeholder="` + item.QuarterAchieved2 + `" />` + `</td>` +
+       //                            `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="${item.QuarterAchieved1 + item.QuarterAchieved2}" />` + `</td>` +
+       //                            `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="0" />` + `</td>` +
+       //                            `<td>` + `<input type="number" class="form-control txtExpanditure" placeholder="` + item.Expanditure2 + `" style="width:10rem"  value="` + item.Expanditure2 + `" />` + `</td>` +
+       //                            `<td>` + `<input disabled type="number" class="form-control CumulativeExpanditure" style="width:10rem" value="${ item.Expanditure1 + item.Expanditure2 }" />` + `</td>` +
+       //                            `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="` + item.AnnualBudget + `" />` + `</td>` +
+       //                            `<td>` + `<textarea typeof="text" class="form-control txtComment" style="width:20rem">` + item.Comment2 + `</textarea>` + `</td></tr>`
+       //                        $("#myTable").append(row);
+       //                    }
+       //                    else if (slctQuarter == "quarterThree") {
+       //                        var row = `<tr>`
+       //                        row = row + `<td style = "display:none" id = "txtWPDtlId" >` + `<input disabled type="number" class="form-control txtWPDtlId" style="width:10rem" value="` + item.WorkPlanDtlId + `" />` + `</td>` +
+       //                            `<td>` + item.SlNo + `</td>` +
+       //                            `<td>` + item.ModelActivity + `</td>` +
+       //                            `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="` + item.ApprovalAnnualTarget + `" />` + `</td>` +
+       //                            `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="` + item.QuarterTarget3 + `" />` + `</td>` +
+       //                            `<td>` + `<input type="number" class="form-control txtQuarterAchived" style="width:10rem" placeholder="` + item.QuarterAchieved3 + `" />` + `</td>` +
+       //                            `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="${item.QuarterAchieved1 + item.QuarterAchieved2 + item.QuarterAchieved3}" />` + `</td>` +
+       //                            `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="0" />` + `</td>` +
+       //                            `<td>` + `<input type="number" class="form-control txtExpanditure" placeholder="` + item.Expanditure3 + `" style="width:10rem"  value="` + item.Expanditure3 + `" />` + `</td>` +
+       //                            `<td>` + `<input disabled type="number" class="form-control CumulativeExpanditure" style="width:10rem" value="${item.Expanditure1 + item.Expanditure2 + item.Expanditure3}" />` + `</td>` +
+       //                            `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="` + item.AnnualBudget + `" />` + `</td>` +
+       //                            `<td>` + `<textarea typeof="text" class="form-control txtComment" style="width:20rem">` + item.Comment3 + `</textarea>` + `</td></tr>`
+       //                        $("#myTable").append(row);
+       //                    }
+       //                    else if (slctQuarter == "quarterFour") {
+       //                        var row = `<tr>`
+       //                        row = row + `<td style = "display:none" id = "txtWPDtlId" >` + `<input disabled type="number" class="form-control txtWPDtlId" style="width:10rem" value="` + item.WorkPlanDtlId + `" />` + `</td>` +
+       //                            `<td>` + item.SlNo + `</td>` +
+       //                            `<td>` + item.ModelActivity + `</td>` +
+       //                            `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="` + item.ApprovalAnnualTarget + `" />` + `</td>` +
+       //                            `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="` + item.QuarterTarget4 + `" />` + `</td>` +
+       //                            `<td>` + `<input type="number" class="form-control txtQuarterAchived" style="width:10rem" placeholder="` + item.QuarterAchieved4 + `" />` + `</td>` +
+       //                            `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="${item.QuarterAchieved1 + item.QuarterAchieved2 + item.QuarterAchieved3 + item.QuarterAchieved4}" />` + `</td>` +
+       //                            `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="0" />` + `</td>` +
+       //                            `<td>` + `<input type="number" class="form-control txtExpanditure" placeholder="` + item.Expanditure4 + `" style="width:10rem"  value="` + item.Expanditure4 + `" />` + `</td>` +
+       //                            `<td>` + `<input disabled type="number" class="form-control CumulativeExpanditure" style="width:10rem" value="${item.Expanditure1 + item.Expanditure2 + item.Expanditure3 + item.Expanditure4}" />` + `</td>` +
+       //                            `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="` + item.AnnualBudget + `" />` + `</td>` +
+       //                            `<td>` + `<textarea typeof="text" class="form-control txtComment" style="width:20rem">` + item.Comment4 + `</textarea>` + `</td></tr>`
+       //                        $("#myTable").append(row);
+       //                    }
        //                })
        //                /*$("#myTable").DataTable();*/
        //            }
@@ -128,117 +336,6 @@
 
        //    CallHandler(data, s, e);
        //}
-       function ModelActivityTable() {
-           let FinancialYr = $("#slctFinancialYearId").val();
-           let LocalGovernment = $("#slctLocalGovernmentId").val();
-           let slctQuarter = $("#slctQuarterId").val();
-           let data = {
-               'op': "FundsRecivedDSHCG",
-               "FinancialYr": FinancialYr,
-               "LocalGovernment": LocalGovernment,
-               "slctQuarter": slctQuarter
-           }
-           var s = function (sms) {
-               let FinancialYr = $("#slctFinancialYearId").val();
-               let LocalGovernment = $("#slctLocalGovernmentId").val();
-               let slctQuarter = $("#slctQuarterId").val();
-               if (Array.isArray(sms)) {
-                   sms.forEach(function (item) {
-                       console.log(item);
-                       $("#txtFundsRecivedId").val(item.FundsRecived);
-                   })
-               }
-               var data = {
-                   'op': 'FetchPReportDSHCG',
-                   "FinancialYr": FinancialYr,
-                   "LocalGovernment": LocalGovernment,
-                   "slctQuarter": slctQuarter
-               }
-               var s = function (sms) {
-                   console.log(sms);
-                   $("#tBody").html("");
-                   if (Array.isArray(sms)) {
-                       sms.forEach(function (item) {
-                           if (slctQuarter == "quarterOne") {
-                               var row = `<tr>`
-                               row = row + `<td style = "display:none" id = "txtWPDtlId" >` + `<input disabled type="number" class="form-control txtWPDtlId" style="width:10rem" value="` + item.WorkPlanDtlId + `" />` + `</td>` +
-                                   `<td>` + item.SlNo + `</td>` +
-                                   `<td>` + item.ModelActivity + `</td>` +
-                                   `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="` + item.ApprovalAnnualTarget + `" />` + `</td>` +
-                                   `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="` + item.QuarterTarget1 + `" />` + `</td>` +
-                                   `<td>` + `<input type="number" class="form-control txtQuarterAchived" style="width:10rem" placeholder="` + item.QuarterAchieved1 + `" />` + `</td>` +
-                                   `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="${item.QuarterAchieved1}" />` + `</td>` +
-                                   `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="0" />` + `</td>` +
-                                   `<td>` + `<input type="number" class="form-control txtExpanditure" placeholder="` + item.Expanditure1 + `" style="width:10rem"  value="` + item.Expanditure1 + `" />` + `</td>` +
-                                   `<td>` + `<input disabled type="number" class="form-control CumulativeExpanditure" style="width:10rem" value="` + item.Expanditure1 + `" />` + `</td>` +
-                                   `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="` + item.AnnualBudget + `" />` + `</td>` +
-                                   `<td>` + `<textarea typeof="text" class="form-control txtComment" style="width:20rem">` + item.Comment1 + `</textarea>` + `</td></tr>`
-                               $("#myTable").append(row);
-                           }
-                           else if (slctQuarter == "quarterTwo") {
-                               var row = `<tr>`
-                               row = row + `<td style = "display:none" id = "txtWPDtlId" >` + `<input disabled type="number" class="form-control txtWPDtlId" style="width:10rem" value="` + item.WorkPlanDtlId + `" />` + `</td>` +
-                                   `<td>` + item.SlNo + `</td>` +
-                                   `<td>` + item.ModelActivity + `</td>` +
-                                   `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="` + item.ApprovalAnnualTarget + `" />` + `</td>` +
-                                   `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="` + item.QuarterTarget2 + `" />` + `</td>` +
-                                   `<td>` + `<input type="number" class="form-control txtQuarterAchived" style="width:10rem" placeholder="` + item.QuarterAchieved2 + `" />` + `</td>` +
-                                   `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="${item.QuarterAchieved1 + item.QuarterAchieved2}" />` + `</td>` +
-                                   `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="0" />` + `</td>` +
-                                   `<td>` + `<input type="number" class="form-control txtExpanditure" placeholder="` + item.Expanditure2 + `" style="width:10rem"  value="` + item.Expanditure2 + `" />` + `</td>` +
-                                   `<td>` + `<input disabled type="number" class="form-control CumulativeExpanditure" style="width:10rem" value="${ item.Expanditure1 + item.Expanditure2 }" />` + `</td>` +
-                                   `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="` + item.AnnualBudget + `" />` + `</td>` +
-                                   `<td>` + `<textarea typeof="text" class="form-control txtComment" style="width:20rem">` + item.Comment2 + `</textarea>` + `</td></tr>`
-                               $("#myTable").append(row);
-                           }
-                           else if (slctQuarter == "quarterThree") {
-                               var row = `<tr>`
-                               row = row + `<td style = "display:none" id = "txtWPDtlId" >` + `<input disabled type="number" class="form-control txtWPDtlId" style="width:10rem" value="` + item.WorkPlanDtlId + `" />` + `</td>` +
-                                   `<td>` + item.SlNo + `</td>` +
-                                   `<td>` + item.ModelActivity + `</td>` +
-                                   `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="` + item.ApprovalAnnualTarget + `" />` + `</td>` +
-                                   `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="` + item.QuarterTarget3 + `" />` + `</td>` +
-                                   `<td>` + `<input type="number" class="form-control txtQuarterAchived" style="width:10rem" placeholder="` + item.QuarterAchieved3 + `" />` + `</td>` +
-                                   `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="${item.QuarterAchieved1 + item.QuarterAchieved2 + item.QuarterAchieved3}" />` + `</td>` +
-                                   `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="0" />` + `</td>` +
-                                   `<td>` + `<input type="number" class="form-control txtExpanditure" placeholder="` + item.Expanditure3 + `" style="width:10rem"  value="` + item.Expanditure3 + `" />` + `</td>` +
-                                   `<td>` + `<input disabled type="number" class="form-control CumulativeExpanditure" style="width:10rem" value="${item.Expanditure1 + item.Expanditure2 + item.Expanditure3}" />` + `</td>` +
-                                   `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="` + item.AnnualBudget + `" />` + `</td>` +
-                                   `<td>` + `<textarea typeof="text" class="form-control txtComment" style="width:20rem">` + item.Comment3 + `</textarea>` + `</td></tr>`
-                               $("#myTable").append(row);
-                           }
-                           else if (slctQuarter == "quarterFour") {
-                               var row = `<tr>`
-                               row = row + `<td style = "display:none" id = "txtWPDtlId" >` + `<input disabled type="number" class="form-control txtWPDtlId" style="width:10rem" value="` + item.WorkPlanDtlId + `" />` + `</td>` +
-                                   `<td>` + item.SlNo + `</td>` +
-                                   `<td>` + item.ModelActivity + `</td>` +
-                                   `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="` + item.ApprovalAnnualTarget + `" />` + `</td>` +
-                                   `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="` + item.QuarterTarget4 + `" />` + `</td>` +
-                                   `<td>` + `<input type="number" class="form-control txtQuarterAchived" style="width:10rem" placeholder="` + item.QuarterAchieved4 + `" />` + `</td>` +
-                                   `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="${item.QuarterAchieved1 + item.QuarterAchieved2 + item.QuarterAchieved3 + item.QuarterAchieved4}" />` + `</td>` +
-                                   `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="0" />` + `</td>` +
-                                   `<td>` + `<input type="number" class="form-control txtExpanditure" placeholder="` + item.Expanditure4 + `" style="width:10rem"  value="` + item.Expanditure4 + `" />` + `</td>` +
-                                   `<td>` + `<input disabled type="number" class="form-control CumulativeExpanditure" style="width:10rem" value="${item.Expanditure1 + item.Expanditure2 + item.Expanditure3 + item.Expanditure4}" />` + `</td>` +
-                                   `<td>` + `<input disabled type="number" class="form-control" style="width:10rem" placeholder="` + item.AnnualBudget + `" />` + `</td>` +
-                                   `<td>` + `<textarea typeof="text" class="form-control txtComment" style="width:20rem">` + item.Comment4 + `</textarea>` + `</td></tr>`
-                               $("#myTable").append(row);
-                           }
-                       })
-                       /*$("#myTable").DataTable();*/
-                   }
-                   else { alert("No Rows Found"); }
-               }
-               var e = function (msg) {
-                   alert(msg);
-               }
-               CallHandler(data, s, e);
-           }
-           var e = function (msg) {
-               alert(msg);
-           }
-
-           CallHandler(data, s, e);
-       }
        function getFinancialYr() {
            var data = { 'op': 'FetchFinancialYear' }
            var s = function (sms) {
@@ -353,6 +450,7 @@
                     <div class="card-header text-center h5 alert alert-info">Progress Report (DSHCG)</div>
                     <div class="card-body">
                         <div class="row p-1 m-1">
+                            <label id="txtSanitation"></label>
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-floating">
                                     <select class="form-select" id="slctFinancialYearId" title="Financial Year">
@@ -411,7 +509,7 @@
                             </div>
                         </div>
                         <div style="overflow: auto; height: 600px;" class="ms-3 me-3">
-                            <table id="myTable" class="table table-hover">
+                            <table id="myTable" class="table table-hover" style="display:none;">
                                 <thead>
                                     <tr class="table-secondary" style="position: sticky; top: 0;">
                                         <th>No</th>
@@ -429,22 +527,21 @@
                                     </tr>
                                 </thead>
                                 <tbody id="tBody"></tbody>
-                                 <tfoot>
-                                     <tr style="position: sticky; bottom:0;">
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td><input disabled type="text" class="form-control" placeholder="Total"  /></td>
-                                         <td><input disabled type="text" class="form-control" placeholder="Total"  /></td>
-                                         <td><input disabled type="text" class="form-control" placeholder="Total"  /></td>
-                                         
-                                         <td></td>
-                                     </tr>
-                                 </tfoot>
+                                <tfoot>
+                                    <tr style="position: sticky; bottom: 0;">
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td><button type="button" class="btn btn-secondary w-100" onclick="total()">Total</button></td>
+                                        <td><input disabled type="text" id="Total1" class="form-control" placeholder="Total" /></td>
+                                        <td><input disabled type="text" id="Total2" class="form-control" placeholder="Total" /></td>
+                                        <td><input disabled type="text" id="Total3" class="form-control" placeholder="Total" /></td>
+                                        <td></td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                         <hr />
