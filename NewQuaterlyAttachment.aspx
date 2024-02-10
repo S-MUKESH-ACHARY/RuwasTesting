@@ -1,32 +1,181 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Operation.Master" AutoEventWireup="true" CodeBehind="NewQuaterlyAttachment.aspx.cs" Inherits="RUWAS.QuaterlyNewAttachment" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <script src="Lat_LogConversion/proj4.js"></script>
+    <script src="Lat_LogConversion/utm.min.js"></script>
     <script>
         $(function () {
             document.getElementById("dataEntryId").classList.add("DE");
             getFinancialYr();
             loadTechnology();
-            fetchLC();
             getDistrict();
             FundingSourceInformation();
+            //getSubCounty();
         })
-        function save() {
-            var financialYr = $("#financialYrId").val();
-            if (financialYr == "") {
-                $("#financialYrId").addClass("is-invalid");
-                $("#financialYrId").focus();
+        function showToast(type, msg) {
+            var toast = $('<div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="2000" >\
+        <div class="d-flex justify-content-end">\
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close" style="padding:0px"></button></div>\
+        <div class="toast-body">'+ msg + '</div>\
+        </div>');
+            toast.addClass("bg-" + type);
+            toast.addClass("text-light");
+            $(".toast-container").append(toast);
+            toast.toast("show");
+        }
+        async function utmconv() {
+            $("#UTMLocationType").css("display", "block");
+            $("#LatLongLocationType").css("display", "none");
+            $("#DMSLocationType").css("display", "none");
+        }
+        async function validate_lat_long_uganda() {
+            var latitude = document.getElementById('latitudeId').value;
+            if (latitude == "") {
+                showToast("danger", "Please Enter Lattitude Value");
+                document.getElementById('longitudeId').value = "";
                 return false;
-            } else {
-                $("#financialYrId").removeClass("is-invalid");
-                $("#financialYrId").addClass("is-valid");
             }
-            var workPlan = $("#workplanId").val();
-            if (workPlan == "") {
-                $("#workplanId").addClass("is-invalid");
-                $("#workplanId").focus();
+            var longitude = document.getElementById('longitudeId').value;
+
+            var num_lat = parseInt(latitude);
+            var num_lon = parseInt(longitude);
+            if ((-90 <= num_lat) && (num_lat <= 90)) {
+
+            } else {
+                return showToast("danger", "Latitude value Is Out of Range Map")
+            }
+            if (-180 <= num_lon && num_lon <= 180) {
+
+            } else {
+                return showToast("danger", "Longitude value Is Out of Range Map")
+            }
+            // Check if coordinates fall within Uganda's boundaries
+            var uganda_boundaries = {
+                'min_latitude': -1.464663,
+                'max_latitude': 4.220227,
+                'min_longitude': 29.573891,
+                'max_longitude': 35.000345
+            }
+            if ((uganda_boundaries['min_latitude'] <= parseFloat(latitude)) && parseFloat(latitude) <= (uganda_boundaries['max_latitude']) &&
+                (uganda_boundaries['min_longitude'] <= parseFloat(longitude) && parseFloat(longitude) <= uganda_boundaries['max_longitude'])) {
+
+                utmconv1();
+            } else {
+                showToast("danger", "Coordinates are not valid for Uganda.");
+
+            }
+        }
+        async function utmconv1() {
+            let lat = document.getElementById("latitudeId").value;
+            let lon = document.getElementById("longitudeId").value;
+            var utmList = fromLatLon(parseFloat(lat), parseFloat(lon));
+            console.log(utmList);
+            document.getElementById('zoneId1').value = utmList["zoneNum"];
+            document.getElementById('gps_utm_zone_letter').value = utmList["zoneLetter"];
+            document.getElementById('eastingId').value = (utmList["easting"]).toFixed(6);
+            document.getElementById('northingsId').value = (utmList["northing"]).toFixed(6);
+            degresscon1();
+        }
+        async function latlongconv() {
+            $("#UTMLocationType").css("display", "none");
+            $("#LatLongLocationType").css("display", "block");
+            $("#DMSLocationType").css("display", "none");
+        }
+        async function latlongconv1() {
+            let utmZone = document.getElementById('zoneId1').value;
+            let easting = document.getElementById('eastingId').value;
+            let northing = document.getElementById('northingsId').value;
+            let N_S = document.getElementById('gps_utm_zone_letter').value;
+            var utmlatlon = toLatLon(parseFloat(easting), parseFloat(northing), utmZone, N_S);
+            document.getElementById('latitudeId').value = (utmlatlon.latitude).toFixed(6);
+            document.getElementById('longitudeId').value = (utmlatlon.longitude).toFixed(6);
+
+            let latDMS = await getDD2DMS(parseFloat(utmlatlon.latitude), 'lat');
+            let latarry = latDMS.split(",")
+            document.getElementById('txtDeg').value = latarry[0];
+            document.getElementById('txtMin').value = latarry[1];
+            document.getElementById('txtSec').value = latarry[2];
+            document.getElementById('slct_dir_DMS').value = latarry[3];
+            let LongDMS = await getDD2DMS(parseFloat(utmlatlon.longitude), 'lon');
+            let longarry = LongDMS.split(",")
+            document.getElementById('txtDeg1').value = longarry[0];
+            document.getElementById('txtMin1').value = longarry[1];
+            document.getElementById('txtSec1').value = longarry[2];
+            document.getElementById('slct_dir_DMS1').value = longarry[3];
+            degresscon1();
+        }
+        async function getDMS2DD(days, minutes, seconds, direction) {
+            direction.toUpperCase();
+            var dd = days + minutes / 60 + seconds / (60 * 60);
+            //alert(dd);
+            if (direction == "S" || direction == "W") {
+                dd = dd * -1;
+            } // Don't do anything for N or E
+            return dd;
+        }
+        async function getDD2DMS(dms, type) {
+
+            var sign = 1, Abs = 0;
+            var days, minutes, secounds, direction;
+
+            if (dms < 0) { sign = -1; }
+            Abs = Math.abs(Math.round(dms * 1000000.));
+            //Math.round is used to eliminate the small error caused by rounding in the computer:
+            //e.g. 0.2 is not the same as 0.20000000000284
+            //Error checks
+            if (type == "lat" && Abs > (90 * 1000000)) {
+                //alert(" Degrees Latitude must be in the range of -90. to 90. ");
+                showToast("danger", "Degrees Latitude must be in the range of -90. to 90.");
+                return false;
+            } else if (type == "lon" && Abs > (180 * 1000000)) {
+                //alert(" Degrees Longitude must be in the range of -180 to 180. ");
+                showToast("danger", "Degrees Longitude must be in the range of -180 to 180. ");
+                return false;
+            }
+
+            days = Math.floor(Abs / 1000000);
+            minutes = Math.floor(((Abs / 1000000) - days) * 60);
+            secounds = (Math.floor(((((Abs / 1000000) - days) * 60) - minutes) * 100000) * 60 / 100000);
+            days = days * sign;
+            if (type == 'lat') direction = days < 0 ? 'S' : 'N';
+            if (type == 'lon') direction = days < 0 ? 'W' : 'E';
+            //else return value     
+            return (days * sign) + ',' + minutes + "," + secounds + "," + direction;
+        }
+        async function degresscon() {
+            $("#UTMLocationType").css("display", "none");
+            $("#LatLongLocationType").css("display", "none");
+            $("#DMSLocationType").css("display", "block");
+        }
+        async function degresscon1() {
+            let utmZone = document.getElementById('zoneId1').value;
+            let easting = document.getElementById('eastingId').value;
+            let northing = document.getElementById('northingsId').value;
+            let N_S = document.getElementById('gps_utm_zone_letter').value;
+            var utmlatlon = toLatLon(parseFloat(easting), parseFloat(northing), utmZone, N_S);
+
+            let latDMS = await getDD2DMS(parseFloat(utmlatlon.latitude), 'lat');
+            let latarry = latDMS.split(",")
+            document.getElementById('txtDeg').value = latarry[0];
+            document.getElementById('txtMin').value = latarry[1];
+            document.getElementById('txtSec').value = latarry[2];
+            document.getElementById('slct_dir_DMS').value = latarry[3];
+            let LongDMS = await getDD2DMS(parseFloat(utmlatlon.longitude), 'lon');
+            let longarry = LongDMS.split(",")
+            document.getElementById('txtDeg1').value = longarry[0];
+            document.getElementById('txtMin1').value = longarry[1];
+            document.getElementById('txtSec1').value = longarry[2];
+            document.getElementById('slct_dir_DMS1').value = longarry[3];
+        }
+        function save() {
+            var financialYr = $("#slctFinancialYearId").val();
+            alert(financialYr);
+            if (financialYr == "") {
+                $("#slctFinancialYearId").addClass("is-invalid");
+                $("#slctFinancialYearId").focus();
                 return false;
             } else {
-                $("#workplanId").removeClass("is-invalid");
-                $("#workplanId").addClass("is-valid");
+                $("#slctFinancialYearId").removeClass("is-invalid");
+                $("#slctFinancialYearId").addClass("is-valid");
             }
             var localGovernment = $("#localGovernmentId").val();
             if (localGovernment == "") {
@@ -37,7 +186,7 @@
                 $("#localGovernmentId").removeClass("is-invalid");
                 $("#localGovernmentId").addClass("is-valid");
             }
-            var category = $("#categoryId").val();
+            var category = $("#categoryId option:selected").text();
             if (category == "") {
                 $("#categoryId").addClass("is-invalid");
                 $("#categoryId").focus();
@@ -63,24 +212,6 @@
             } else {
                 $("#slctTechnologyId").removeClass("is-invalid");
                 $("#slctTechnologyId").addClass("is-valid");
-            }
-            var slctDistrict = $("#slctDistrictId").val();
-            if (slctDistrict == "") {
-                $("#slctDistrictId").addClass("is-invalid");
-                $("#slctDistrictId").focus();
-                return false;
-            } else {
-                $("#slctDistrictId").removeClass("is-invalid");
-                $("#slctDistrictId").addClass("is-valid");
-            }
-            var county = $("#countyId").val();
-            if (county == "") {
-                $("#countyId").addClass("is-invalid");
-                $("#countyId").focus();
-                return false;
-            } else {
-                $("#countyId").removeClass("is-invalid");
-                $("#countyId").addClass("is-valid");
             }
             var sub_County = $("#sub_CountyId").val();
             if (sub_County == "") {
@@ -109,113 +240,121 @@
                 $("#SlctVillageId").removeClass("is-invalid");
                 $("#SlctVillageId").addClass("is-valid");
             }
-            let locationType = $("input[name='locationType']:checked").val();
-            if (locationType == "UTM") {
-                let UTMZone = $("#slctUTMZone").val();
-                if (UTMZone == "") {
-                    $("#slctUTMZone").addClass("is-invalid");
-                    $("#slctUTMZone").focus();
-                    return false;
-                } else {
-                    $("#slctUTMZone").removeClass("is-invalid");
-                    $("#slctUTMZone").addClass("is-valid");
-                }
-                let UTMEasting = $("#txtUTMEasting").val();
-                if (UTMEasting == "") {
-                    $("#txtUTMEasting").addClass("is-invalid");
-                    $("#txtUTMEasting").focus();
-                    return false;
-                } else {
-                    $("#txtUTMEasting").removeClass("is-invalid");
-                    $("#txtUTMEasting").addClass("is-valid");
-                }
-                let UTMNorthing = $("#txtUTMNorthing").val();
-                if (UTMNorthing == "") {
-                    $("#txtUTMNorthing").addClass("is-invalid");
-                    $("#txtUTMNorthing").focus();
-                    return false;
-                } else {
-                    $("#txtUTMNorthing").removeClass("is-invalid");
-                    $("#txtUTMNorthing").addClass("is-valid");
-                }
+            //let locationType = $("input[name='locationType']:checked").val();
+            //if (locationType == "UTM") {
+                //let UTMZone = $("#slctUTMZone").val();
+                //if (UTMZone == "") {
+                //    $("#slctUTMZone").addClass("is-invalid");
+                //    $("#slctUTMZone").focus();
+                //    return false;
+                //} else {
+                //    $("#slctUTMZone").removeClass("is-invalid");
+                //    $("#slctUTMZone").addClass("is-valid");
+                //}
+                //let UTMEasting = $("#txtUTMEasting").val();
+                //if (UTMEasting == "") {
+                //    $("#txtUTMEasting").addClass("is-invalid");
+                //    $("#txtUTMEasting").focus();
+                //    return false;
+                //} else {
+                //    $("#txtUTMEasting").removeClass("is-invalid");
+                //    $("#txtUTMEasting").addClass("is-valid");
+                //}
+                //let UTMNorthing = $("#txtUTMNorthing").val();
+                //if (UTMNorthing == "") {
+                //    $("#txtUTMNorthing").addClass("is-invalid");
+                //    $("#txtUTMNorthing").focus();
+                //    return false;
+                //} else {
+                //    $("#txtUTMNorthing").removeClass("is-invalid");
+                //    $("#txtUTMNorthing").addClass("is-valid");
+                //}
 
-            }
-            else if (locationType == "Lat/Long") {
-                let Latitude = $("#txtLatitude").val();
+           // }
+           // else if (locationType == "Lat/Long") {
+            let Latitude = $("#latitudeId").val();
                 if (Latitude == "") {
-                    $("#txtLatitude").addClass("is-invalid");
-                    $("#txtLatitude").focus();
+                    $("#latitudeId").addClass("is-invalid");
+                    $("#latitudeId").focus();
                     return false;
                 } else {
-                    $("#txtLatitude").removeClass("is-invalid");
-                    $("#txtLatitude").addClass("is-valid");
+                    $("#latitudeId").removeClass("is-invalid");
+                    $("#latitudeId").addClass("is-valid");
                 }
-                let Longitude = $("#txtLongitude").val();
+            let Longitude = $("#longitudeId").val();
                 if (Longitude == "") {
-                    $("#txtLongitude").addClass("is-invalid");
-                    $("#txtLongitude").focus();
+                    $("#longitudeId").addClass("is-invalid");
+                    $("#longitudeId").focus();
                     return false;
                 } else {
-                    $("#txtLongitude").removeClass("is-invalid");
-                    $("#txtLongitude").addClass("is-valid");
-                }
+                    $("#longitudeId").removeClass("is-invalid");
+                    $("#longitudeId").addClass("is-valid");
             }
-            else if (locationType == "DMS") {
-                let Deg = $("#txtDeg").val();
-                if (Deg == "") {
-                    $("#txtDeg").addClass("is-invalid");
-                    $("#txtDeg").focus();
-                    return false;
-                } else {
-                    $("#txtDeg").removeClass("is-invalid");
-                    $("#txtDeg").addClass("is-valid");
-                }
-                let Min = $("#txtMin").val();
-                if (Min == "") {
-                    $("#txtMin").addClass("is-invalid");
-                    $("#txtMin").focus();
-                    return false;
-                } else {
-                    $("#txtMin").removeClass("is-invalid");
-                    $("#txtMin").addClass("is-valid");
-                }
-                let Sec = $("#txtSec").val();
-                if (Sec == "") {
-                    $("#txtSec").addClass("is-invalid");
-                    $("#txtSec").focus();
-                    return false;
-                } else {
-                    $("#txtSec").removeClass("is-invalid");
-                    $("#txtSec").addClass("is-valid");
-                }
-                let Deg1 = $("#txtDeg1").val();
-                if (Deg1 == "") {
-                    $("#txtDeg1").addClass("is-invalid");
-                    $("#txtDeg1").focus();
-                    return false;
-                } else {
-                    $("#txtDeg1").removeClass("is-invalid");
-                    $("#txtDeg1").addClass("is-valid");
-                }
-                let Min1 = $("#txtMin1").val();
-                if (Min1 == "") {
-                    $("#txtMin1").addClass("is-invalid");
-                    $("#txtMin1").focus();
-                    return false;
-                } else {
-                    $("#txtMin1").removeClass("is-invalid");
-                    $("#txtMin1").addClass("is-valid");
-                }
-                let Sec1 = $("#txtSec1").val();
-                if (Sec1 == "") {
-                    $("#txtSec1").addClass("is-invalid");
-                    $("#txtSec1").focus();
-                    return false;
-                } else {
-                    $("#txtSec1").removeClass("is-invalid");
-                    $("#txtSec1").addClass("is-valid");
-                }
-            }
+            let gps_utm_zone_number = $("#zoneId1").val();
+            let gps_utm_zone_letter = $("#gps_utm_zone_letter").val();
+            let utmEasting = $("#eastingId").val();
+            let utmNorthings = $("#northingsId").val();
+               
+           // }
+           // else if (locationType == "DMS") {
+            let XDeg = $("#txtDeg").val();
+                //if (Deg == "") {
+                //    $("#txtDeg").addClass("is-invalid");
+                //    $("#txtDeg").focus();
+                //    return false;
+                //} else {
+                //    $("#txtDeg").removeClass("is-invalid");
+                //    $("#txtDeg").addClass("is-valid");
+                //}
+            let XMin = $("#txtMin").val();
+                //if (Min == "") {
+                //    $("#txtMin").addClass("is-invalid");
+                //    $("#txtMin").focus();
+                //    return false;
+                //} else {
+                //    $("#txtMin").removeClass("is-invalid");
+                //    $("#txtMin").addClass("is-valid");
+                //}
+            let XSec = $("#txtSec").val();
+                //if (Sec == "") {
+                //    $("#txtSec").addClass("is-invalid");
+                //    $("#txtSec").focus();
+                //    return false;
+                //} else {
+                //    $("#txtSec").removeClass("is-invalid");
+                //    $("#txtSec").addClass("is-valid");
+                //}
+            let XDir_DMS = $("#slct_dir_DMS").val();
+            let YDeg = $("#txtDeg1").val();
+                //if (Deg1 == "") {
+                //    $("#txtDeg1").addClass("is-invalid");
+                //    $("#txtDeg1").focus();
+                //    return false;
+                //} else {
+                //    $("#txtDeg1").removeClass("is-invalid");
+                //    $("#txtDeg1").addClass("is-valid");
+                //}
+            let YMin = $("#txtMin1").val();
+                //if (Min1 == "") {
+                //    $("#txtMin1").addClass("is-invalid");
+                //    $("#txtMin1").focus();
+                //    return false;
+                //} else {
+                //    $("#txtMin1").removeClass("is-invalid");
+                //    $("#txtMin1").addClass("is-valid");
+                //}
+            let YSec = $("#txtSec1").val();
+            
+                //if (Sec1 == "") {
+                //    $("#txtSec1").addClass("is-invalid");
+                //    $("#txtSec1").focus();
+                //    return false;
+                //} else {
+                //    $("#txtSec1").removeClass("is-invalid");
+                //    $("#txtSec1").addClass("is-valid");
+                //}
+            // }
+            let YDir_DMS = $("#slct_dir_DMS1").val();
             var sourceNumber = $("#sourceNumberId").val();
             if (sourceNumber == "") {
                 $("#sourceNumberId").addClass("is-invalid");
@@ -270,67 +409,79 @@
                 $("#titleId").removeClass("is-invalid");
                 $("#titleId").addClass("is-valid");
             }
-            var paymentProof1 = $("#txtPaymentProof1").val();
-            if (paymentProof1 == "") {
-                $("#txtPaymentProof1").addClass("is-invalid");
-                $("#txtPaymentProof1").focus();
-                return false;
-            } else {
-                $("#txtPaymentProof1").removeClass("is-invalid");
-                $("#txtPaymentProof1").addClass("is-valid");
-            }
+            //var Doc1 = $("#txtDoc1").val();
+            //if (Doc1 == "") {
+            //    $("#txtDoc1").addClass("is-invalid");
+            //    $("#txtDoc1").focus();
+            //    return false;
+            //} else {
+            //    $("#txtDoc1").removeClass("is-invalid");
+            //    $("#txtDoc1").addClass("is-valid");
+            //}
             alert("Saved Successfully.");
-        }
-        //function addNewRow() {
-        //    let row = '<tr class="row m-1 p-1">';
-        //    row += '<td class="col-3"><div class="form-floating"><input type="number" min="1" class="form-control" id="sourceNumberId" title="Enter the Source Number" placeholder="Enter Source Number" /><label for="sourceNumberId">Source Number</label></div></td >';
-        //    row += '<td class="col-3"><div class="form-floating"><input type="text" id="nameOfWaterSourceId" class="form-control" title="Enter the Name of Water Source" placeholder="Enter Name of Water Source" /><label for="nameOfWaterSourceId">Name of Water Source</label></div></td>';
-        //    row += '<td class="col-3 mt-2"><button type="button" class="btn btn-light" onclick = "addNewRow()"><i class="fa-solid fa-circle-plus fa-1x"></i></button >&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-light" onclick="removeNewRow(this)"><i class="fa-solid fa-circle-minus fa-1x"></i></button></td>';
-        //    row += '</tr>';
-        //    $("#add_table").append(row);
-        //}
-        //function removeNewRow(child) {
-        //    let rowLength = document.getElementById("add_table").rows.length;
-        //    if (rowLength == 2) {
-        //        alert("First row can't be deleted");
-        //        return;
-        //    }
-        //    else {
-        //        child.parentNode.parentNode.remove();
-        //    }
-        //}
-        function getLocationType() {
-            var chkBoxValue = $("input[name='locationType']:checked").val();
-            if (chkBoxValue == "UTM") {
-                $("#UTMLocationType").css("display", "block");
-                $("#LatLongLocationType").css("display", "none");
-                $("#DMSLocationType").css("display", "none")
-            } else if (chkBoxValue == "Lat/Long") {
-                $("#UTMLocationType").css("display", "none");
-                $("#LatLongLocationType").css("display", "block");
-                $("#DMSLocationType").css("display", "none")
-            } else if (chkBoxValue == "DMS") {
-                $("#UTMLocationType").css("display", "none");
-                $("#LatLongLocationType").css("display", "none");
-                $("#DMSLocationType").css("display", "block")
+            var data = {
+                "op": "SaveQuarterlyAttachment",
+                "financialYr": financialYr,
+                "localGovernment": localGovernment,
+                "category": category,
+                "quarter": quarter,
+                "slctTechnology": slctTechnology,
+                "SlctVillage": SlctVillage,
+                "Latitude": Latitude,
+                "Longitude": Longitude,
+                "gps_utm_zone_number": gps_utm_zone_number,
+                "gps_utm_zone_letter": gps_utm_zone_letter,
+                "utmEasting": utmEasting,
+                "utmNorthings": utmNorthings,
+                "XDeg": XDeg,
+                "XMin": XMin,
+                "XSec": XSec,
+                "XDir_DMS": XDir_DMS, 
+                "YDeg": YDeg,
+                "YMin": YMin,
+                "YSec": YSec,
+                "YDir_DMS": YDir_DMS,
+                "sourceNumber": sourceNumber,
+                "nameOfWaterSource": nameOfWaterSource,
+                "SlctFundSourceType": SlctFundSourceType,
+                "funderName": funderName,
+                "investmentCost": investmentCost,
+                "title": title
             }
+            var s = function (sms) {
+                alert(sms);
+            }
+            var e = function (msg) {
+                alert(msg);
+            }
+            console.log(data);
+            CallHandler(data, s, e);
         }
         function getFinancialYr() {
             var data = { 'op': 'FetchFinancialYear' }
             var s = function (sms) {
                 if (Array.isArray(sms)) {
+                    
                     let AddFinancialYr = $("#slctFinancialYearId");
-                    sms.forEach(function (item) {
-                        let option = document.createElement('option');
-                        option.value = item.FinancialYr;
-                        option.text = item.FinancialYrName;
-                        AddFinancialYr.append(option);
-                    })
-                    sms.forEach(function (item) {
-                        if (item.IsActive == 1) {
-                            $("#slctFinancialYearId").val(item.FinancialYr);
-                        }
-                    });
+                    
+                        sms.forEach(function (item) {
+
+                            let option = document.createElement('option');
+                            option.value = item.FinancialYr;
+                            option.text = item.FinancialYrName;
+                            AddFinancialYr.append(option);
+                         //It uses the: gt() selector, which stands for "greater than." 
+                         //It selects all the < option > elements that have an index greater
+                         //than the value specified in the parentheses ie values of dropdown. 
+                            ///var maxItemsToShow = 5;
+                            $('#slctFinancialYearId option:gt(' + (4) + ')').remove();
+                        })
+                        sms.forEach(function (item) {
+                            if (item.IsActive == 1) {
+                                $("#slctFinancialYearId").val(item.FinancialYr);
+                            }
+                        });
+                    
                 } else {
                     alert(sms);
                 }
@@ -340,27 +491,7 @@
             }
             CallHandler(data, s, e);
         }
-        function fetchLC() {
-            let data = { "op": "FetchLC" };
-            let s = function (sms) {
-                if (Array.isArray(sms)) {
-                    let LC = document.getElementById("localGovernmentId");
-                    sms.forEach((msg) => {
-                        let option = document.createElement('option');
-                        option.value = msg.LCId;
-                        option.text = msg.LCName;
-                        LC.appendChild(option);
-                    })
-                }
-                else {
-                    alert(sms);
-                }
-            }
-            let e = function (msg) {
-                alert(msg);
-            }
-            CallHandler(data, s, e);
-        }
+       
         function loadTechnology() {
             var data = { 'op': 'FetchTeachnologyTable' };
             var s = function (sms) {
@@ -380,6 +511,7 @@
             }
             CallHandler(data, s, e);
         }
+        
         function getDistrict() {
             var data = { "op": "FetchLC" }
             var s = function (sms) {
@@ -403,7 +535,7 @@
         }
         function getSubCounty() {
             let districtId = document.getElementById("slctDistrictId").value;
-            alert(districtId);
+           
             var data = { 'op': 'FetchSubCountyOfDistrict', 'districtId': districtId }
             var s = function (sms) {
                 if (Array.isArray(sms)) {
@@ -434,6 +566,10 @@
                 if (Array.isArray(sms)) {
                     let ParishId = document.getElementById("SlctParishId");
                     ParishId.innerHTML = "";
+                    let option1 = document.createElement('option');
+                    option1.value = "";
+                    option1.text = "Choose From List";
+                    ParishId.append(option1);
                     sms.forEach(function (item) {
                         let option = document.createElement('option');
                         option.value = item.ParishId;
@@ -493,8 +629,6 @@
             }
             CallHandler(data, s, e);
         }
-
-        
         function CallHandler(d, s, e) {
             $.ajax({
                 type: "GET",
@@ -523,6 +657,9 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <section class="container-fluid">
+        <%--Toast--%>
+ <div class="toast-container position-fixed top-0 end-0">
+ </div>
         <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
             <ol class="breadcrumb d-flex justify-content-start">
                 <li class="breadcrumb-item h6 active"><i class="fa-solid fa-arrow-left" style="cursor:pointer;" onclick="location.href='QuarterlyAttachments.aspx'"></i>&nbsp;&nbsp;Data Entry</li>
@@ -540,14 +677,14 @@
                     <div><strong class="ms-3">1.Basic Information</strong></div>
                     <div class="row p-2 m-1">
                         <div class="col-lg-3 col-12">
-                                            <div class="form-floating">
-                                                <select class="form-select" id="slctFinancialYearId" title="Financial Year">
-                                                    <option value="">Choose from List</option>
-                                                </select>
-                                                <label class="slctFinancialYearId">Financial Year <span>*</span></label>
-                                                <span class="invalid-feedback is-invalid">please select Financial year</span>
-                                            </div>
-                                        </div>
+                            <div class="form-floating">
+                                <select class="form-select" id="slctFinancialYearId" title="Financial Year">
+                                    <%--<option value="">Choose From List</option>--%>
+                                </select>
+                                <label class="slctFinancialYearId">Financial Year <span>*</span></label>
+                                <span class="invalid-feedback is-invalid">please select Financial year</span>
+                            </div>
+                        </div>
                         <%--<div class="col-lg-3 col-6">
                             <div class="form-floating">
                                 <input disabled type="text" id="workplanId" class="form-control" title="Enter the Workplan Id" placeholder="Workplan Id" />
@@ -557,31 +694,30 @@
                         </div>--%>
                     </div>
                     <div class="row p-1 m-1 mb-4">
-                        <div class="col-lg-3 col-sm-6">
-                                            <div class="form-floating">
-                                                <select class="form-select" id="localGovernmentId" aria-label="A">
-                                                    <option value="">Choose from List</option>
-                                                </select>
-                                                <label for="localGovernmentId">Local Government <span>*</span></label>
-                                                <span class="invalid-feedback is-invalid">please select from list</span>
-                                            </div>
-                                        </div>
+                       <%-- <div class="col-lg-3 col-sm-6">
+                            <div class="form-floating">
+                                <select class="form-select" id="localGovernmentId" aria-label="A">
+                                    <option value="">Choose From List</option>
+                                </select>
+                                <label for="localGovernmentId">Local Government <span>*</span></label>
+                                <span class="invalid-feedback is-invalid">please select from list</span>
+                            </div>
+                        </div>--%>
                         <div class="col-lg-3 col-6">
                             <div class="form-floating">
                                 <select class="form-select" id="categoryId" title="Category">
-                                    <option value="">Choose from List</option>
+                                    <option value="">Choose From List</option>
                                     <option value="1">New water sources constructed in this quarter</option>
                                     <option value="2">Water sources rehabilitated in this quarter</option>
-                                    <option value="3">Example Three</option>
                                 </select>
-                                <label for="categoryId">Category <span>*</span></label>
+                                <label for="categoryId">New Rehabilitated Category <span>*</span></label>
                                 <span class="invalid-feedback is-invalid">please select from list</span>
                             </div>
                         </div>
                         <div class="col-lg-3 col-6">
                             <div class="form-floating">
                                 <select class="form-select" id="quarterId" title="Quarter">
-                                    <option value="">Choose from List</option>
+                                    <option value="">Choose From List</option>
                                     <option value="1">Q One (July-Sept)</option>
                                     <option value="2">Q Two (Oct-Dec)</option>
                                     <option value="3">Q Three (Jan-March)</option>
@@ -594,8 +730,8 @@
                         <div class="col-lg-3 col-6">
                             <div class="form-floating">
                                 <select class="form-select" id="slctTechnologyId" title="Technology">
-                                    <option value="">Choose from List</option>
-                                    
+                                    <option value="">Choose From List</option>
+
                                 </select>
                                 <label for="slctTechnologyId">Technology <span>*</span></label>
                                 <span class="invalid-feedback is-invalid">please select from list</span>
@@ -604,6 +740,7 @@
                     </div>
                     <div class="row ms-2"><strong>2.Location Information</strong></div>
                     <div class="row p-1 m-1">
+                             <div class="row p-1 m-1">
                         <div class="col-lg-3 col-6">
                             <div class="form-floating">
                                 <select class="form-select" id="slctDistrictId" title="District" onchange="getSubCounty()">
@@ -616,21 +753,8 @@
                         </div>
                         <div class="col-lg-3 col-6">
                             <div class="form-floating">
-                                <select class="form-select" id="countyId" title="County">
-                                    <option value="">Choose from List</option>
-                                    <option value="1">Example One</option>
-                                    <option value="2">Example Two</option>
-                                    <option value="3">Example Three</option>
-                                </select>
-                                <label for="countyId">County <span>*</span></label>
-                                <span class="invalid-feedback is-invalid">please select from list</span>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-6">
-                            <div class="form-floating">
                                 <select id="sub_CountyId" class="form-select" title="Sub-County" onchange="getParish()">
-                                    <option value="">Choose from List</option>
-                                    
+                                    <option value="">Choose From List</option>
                                 </select>
                                 <label for="sub_CountyId">Sub-County <span>*</span></label>
                                 <span class="invalid-feedback is-invalid">please select from list</span>
@@ -640,19 +764,17 @@
                         <div class="col-lg-3 col-6">
                             <div class="form-floating">
                                 <select class="form-select" id="SlctParishId" title="Parish" onchange=" getVillage()">
-                                    <option value="">Choose from List</option>
-                                   
+                                    <option value="">Choose From List</option>
+
                                 </select>
                                 <label for="SlctParishId">Parish <span>*</span></label>
                                 <span class="invalid-feedback is-invalid">please select from list</span>
                             </div>
                         </div>
-                    </div>
-                    <div class="row p-1 m-1">
                         <div class="col-lg-3 col-6">
                             <div class="form-floating">
                                 <select class="form-select" id="SlctVillageId" title="Village">
-                                    <option value="">Choose from List</option>
+                                    <option value="">Choose From List</option>
                                     <%--<option value="1">Example One</option>
                                     <option value="2">Example Two</option>
                                     <option value="3">Example Three</option>--%>
@@ -662,113 +784,137 @@
                             </div>
                         </div>
                     </div>
-                    <div class="d-flex p-1 ms-3">
+                    <%--<div class="row p-1 m-1">
+                        <div class="col-lg-3 col-6">
+                            <div class="form-floating">
+                                <select class="form-select" id="SlctVillageId" title="Village">
+                                    <option value="">Choose From List</option>
+                                    <option value="1">Example One</option>
+                                    <option value="2">Example Two</option>
+                                    <option value="3">Example Three</option>
+                                </select>
+                                <label for="SlctVillageId">Village <span>*</span></label>
+                                <span class="invalid-feedback is-invalid">please select from list</span>
+                            </div>
+                        </div>
+                    </div>--%>
+                    <div class="row ms-2"><strong>3.GPS Information:</strong></div>
+                    <div class="d-flex p-1 p-1 m-1">
                         <div class="form-check form-switch m-1">
-                            <input class="form-check-input" type="radio" role="switch" checked name="locationType" value="UTM" onclick="getLocationType()">
+                            <input class="form-check-input" type="radio" role="switch" checked name="locationType" value="Lat/Long" onclick="latlongconv()" id="rdbtn_lat_long">
+                            <label class="form-check-label">Lat/Long</label>
+                        </div>
+                        <div class="form-check form-switch m-1">
+                            <input class="form-check-input" type="radio" role="switch" name="locationType" value="UTM" onclick="utmconv()" id="rdbtn_utm">
                             <label class="form-check-label">UTM</label>
                         </div>
 
                         <div class="form-check form-switch m-1">
-                            <input class="form-check-input" type="radio" role="switch" name="locationType" value="Lat/Long" onclick="getLocationType()">
-                            <label class="form-check-label">Lat/Long</label>
-                        </div>
-                        <div class="form-check form-switch m-1">
-                            <input class="form-check-input" type="radio" role="switch" name="locationType" value="DMS" onclick="getLocationType()">
+                            <input class="form-check-input" type="radio" role="switch" name="locationType" value="DMS" onclick="degresscon()">
                             <label class="form-check-label">DMS</label>
                         </div>
                     </div>
-                    <div id="UTMLocationType">
-                        <div class="row p-1 m-2 mb-4">
-                            <div class="col-3">
+                    <div id="LatLongLocationType">
+                        <div class="row p-1">
+                            <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-floating">
-                                    <select class="form-select" title="UTM Zone" placeholder="UTM Zone" id="slctUTMZone">
-                                        <option value="">choose from list</option>
-                                        <option>35N</option>
-                                        <option>35S</option>
-                                        <option>36N</option>
-                                        <option>36S</option>
-                                    </select>
-                                    <label>UTM Zone</label>
-                                    <span class="invalid-feedback is-invalid">please select UTM Zone</span>
+                                    <input type="number" class="form-control" id="latitudeId" placeholder="Enter Latitude" title="Enter Latitude" />
+                                    <label for="latitudeId">Latitude</label>
+                                    <span class="invalid-feedback">please enter latitude</span>
                                 </div>
                             </div>
-                            <div class="col-3">
+                            <div class="col-lg-6 col-md-6 col-sm-12">
                                 <div class="form-floating">
-                                    <input type="number" class="form-control" title="UTM Easting" placeholder="UTM Easting" id="txtUTMEasting" />
-                                    <label>UTM Easting</label>
-                                    <span class="invalid-feedback is-invalid">please enter UTM easting</span>
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="form-floating">
-                                    <input type="number" class="form-control" title="UTM Northing" placeholder="UTM Northing" id="txtUTMNorthing" />
-                                    <label>UTM Northing</label>
-                                    <span class="invalid-feedback is-invalid">please enter UTM Northing</span>
+                                    <input type="number" class="form-control" id="longitudeId" placeholder="Enter Longitude" title="Enter Longitude" onchange="validate_lat_long_uganda()" />
+                                    <label for="longitudeId">Longitude</label>
+                                    <span class="invalid-feedback">please enter longitude</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div id="LatLongLocationType" style="display: none">
-                        <div class="row p-1 m-2 mb-4">
-                            <div class="col-3">
+
+                    <div id="UTMLocationType" style="display: none">
+                        <div class="row p-1">
+                            <div class="col-sm-12 col-lg-3 col-md-3">
                                 <div class="form-floating">
-                                    <input type="number" class="form-control" title="Lattitude" placeholder="Lattitude" id="txtLatitude" />
-                                    <label>Latitude</label>
-                                    <span class="invalid-feedback is-invalid">please enter latitude</span>
+                                    <input type="number" id="zoneId1" class="form-control" placeholder="zonal number" title="zonal number" onchange="latlongconv1()" />
+                                    <label>Zonal Number</label>
+                                    
                                 </div>
                             </div>
-                            <div class="col-3">
+                            <div class="col-sm-12 col-lg-3 col-md-3">
                                 <div class="form-floating">
-                                    <input type="number" class="form-control" title="Longitude" placeholder="Longitude" id="txtLongitude" />
-                                    <label>Longitude</label>
-                                    <span class="invalid-feedback is-invalid">please enter longitude</span>
+                                    <input type="text" id="gps_utm_zone_letter" placeholder="zonal letter" title="zonal letter" class="form-control" onchange="latlongconv1()" />
+                                    <label>Zonal Letter</label>
+                                    
                                 </div>
                             </div>
+                            <div class="col-sm-12 col-lg-3 col-md-3">
+                                <div class="form-floating">
+                                    <input type="number" class="form-control" id="eastingId" title="enter easting" placeholder="Enter Easting" onchange="latlongconv1()" />
+                                    <label for="eastingId">Easting</label>
+                                    <span class="invalid-feedback">please enter easting</span>
+                                </div>
+
+                            </div>
+                            <div class="col-sm-12 col-lg-3 col-md-3">
+                                <div class="form-floating">
+                                    <input type="number" class="form-control" id="northingsId" placeholder="Enter Northings Name" title="Enter Northings" onchange="latlongconv1()" />
+                                    <label for="northingsId">Northings</label>
+                                    <span class="invalid-feedback">please enter northings</span>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
+
                     <div id="DMSLocationType" style="display: none">
-                        <div class="row p-1 m-2">
-                            <div class="col-2 d-flex">
+                        <div class="row p-1">
+                            <div class="col-lg-2 col-md-2 col-sm-12 d-flex">
                                 <input type="number" class="form-control" id="txtDeg" />&nbsp;<div class="pt-1">Deg</div>
-                                <span class="invalid-feedback is-invalid">*</span>
+                                <span class="notValid" id="errDeg">*</span>
                             </div>
-                            <div class="col-2 d-flex">
+                            <div class="col-lg-2 col-md-2 col-sm-12 d-flex">
                                 <input type="number" class="form-control" id="txtMin" />&nbsp;<div class="pt-1">Min</div>
-                                <span class="invalid-feedback is-invalid">*</span>
+                                <span class="notValid" id="errMin">*</span>
                             </div>
-                            <div class="col-2 d-flex">
+                            <div class="col-lg-2 col-md-2 col-sm-12 d-flex">
                                 <input type="number" class="form-control" id="txtSec" />&nbsp;<div class="pt-1">Sec</div>
-                                <span class="invalid-feedback is-invalid">*</span>
+                                <span class="notValid" id="errSec">*</span>
                             </div>
-                            <div class="col-2">
-                                <select class="form-select">
-                                    <option>E</option>
-                                    <option>W</option>
-                                    <option>N</option>
-                                    <option>S</option>
+                            <div class="col-lg-2 col-md-2 col-sm-12">
+                                <select class="form-select" id="slct_dir_DMS">
+                                    <option value="">select</option>
+                                    <option value="E">E</option>
+                                    <option value="W">W</option>
+                                    <option value="N">N</option>
+                                    <option value="S">S</option>
                                 </select>
+                                <span class="notValid" id="err_slct_dir_DMS">*</span>
                             </div>
                         </div>
-                        <div class="row p-1 m-2 mb-4">
-                            <div class="col-2 d-flex">
+                        <div class="row p-1">
+                            <div class="col-lg-2 col-md-2 col-sm-12 d-flex">
                                 <input type="number" class="form-control" id="txtDeg1" />&nbsp;<div class="pt-1">Deg</div>
-                                <span class="invalid-feedback is-invalid">*</span>
+                                <span class="notValid" id="errDeg1">*</span>
                             </div>
-                            <div class="col-2 d-flex">
+                            <div class="col-lg-2 col-md-2 col-sm-12 d-flex">
                                 <input type="number" class="form-control" id="txtMin1" />&nbsp;<div class="pt-1">Min</div>
-                                <span class="invalid-feedback is-invalid">*</span>
+                                <span class="notValid" id="errMin1">*</span>
                             </div>
-                            <div class="col-2 d-flex">
+                            <div class="col-lg-2 col-md-2 col-sm-12 d-flex">
                                 <input type="number" class="form-control" id="txtSec1" />&nbsp;<div class="pt-1">Sec</div>
-                                <span class="invalid-feedback is-invalid">*</span>
+                                <span class="notValid" id="errSec1">*</span>
                             </div>
-                            <div class="col-2">
-                                <select class="form-select">
-                                    <option>E</option>
-                                    <option>W</option>
-                                    <option>N</option>
-                                    <option>S</option>
+                            <div class="col-lg-2 col-md-2 col-sm-12">
+                                <select class="form-select" id="slct_dir_DMS1">
+                                    <option value="">select</option>
+                                    <option value="E">E</option>
+                                    <option value="W">W</option>
+                                    <option value="N">N</option>
+                                    <option value="S">S</option>
                                 </select>
+                                <span class="notValid" id="err_slct_dir_DMS1">*</span>
                             </div>
                         </div>
                     </div>
@@ -781,7 +927,7 @@
                         <tr class="row m-1 p-1">
                             <td class="col-3">
                                 <div class="form-floating">
-                                    <input type="number" min="1" class="form-control" id="sourceNumberId" title="Enter the Source Number" placeholder="Enter Source Number" />
+                                    <input type="text" min="1" class="form-control" id="sourceNumberId" title="Enter the Source Number" placeholder="Enter Source Number" />
                                     <label for="sourceNumberId">Source Number <span>*</span></label>
                                     <span class="invalid-feedback is-invalid">please enter the source number</span>
                                 </div>
@@ -793,7 +939,7 @@
                                     <span class="invalid-feedback is-invalid">please enter the name of water source</span>
                                 </div>
                             </td>
-                           <%-- <td class="col-3 mt-2">
+                            <%-- <td class="col-3 mt-2">
                                 <button type="button" class="btn btn-light" onclick="addNewRow()"><i class="fa-solid fa-circle-plus fa-1x"></i></button>
                                 &nbsp;&nbsp;
                                 <button type="button" class="btn btn-light" onclick="removeNewRow(this)"><i class="fa-solid fa-circle-minus fa-1x"></i></button>
@@ -805,7 +951,7 @@
                         <div class="col-lg-3 col-6">
                             <div class="form-floating">
                                 <select class="form-select" id="SlctFundSourceTypeId" title="Fund Source Type">
-                                    <option value="">Choose from List</option>
+                                    <option value="">Choose From List</option>
                                 </select>
                                 <label for="SlctFundSourceTypeId">Fund Source Type <span>*</span></label>
                                 <span class="invalid-feedback is-invalid">please select from list</span>
@@ -826,7 +972,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row ms-2 mt-4">
+                   <%-- <div class="row ms-2 mt-4">
                         <strong>5.Attachments</strong>
                     </div>
                     <div class="row m-1 p-1">
@@ -838,12 +984,12 @@
                             </div>
                         </div>
                         <div class="col-lg-3 col-6">
-                            <input class="form-control form-control-lg " type="file" id="txtPaymentProof1" />
+                            <input class="form-control form-control-lg " type="file" id="txtDoc1" />
                             <span class="invalid-feedback is-invalid">please select any file</span>
                         </div>
                         <div class="col-lg-3 col-6 text-sm-start mt-4 fst-italic" style="font-weight: 400">(Docment File, Max 10MB) <span>*</span></div>
                     </div>
-                </div>
+                </div>--%>
                 <div class="d-flex justify-content-center p-2 mt-3 mb-3">
                     <button type="button" class="btn btn-warning" id="saveId" onclick="save()">Save</button>&nbsp;
                         <button type="button" class="btn btn-danger" id="cancelId" onclick="location.reload();">Clear</button>

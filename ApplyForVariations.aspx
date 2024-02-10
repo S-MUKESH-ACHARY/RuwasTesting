@@ -199,8 +199,8 @@
 
                     sms.forEach((msg) => {
                         let option = document.createElement('option');
-                        option.value = msg.budgetId;
-                        option.text = msg.under;
+                        option.value = msg.UnderId;
+                        option.text = msg.Under;
                         under.appendChild(option);
                     })
                 }
@@ -296,13 +296,13 @@
                                                     <span class="invalid-feedback is-invalid">please select date</span>
                                                 </div>
                                             </div>
-                                            <div class="col-3">
+                                         <%--   <div class="col-3">
                                                 <div class="form-floating">
                                                     <input type="text" class="form-control" id="workPlanId" disabled placeholder="Work Plan Id" title="Enter Workplan Id" />
                                                     <label for="workPlanId">Work Plan Id</label>
                                                     <span class="invalid-feedback is-invalid">please enter work plan id</span>
                                                 </div>
-                                            </div>
+                                            </div>--%>
                                         </div>
                                     </td>
                                 </tr>

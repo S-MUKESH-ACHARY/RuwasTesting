@@ -366,7 +366,7 @@
                     sms.forEach(function (item) {
                         if (item.Under == 'Work plan') {
                             var row = `<tr>`
-                            row = row + `<td class="txtworkPlanDetailId">` + item.workPlanDetailId + `</td>` +
+                            row = row + `<td class="txtworkPlanDetailId">` + item.ModelActivityDetailId + `</td>` +
                             `<td class="txtSlNo">` + item.SlNo + `</td>` +
                                 `<td class="txtModelActivity">` + item.ModelActivityName + `</td>` +
                                 `<td>` + `<input disabled type="number" class="form-control txtApprovalAnnualTarget "  placeholder="0" />` + `</td>` +
@@ -476,11 +476,16 @@
             var s = function (sms) {
                 if (Array.isArray(sms)) {
                     let AddFinancialYr = $("#slctFinancialYearId");
+                    let option1 = document.createElement('option');
+                    option1.value = "";
+                    option1.text = "Choose from the list";
+                    AddFinancialYr.append(option1);
                     sms.forEach(function (item) {
                         let option = document.createElement('option');
                         option.value = item.FinancialYr;
                         option.text = item.FinancialYrName;
                         AddFinancialYr.append(option);
+                        $('#slctFinancialYearId option:gt(' + (5) + ')').remove();
                     })
                     sms.forEach(function (item) {
                         if (item.IsActive == 1) {
@@ -770,7 +775,6 @@
                                         <div class="col-lg-3 col-12">
                                             <div class="form-floating">
                                                 <select class="form-select" id="slctFinancialYearId" title="Financial Year">
-                                                    <option value="">Choose from List</option>
                                                 </select>
                                                 <label class="slctFinancialYearId">Financial Year <span>*</span></label>
                                                 <span class="invalid-feedback is-invalid">please select Financial year</span>

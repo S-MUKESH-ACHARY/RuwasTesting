@@ -3,24 +3,52 @@
      <script>
         $(function () {
             document.getElementById("administrationId").classList.add("DE");
-            getTableData()
+            getTableData();
+            getFinancialYr();
+            fetchLC();
         })
+         function saveChanges() {
+             let SubCountyId = Number($("#IdOfSunCounty").text());
+             let SubCounty = $("#txtSunCountyId").val();
+             let DistrictId = Number($("#txtDistrictId").val());
+             let Population = Number($("#txtPopulationId").val());
+             let FinancialYearId = Number($("#slctFinancialYearId").val());
+             var data = {
+                 "op": "UpdateSubCounty",
+                 "SubCountyId": SubCountyId,
+                 "SubCounty": SubCounty,
+                 "DistrictId": DistrictId,
+                 "Population": Population,
+                 "FinancialYearId": FinancialYearId
+             }
+             var s = function (sms) {
+                 alert(sms);
+             }
+             var e = function (msg) {
+                 alert(msg);
+             }
+             CallHandler(data, s, e);
+             
+         }
          function getTableData() {
              var data = { 'op': 'FetchSubCountyTableData' }
              var s = function (sms) {
                  sms.forEach(function (item) {
-                     console.log(item);
                      var row = `<tr>`
-                     row = row + `<td class="1">` + item.SubCounty+`</td>`+
+                     row = row +
+                         `<td class="5" style="display:none;">` + item.SubCountyId + `</td>` +
+                         `<td class="1">` + item.SubCounty + `</td>` +
                          `<td>` + item.District+`</td>`+
-                         `<td class="2">` + item.DistrictId+`</td>`+
+                         `<td class="2" style="display:none;">` + item.DistrictId+`</td>`+
                          `<td class="3">` + item.Population+`</td>`+
-                         `<td class="4">` + item.FinancialYear+`</td>`+
+                         `<td>` + item.FinancialYear+`</td>`+
+                         `<td class="4" style="display:none;">` + item.FinancialYearId+`</td>`+
                          `<td>` +`<button class="btn btn-primary" type="button" onclick="EditSubCounty(this)" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-pen-to-square"></i></button> `+`</td></tr>`
                      $("#myTable").append(row);
                  })
-                 $("#myTable").DataTable();
                  $(".loader-container").hide();
+                 $("#myTable").DataTable();
+                
              }
              var e = function (msg) {
                  alert(msg);
@@ -30,14 +58,17 @@
              $(".loader-container").show();
          }
          function EditSubCounty(thisId) {
-             getFinancialYr();
-             fetchLC();
+             
              let Subcounty = $(thisId).closest('tr').find('.1').html();
              $("#txtSunCountyId").val(Subcounty);
              let District = $(thisId).closest('tr').find('.2').html();
              $("#txtDistrictId").val(District);
              let Population = $(thisId).closest('tr').find('.3').html();
              $("#txtPopulationId").val(Population);
+             let FinancialYear = $(thisId).closest('tr').find('.4').html();
+             $("#slctFinancialYearId").val(FinancialYear);
+             let IdOfSunCounty = $(thisId).closest('tr').find('.5').html();
+             $("#IdOfSunCounty").html(IdOfSunCounty);
          }
          function getFinancialYr() {
              var data = {
@@ -53,12 +84,7 @@
                          option.text = msg.FinancialYrName;
                          AddFinancialYr.append(option);
                      });
-                     /* $("#slctFinancialYearId").val("1");*/
-                     sms.forEach(function (msg) {
-                         if (msg.IsActive == 1) {
-                             $("#slctFinancialYearId").val(msg.FinancialYr);
-                         }
-                     });
+                    
                  }
                  else {
                      alert(sms);
@@ -135,11 +161,13 @@
                 <table id="myTable" class="table table-hover w-100" style="text-align: center;">
                     <thead>
                         <tr class="table-secondary">
+                            <th style="display:none;" class="text-center">Sub-CountyId</th>
                             <th class="text-center">Sub-County</th>
                             <th class="text-center">District</th>
-                            <th class="text-center">DistrictId</th>
+                            <th style="display:none;" class="text-center">DistrictId</th>
                             <th class="text-center">Population</th>
                             <th class="text-center">Financial Year</th>
+                            <th style="display:none;" class="text-center">Financial Year Id</th>
                             <th class="text-center">Edit</th>
                         </tr>
                     </thead>
@@ -157,6 +185,7 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="row m-1 p-1">
+                                        <label id="IdOfSunCounty"></label>
                                         <div class="col-lg-6 col-12">
                                             <div class="form-floating">
                                                 <input type="text" id="txtSunCountyId" class="form-control" placeholder="Sun-County" title="Sun-County" />
@@ -195,7 +224,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                    <button type="button" class="btn btn-primary" onclick="saveChanges()">Save changes</button>
                                 </div>
                             </div>
                         </div>

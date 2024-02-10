@@ -120,16 +120,20 @@
             var s = function (sms) {
                 if (Array.isArray(sms)) {
                     let AddFinancialYr = $("#slctFinancialYrId");
+                    let option1 = document.createElement('option');
+                    option1.value = "";
+                    option1.text = "Choose from the list";
+                    AddFinancialYr.append(option1);
                     sms.forEach(function (item) {
                         let option = document.createElement('option');
                         option.value = item.FinancialYr;
                         option.text = item.FinancialYrName;
                         AddFinancialYr.append(option);
+                        $('#slctFinancialYrId option:gt(' + (5) + ')').remove();
                     })
                     sms.forEach(function (item) {
                         if (item.IsActive == 1) {
                             $("#slctFinancialYrId").val(item.FinancialYr);
-                            console.log(item);
                         }
                     });
                 } else {
@@ -210,7 +214,7 @@
                             <div class="col-lg-3 col-12">
                                 <div class="form-floating">
                                     <select class="form-select" id="slctFinancialYrId" title="Financial Year">
-                                        <option value="">Choose from List</option>
+                                        
                                     </select>
                                     <label>Financial Year <span>*</span></label>
                                     <span class="invalid-feedback is-invalid">Please select from list</span>

@@ -43,8 +43,8 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
                 case "FetchUnder":
                     FetchUnder(context);
                     break;
-                case "BudgetTypeOfUnder":
-                    FetchBudgetTypeOfUnder(context);
+                case "FetchBudgetType":
+                    FetchBudgetType(context);
                     break;
                 case "SaveRWSRC":
                     SaveRWSRC(context);
@@ -155,7 +155,7 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
                     FetchQuarterlyAttachmentData(context);
                     break;
                 case "CategoryOfBudgetType":
-                    FetchCategoryOfBudgetType(context);
+                    CategoryOfBudgetType(context);
                     break;
                 case "VillageOfParish":
                     FetchVillageOfParish(context);
@@ -169,9 +169,9 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
                 case "PlannedFunds":
                     FetchPlannedFunds(context);
                     break;
-                case "UnderOfCategory":
-                    FetchUnderOfCategory(context);
-                    break;
+                //case "UnderOfCategory":
+                //    FetchUnderOfCategory(context);
+                //    break;
                 //case "FetchModelActivityOfWorkplan":
                 //    FetchModelActivityOfWorkplan(context);
                 //    break;
@@ -225,6 +225,12 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
                     break;
                 case "UpdateContract":
                     UpdateContract(context);
+                    break;
+                case "UpdateSubCounty":
+                    UpdateSubCounty(context);
+                    break;
+                case "SaveQuarterlyAttachment":
+                    SaveQuarterlyAttachment(context);
                     break;
                 default:
                     var jsonString = String.Empty;
@@ -311,8 +317,8 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
     }
     public class FetchUnderClass
     {
-        public int budgetId { get; set; }
-        public string under { get; set; }
+        public int UnderId { get; set; }
+        public string Under { get; set; }
     }
 
 
@@ -329,8 +335,8 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
                 foreach (DataRow dr in dt.Rows)
                 {
                     FetchUnderClass arr = new FetchUnderClass();
-                    arr.budgetId = Convert.ToInt32(dr["underId"]);
-                    arr.under = dr["underName"].ToString();
+                    arr.UnderId = Convert.ToInt32(dr["underId"]);
+                    arr.Under = dr["underName"].ToString();
                     listarr.Add(arr);
                 }
                 string response = GetJson(listarr);
@@ -349,26 +355,26 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
         }
 
     }
-    public class BudgetTypeOfUnder
+    public class BudgetType
     {
         public int BudgetTypeId { get; set; }
         public string BudgetTypeName { get; set; }
     }
-    public void FetchBudgetTypeOfUnder(HttpContext context)
+    public void FetchBudgetType(HttpContext context)
     {
         try
         {
-            int slctUnder = Convert.ToInt32(context.Request["slctUnder"]);
-            List<BudgetTypeOfUnder> listarr = new List<BudgetTypeOfUnder>();
-            NpgsqlCommand cmd = new NpgsqlCommand("select \"budgetTypeId\",\"budgetTypeName\" from \"budgetTypes\" where \"budgetUnderId\"=@slctUnder");
-            cmd.Parameters.AddWithValue("slctUnder", @slctUnder);
+            
+            List<BudgetType> listarr = new List<BudgetType>();
+            NpgsqlCommand cmd = new NpgsqlCommand("select \"budgetTypeId\",\"budgetTypeName\" from \"budgetTypes\" order by \"budgetTypeName\" asc");
+            
             DataSet ds = ruwasdb.SelectQuery(cmd);
             DataTable dt = ds.Tables[0];
             if (dt.Rows.Count > 0)
             {
                 foreach (DataRow dr in dt.Rows)
                 {
-                    BudgetTypeOfUnder arr = new BudgetTypeOfUnder();
+                    BudgetType arr = new BudgetType();
                     arr.BudgetTypeId = Convert.ToInt32(dr["budgetTypeId"]);
                     arr.BudgetTypeName = dr["budgetTypeName"].ToString();
                     listarr.Add(arr);
@@ -516,7 +522,7 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
         try
         {
             List<FinancialYearClass> FinancialYearList = new List<FinancialYearClass>();
-            NpgsqlCommand cmd = new NpgsqlCommand("select \"financialYearId\",\"financialYearName\",\"isActiveYear\" from \"financialYears\" order by \"financialYearId\" desc limit 5");
+            NpgsqlCommand cmd = new NpgsqlCommand("select \"financialYearId\",\"financialYearName\",\"isActiveYear\" from \"financialYears\" order by \"financialYearId\" desc");
             DataSet ds = ruwasdb.SelectQuery(cmd);
             DataTable dt = ds.Tables[0];
             if (dt.Rows.Count > 0)
@@ -1107,7 +1113,7 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
         try
         {
             List<FetchTeachnologyTableClass> TeachnologyList = new List<FetchTeachnologyTableClass>();
-            NpgsqlCommand cmd = new NpgsqlCommand("select \"technologyId\",\"technologyName\",\"populationServed\",\"noEastings\",\"isDeleted\" from \"technologies\"");
+            NpgsqlCommand cmd = new NpgsqlCommand("select \"technologyId\",\"technologyName\",\"populationServed\",\"noEastings\",\"isDeleted\" from \"technologies\" ORDER BY \"public\".\"technologies\".\"technologyName\" ASC ");
             DataSet ds = ruwasdb.SelectQuery(cmd);
             DataTable dt = ds.Tables[0];
             if (dt.Rows.Count > 0)
@@ -1143,13 +1149,14 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
         public int DistrictId { get; set; }
         public int Population { get; set; }
         public string FinancialYear { get; set; }
+        public int FinancialYearId { get; set; }
     }
     public void FetchSubCountyTableData(HttpContext context)
     {
         try
         {
             List<SubCountyTableDataClass> SubCountyList = new List<SubCountyTableDataClass>();
-            NpgsqlCommand cmd = new NpgsqlCommand("select \"subCountyId\",\"subCountyName\",\"population\",\"subCounties\".\"districtId\",\"districtName\",\"financialYearName\" from \"subCounties\" join \"districts\" on \"subCounties\".\"districtId\"=\"districts\".\"districtId\" join \"financialYears\" on \"subCounties\".\"financialYearId\"=\"financialYears\".\"financialYearId\"");
+            NpgsqlCommand cmd = new NpgsqlCommand("select \"subCountyId\",\"subCounties\".\"financialYearId\",\"subCountyName\",\"population\",\"subCounties\".\"districtId\",\"districtName\",\"financialYearName\" from \"subCounties\" join \"districts\" on \"subCounties\".\"districtId\"=\"districts\".\"districtId\" join \"financialYears\" on \"subCounties\".\"financialYearId\"=\"financialYears\".\"financialYearId\"");
             DataSet ds = ruwasdb.SelectQuery(cmd);
             DataTable dt = ds.Tables[0];
             if (dt.Rows.Count > 0)
@@ -1163,6 +1170,7 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
                     arr.District = dr["districtName"].ToString();
                     arr.Population = Convert.ToInt32(dr["population"]);
                     arr.FinancialYear = dr["financialYearName"].ToString();
+                    arr.FinancialYearId = Convert.ToInt32(dr["financialYearId"]);
                     SubCountyList.Add(arr);
                 }
                 string response = GetJson(SubCountyList);
@@ -1496,10 +1504,12 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
     {
         try
         {
+
             int districtId = Convert.ToInt32(context.Request["districtId"]);
             List<LoadSubCountyOfDistrictClass> LoadSubCountyList = new List<LoadSubCountyOfDistrictClass>();
             NpgsqlCommand cmd = new NpgsqlCommand("select \"subCountyId\",\"subCountyName\" from \"subCounties\" where \"districtId\"=@districtId ");
             cmd.Parameters.AddWithValue("districtId", @districtId);
+
             DataSet ds = ruwasdb.SelectQuery(cmd);
             DataTable dt = ds.Tables[0];
             if (dt.Rows.Count > 0)
@@ -2070,29 +2080,31 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
             context.Response.Write(response);
         }
     }
-    public class FetchCategoryOfBudgetTypeClass
+    public class CategoryOfBudgetTypeClass
     {
         public int BudgetTypeId { get; set; }
         public string BudgetType { get; set; }
     }
-    public void FetchCategoryOfBudgetType(HttpContext context)
+    public void CategoryOfBudgetType(HttpContext context)
     {
         try
         {
-            List<FetchCategoryOfBudgetTypeClass> FetchCategoryOfBudgetType = new List<FetchCategoryOfBudgetTypeClass>();
-            NpgsqlCommand cmd = new NpgsqlCommand("select \"budgetTypeId\",\"budgetTypeName\" from \"budgetTypes\"");
+            int slctBudgetType = Convert.ToInt32(context.Request["slctBudgetType"]);
+            List<CategoryOfBudgetTypeClass> CategoryOfBudgetTypeList = new List<CategoryOfBudgetTypeClass>();
+            NpgsqlCommand cmd = new NpgsqlCommand("select \"categoryDetailId\",\"categoryName\" from \"categories\" join \"categoryDetails\" on \"categories\".\"categoryId\"=\"categoryDetails\".\"categoryId\"  where \"categories\".\"budgetTypeId\"=@slctBudgetType ");
+            cmd.Parameters.AddWithValue("@slctBudgetType", slctBudgetType);
             DataSet ds = ruwasdb.SelectQuery(cmd);
             DataTable dt = ds.Tables[0];
             if (dt.Rows.Count > 0)
             {
                 foreach (DataRow dr in dt.Rows)
                 {
-                    FetchCategoryOfBudgetTypeClass arr = new FetchCategoryOfBudgetTypeClass();
-                    arr.BudgetTypeId = Convert.ToInt32(dr["budgetTypeId"]);
-                    arr.BudgetType = dr["budgetTypeName"].ToString();
-                    FetchCategoryOfBudgetType.Add(arr);
+                    CategoryOfBudgetTypeClass arr = new CategoryOfBudgetTypeClass();
+                    arr.BudgetTypeId = Convert.ToInt32(dr["categoryDetailId"]);
+                    arr.BudgetType = dr["categoryName"].ToString();
+                    CategoryOfBudgetTypeList.Add(arr);
                 }
-                string response = GetJson(FetchCategoryOfBudgetType);
+                string response = GetJson(CategoryOfBudgetTypeList);
                 context.Response.Write(response);
             }
             else
@@ -2303,38 +2315,38 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
             context.Response.Write(response);
         }
     }
-    public class UnderOfCategoryClass
-    {
-        public int BudgetTypeId { get; set; }
-        public string Under { get; set; }
-    }
-    public void FetchUnderOfCategory(HttpContext context)
-    {
-        try
-        {
-            List<UnderOfCategoryClass> UnderOfCategoryList = new List<UnderOfCategoryClass>();
-            NpgsqlCommand cmd = new NpgsqlCommand("select \"under\",\"budgetTypeId\" from \"categories\"");
-            DataSet ds = ruwasdb.SelectQuery(cmd);
-            DataTable dt = ds.Tables[0];
-            if (dt.Rows.Count > 0)
-            {
-                foreach (DataRow dr in dt.Rows)
-                {
-                    UnderOfCategoryClass arr = new UnderOfCategoryClass();
-                    arr.BudgetTypeId = Convert.ToInt32(dr["budgetTypeId"]);
-                    arr.Under = dr["under"].ToString();
-                    UnderOfCategoryList.Add(arr);
-                }
-                string response = GetJson(UnderOfCategoryList);
-                context.Response.Write(response);
-            }
-        }
-        catch (Exception ex)
-        {
-            string response = GetJson(ex.Message);
-            context.Response.Write(response);
-        }
-    }
+    //public class UnderOfCategoryClass
+    //{
+    //    public int BudgetTypeId { get; set; }
+    //    public string Under { get; set; }
+    //}
+    //public void FetchUnderOfCategory(HttpContext context)
+    //{
+    //    try
+    //    {
+    //        List<UnderOfCategoryClass> UnderOfCategoryList = new List<UnderOfCategoryClass>();
+    //        NpgsqlCommand cmd = new NpgsqlCommand("select \"under\",\"budgetTypeId\" from \"categories\"");
+    //        DataSet ds = ruwasdb.SelectQuery(cmd);
+    //        DataTable dt = ds.Tables[0];
+    //        if (dt.Rows.Count > 0)
+    //        {
+    //            foreach (DataRow dr in dt.Rows)
+    //            {
+    //                UnderOfCategoryClass arr = new UnderOfCategoryClass();
+    //                arr.BudgetTypeId = Convert.ToInt32(dr["budgetTypeId"]);
+    //                arr.Under = dr["under"].ToString();
+    //                UnderOfCategoryList.Add(arr);
+    //            }
+    //            string response = GetJson(UnderOfCategoryList);
+    //            context.Response.Write(response);
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        string response = GetJson(ex.Message);
+    //        context.Response.Write(response);
+    //    }
+    //}
     //public class ModelActivityOfWorkplanClass
     //{
     //    public string SlNo { get; set; }
@@ -4081,6 +4093,109 @@ public class RuwasHandler : IHttpHandler, IRequiresSessionState
             cmd.Parameters.AddWithValue("@slctStatus", slctStatus);
             ruwasdb.Update(cmd);
             string sms = "Updated successfully";
+            string response = GetJson(sms);
+            context.Response.Write(response);
+        }
+        catch (Exception ex)
+        {
+            string msg = ex.Message;
+            string response = GetJson(msg);
+            context.Response.Write(response);
+        }
+    }
+    public void UpdateSubCounty(HttpContext context)
+    {
+        try
+        {
+            int SubCountyId = Convert.ToInt32(context.Request["SubCountyId"]);
+            string SubCounty = context.Request["SubCounty"].ToString();
+            int DistrictId = Convert.ToInt32(context.Request["DistrictId"]);
+            int Population = Convert.ToInt32(context.Request["Population"]);
+            int FinancialYearId = Convert.ToInt32(context.Request["FinancialYearId"]);
+            NpgsqlCommand cmd = new NpgsqlCommand("Update \"subCounties\" set" +
+                "\"subCountyName\"=@SubCounty,\"districtId\"=@DistrictId,\"population\"=@Population," +
+                "\"financialYearId\"=@FinancialYearId where \"subCountyId\"=@SubCountyId");
+            cmd.Parameters.AddWithValue("@SubCounty",SubCounty);
+            cmd.Parameters.AddWithValue("@DistrictId",DistrictId);
+            cmd.Parameters.AddWithValue("@Population", Population);
+            cmd.Parameters.AddWithValue("@FinancialYearId", FinancialYearId);
+            cmd.Parameters.AddWithValue("@SubCountyId", SubCountyId);
+            ruwasdb.Update(cmd);
+            string sms="Updated Successfully";
+            string response = GetJson(sms);
+            context.Response.Write(response);
+        }
+        catch (Exception ex)
+        {
+            string msg = ex.Message;
+            string response = GetJson(msg);
+            context.Response.Write(response);
+        }
+    }
+    public void SaveQuarterlyAttachment(HttpContext context)
+    {
+        try
+        {
+            int financialYr = Convert.ToInt32(context.Request["financialYr"]);
+            string category = context.Request["category"].ToString();
+           // int localGovernment = Convert.ToInt32(context.Request["localGovernment"]);
+            int quarter = Convert.ToInt32(context.Request["quarter"]);
+            int slctTechnology = Convert.ToInt32(context.Request["slctTechnology"]);
+            int SlctVillage = Convert.ToInt32(context.Request["SlctVillage"]);
+            double gps_utm_zone_number = Convert.ToDouble(context.Request["gps_utm_zone_number"]);
+            double Latitude = Convert.ToDouble(context.Request["Latitude"]);
+            double Longitude = Convert.ToDouble(context.Request["Longitude"]);
+            string gps_utm_zone_letter = context.Request["gps_utm_zone_letter"].ToString();
+            double utmEasting = Convert.ToDouble(context.Request["utmEasting"]);
+            double utmNorthings = Convert.ToDouble(context.Request["utmNorthings"]);
+            double XDeg = Convert.ToDouble(context.Request["XDeg"]);
+            double XMin = Convert.ToDouble(context.Request["XMin"]);
+            double XSec = Convert.ToDouble(context.Request["XSec"]);
+            string XDir_DMS = context.Request["XDir_DMS"];
+            double YDeg = Convert.ToDouble(context.Request["YDeg"]);
+            double YMin = Convert.ToDouble(context.Request["YMin"]);
+            double YSec = Convert.ToDouble(context.Request["YSec"]);
+            string YDir_DMS = context.Request["YDir_DMS"].ToString();
+            string sourceNumber =context.Request["sourceNumber"].ToString();
+            string nameOfWaterSource = context.Request["nameOfWaterSource"].ToString();
+            int SlctFundSourceType = Convert.ToInt32(context.Request["SlctFundSourceType"]);
+            string funderName = context.Request["funderName"].ToString();
+            int investmentCost = Convert.ToInt32(context.Request["investmentCost"]);
+            //int title = Convert.ToInt32(context.Request["title"]);
+            NpgsqlCommand cmd = new NpgsqlCommand("insert into \"quarterlyAttachments\" " +
+                "(\"financialYearId\",\"newRehabilitated\",\"quarter\",\"technologyId\"," +
+                "\"localGovernmentId\",\"sourceNo\",\"waterSourceName\",\"utmEasting\"," +
+                "\"utmNorthing\",\"investmentValue\",\"fundingSourceId\",\"utmZone\"," +
+                "\"lattitude\",\"longitude\",\"dmsXDegrees\",\"dmsXMinutes\",\"dmsXSeconds\"," +
+                "\"dmsXZone\",\"dmsYDegrees\",\"dmsYMinutes\",\"dmsYSeconds\"," +
+                "\"dmsYZone\",\"utmZoneNumber\") values(@financialYr,@category,@quarter,@slctTechnology,@SlctVillage," +
+                "@sourceNumber,@nameOfWaterSource,@utmEasting,@utmNorthings,@investmentCost," +
+                "@SlctFundSourceType,@gps_utm_zone_letter,@Latitude,@Longitude,@XDeg,@XMin,@XSec,@XDir_DMS,@YDeg,@YMin,@YSec,@YDir_DMS,@gps_utm_zone_number)");
+            cmd.Parameters.AddWithValue("@financialYr", financialYr);
+            cmd.Parameters.AddWithValue("@category", category);
+            cmd.Parameters.AddWithValue("@quarter", quarter);
+            cmd.Parameters.AddWithValue("@slctTechnology", slctTechnology);
+            cmd.Parameters.AddWithValue("@SlctVillage", SlctVillage);
+            cmd.Parameters.AddWithValue("@sourceNumber", sourceNumber);
+            cmd.Parameters.AddWithValue("@nameOfWaterSource", nameOfWaterSource);
+            cmd.Parameters.AddWithValue("@utmEasting", utmEasting);
+            cmd.Parameters.AddWithValue("@utmNorthings", utmNorthings);
+            cmd.Parameters.AddWithValue("@investmentCost", investmentCost);
+            cmd.Parameters.AddWithValue("@SlctFundSourceType", SlctFundSourceType);
+            cmd.Parameters.AddWithValue("@gps_utm_zone_letter", gps_utm_zone_letter);
+            cmd.Parameters.AddWithValue("@Latitude", Latitude);
+            cmd.Parameters.AddWithValue("@Longitude", Longitude);
+            cmd.Parameters.AddWithValue("@XDeg", XDeg);
+            cmd.Parameters.AddWithValue("@XMin", XMin);
+            cmd.Parameters.AddWithValue("@XSec", XSec);
+            cmd.Parameters.AddWithValue("@XDir_DMS", XDir_DMS);
+            cmd.Parameters.AddWithValue("@YDeg", YDeg);
+            cmd.Parameters.AddWithValue("@YMin", YMin);
+            cmd.Parameters.AddWithValue("@YSec", YSec);
+            cmd.Parameters.AddWithValue("@YDir_DMS", YDir_DMS);
+            cmd.Parameters.AddWithValue("@gps_utm_zone_number", gps_utm_zone_number);
+            ruwasdb.Insert(cmd);
+            string sms = "Saved Successfully";
             string response = GetJson(sms);
             context.Response.Write(response);
         }

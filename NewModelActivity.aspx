@@ -6,16 +6,17 @@
             document.getElementById("administrationId").classList.add("DE");
             fetchUnder();
             addNewRow();
+            FetchBudgetType();
         })
         function fetchUnder() {
-            let data = { "op": "UnderOfCategory" };
+            let data = { "op": "FetchUnder" };
             let s = function (sms) {
 
                 if (Array.isArray(sms)) {
                     let under = document.getElementById("slctUnderId");
                     sms.forEach((msg) => {
                         let option = document.createElement('option');
-                        option.value = msg.BudgetTypeId;
+                        option.value = msg.UnderId;
                         option.text = msg.Under;
                         under.appendChild(option);
                     })
@@ -29,10 +30,9 @@
             }
             CallHandler(data, s, e);
         }
-        function budgetTypeOfUnder() {
+        function FetchBudgetType() {
             let slctUnder = document.getElementById("slctUnderId").value;
-            alert(slctUnder);
-            let data = { "op": "BudgetTypeOfUnder", "slctUnder": slctUnder };
+            let data = { "op": "FetchBudgetType" };
 
             let s = function (sms) {
                 if (Array.isArray(sms)) {
@@ -59,9 +59,11 @@
             CallHandler(data, s, e);
         }
         function categoryOfBudgetType() {
-            var data = { 'op': 'CategoryOfBudgetType' };
+            let slctBudgetType = $("#slctBudgetTypeId").val();
+            alert(slctBudgetType);
+            var data = { 'op': 'CategoryOfBudgetType', "slctBudgetType": slctBudgetType };
             var s = function (sms) {
-                alert(sms);
+             
                 let Category = document.getElementById('slctCategoryId');
                 Category.innerHTML = "";
                 let option1 = document.createElement('option');
@@ -113,6 +115,7 @@
                 $("#slctBudgetTypeId").addClass("is-valid");
             }
             let slctCategory = $("#slctCategoryId").val();
+            console.log(slctCategory);
             if (slctCategory == "") {
                 $("#slctCategoryId").addClass("is-invalid");
                 $("#slctCategoryId").focus();
@@ -137,6 +140,7 @@
                 "slctCategory": slctCategory,
                 "ModelActivityDtlList": ModelActivityDtlList
             }
+            console.log(data);
             var s = function (sms) {
                 alert(sms);
             }
@@ -209,7 +213,7 @@
                         <div class="row">
                             <div class="col-lg-3 col-12">
                                 <div class="form-floating">
-                                    <select id="slctUnderId" class="form-select" onchange="budgetTypeOfUnder();" title="Under">
+                                    <select id="slctUnderId" class="form-select" title="Under">
                                     <option value="">Choose from List</option>
                                     </select>
                                     <label for="slctUnderId">Under</label>

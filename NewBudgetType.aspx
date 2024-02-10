@@ -46,8 +46,8 @@
                     let under = $("#slctUnderId");
                     sms.forEach(function (msg) {
                         let option = document.createElement("option");
-                        option.value = msg.budgetId;
-                        option.text = msg.under;
+                        option.value = msg.UnderId;
+                        option.text = msg.Under;
                         under.append(option);   
                     })
                 } else {

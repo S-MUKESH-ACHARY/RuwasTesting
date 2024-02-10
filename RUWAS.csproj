@@ -295,6 +295,8 @@
     <Content Include="FontAwesome\Fontawesome.js" />
     <Content Include="FundingSource.aspx" />
     <Content Include="Global.asax" />
+    <Content Include="Lat_LogConversion\proj4.js" />
+    <Content Include="Lat_LogConversion\utm.min.js" />
     <Content Include="LC.aspx" />
     <Content Include="Map.aspx" />
     <Content Include="ModelActivity.aspx" />

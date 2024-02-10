@@ -103,7 +103,7 @@
            });
        }
        function ModelActivityTable() {
-           $("#myTable").css("display", "block");
+           $("#tableContainer").css("display", "block");
            let FinancialYr = $("#slctFinancialYearId").val();
            let LocalGovernment = $("#slctLocalGovernmentId").val();
            let slctQuarter = $("#slctQuarterId").val();
@@ -341,11 +341,16 @@
            var s = function (sms) {
                if (Array.isArray(sms)) {
                    let AddFinancialYr = $("#slctFinancialYearId");
+                   let option1 = document.createElement('option');
+                   option1.value = "";
+                   option1.text = "Choose from the list";
+                   AddFinancialYr.append(option1);
                    sms.forEach(function (item) {
                        let option = document.createElement('option');
                        option.value = item.FinancialYr;
                        option.text = item.FinancialYrName;
                        AddFinancialYr.append(option);
+                       $('#slctFinancialYearId option:gt(' + (5) + ')').remove();
                    })
                    sms.forEach(function (item) {
                        if (item.IsActive == 1) {
@@ -454,7 +459,7 @@
                             <div class="col-lg-3 col-sm-6 col-12">
                                 <div class="form-floating">
                                     <select class="form-select" id="slctFinancialYearId" title="Financial Year">
-                                        <option value="">Choose from List</option>
+                                        
                                     </select>
                                     <label class="slctFinancialYearId">Financial Year <span>*</span></label>
                                     <span class="invalid-feedback is-invalid">please select Financial year</span>
@@ -508,8 +513,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div style="overflow: auto; height: 600px;" class="ms-3 me-3">
-                            <table id="myTable" class="table table-hover" style="display:none;">
+                        <div id="tableContainer" style="overflow: auto; height: 600px;display:none;" class="ms-3 me-3">
+                            <table id="myTable" class="table table-hover">
                                 <thead>
                                     <tr class="table-secondary" style="position: sticky; top: 0;">
                                         <th>No</th>

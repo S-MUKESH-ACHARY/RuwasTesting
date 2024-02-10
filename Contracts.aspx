@@ -1,10 +1,12 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Operation.Master" AutoEventWireup="true" CodeBehind="Contracts.aspx.cs" Inherits="RUWAS.Contracts" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <script src="Lat_LogConversion/proj4.js"></script>
+    <script src="Lat_LogConversion/utm.min.js"></script>
     <script>
         $(function () {
             document.getElementById("dataEntryId").classList.add("DE");
             getTableData();
-            getFinancialYr();
+            //getFinancialYr();
            // fetchLC();
             CStatus();
         })
@@ -51,8 +53,8 @@
                         `<td class="6">` + item.DescriptionOfGoods+`</td>`+
                         `<td class="7">` + item.ContractSum+`</td>`+
                         `<td class="8">` + item.AnnualPaymentUnderContract+`</td>`+
-                        `<td class="9">` + item.CStatusId + `</td>` +
-                        `<td class="10">` + item.ContractDetlId + `</td>` +
+                        `<td class="9" style="display:none;">` + item.CStatusId + `</td>` +
+                        `<td class="10" style="display:none;">` + item.ContractDetlId + `</td>` +
                         `<td>` + item.Status+`</td>`+
                         `<td>` + `<button class="btn btn-primary" type="button" onclick="EditSubCounty(this)" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-pen-to-square"></i></button> ` + `</td></tr>`
                     $("#myTable").append(row);
@@ -86,36 +88,41 @@
              let ContractDtl = $(thisId).closest('tr').find('.10').html();
              $("#ContractDtlId").html(ContractDtl);
         }
-        function getFinancialYr() {
-            var data = {
-                'op': 'FetchFinancialYear',
-            }
-            var s = function (sms) {
-                if (Array.isArray(sms)) {
-                    let AddFinancialYr = $("#slctFinancialYearId");
-                    sms.forEach(function (msg) {
-                        msg.IsActive;
-                        let option = document.createElement('option');
-                        option.value = msg.FinancialYr;
-                        option.text = msg.FinancialYrName;
-                        AddFinancialYr.append(option);
-                    });
-                    /* $("#slctFinancialYearId").val("1");*/
-                    sms.forEach(function (msg) {
-                        if (msg.IsActive == 1) {
-                            $("#slctFinancialYearId").val(msg.FinancialYr);
-                        }
-                    });
-                }
-                else {
-                    alert(sms);
-                }
-            }
-            var e = function (msg) {
-                alert(msg);
-            }
-            CallHandler(data, s, e);
-        }
+        //function getFinancialYr() {
+        //    var data = {
+        //        'op': 'FetchFinancialYear',
+        //    }
+        //    var s = function (sms) {
+        //        if (Array.isArray(sms)) {
+        //            let AddFinancialYr = $("#slctFinancialYearId");
+        //            let option1 = document.createElement('option');
+        //            option1.value = "";
+        //            option1.text = "Choose from the list";
+        //            AddFinancialYr.append(option1);
+        //            sms.forEach(function (msg) {
+        //                msg.IsActive;
+        //                let option = document.createElement('option');
+        //                option.value = msg.FinancialYr;
+        //                option.text = msg.FinancialYrName;
+        //                AddFinancialYr.append(option);
+        //                $('#slctFinancialYearId option:gt(' + (5) + ')').remove();
+        //            });
+        //            /* $("#slctFinancialYearId").val("1");*/
+        //            sms.forEach(function (msg) {
+        //                if (msg.IsActive == 1) {
+        //                    $("#slctFinancialYearId").val(msg.FinancialYr);
+        //                }
+        //            });
+        //        }
+        //        else {
+        //            alert(sms);
+        //        }
+        //    }
+        //    var e = function (msg) {
+        //        alert(msg);
+        //    }
+        //    CallHandler(data, s, e);
+        //}
         function CStatus() {
             var data = {
                 "op": "FetchCStatus"
@@ -237,7 +244,7 @@
                                 <thead>
                                     <tr class="table-secondary">
                                         <th>Local Government</th>
-                                        <th>ContractDetlId</th>
+                                        <th style="display:none;">ContractDetlId</th>
                                         <th>Financial Year</th>
                                         <th>Contract Number</th>
                                         <th>Name of Contractor or Consultant/Company Name</th>
@@ -245,7 +252,7 @@
                                         <th style="width: 10%;">Description of Goods,Services or Works Procured</th>
                                         <th>Contract Sum (UGX)(000)</th>
                                         <th>Annual Payment Under Contract</th>
-                                        <th>StatusID</th>
+                                        <th style="display:none;">StatusID</th>
                                         <th>Status</th>
                                         <th>Edit</th>
                                         <%-- <th>Edit</th>--%>
@@ -334,8 +341,9 @@
                              </div>
                              <div class="col-lg-6 col-md-6 col-sm-12">
                                  <div class="form-floating">
-                                     <select id="slctStatusId"  class="form-select" ></select>
-                                     <span class="invalid-feedback is-invalid">Status</span>
+                                     <select id="slctStatusId" class="form-select" ></select>
+                                     <label>Status</label>
+                                     <span class="invalid-feedback is-invalid">select Status</span>
                                  </div>
                              </div>
                          </div>

@@ -8,7 +8,7 @@
          function saveChanges() {
              let TeachnologyId = $("#txtTeachnologyId").html();
              let TeachnologyName = $("#txtTechnologyName").val();
-             let PopulationServed = $("#txtPopulationId").val();
+             let PopulationServed = Number($("#txtPopulationId").val());
              var data = {
                  "op": "UpdateTeachnology",
                  "TeachnologyId": TeachnologyId,
